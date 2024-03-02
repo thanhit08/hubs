@@ -1,3 +1,10 @@
+/**
+ * This file contains the registration of various components for the GLTFModelPlus library.
+ * It imports necessary dependencies and registers components with their respective names and handlers.
+ * The components include features like sound, light, collision, animation, media, etc.
+ * Each component is registered using the AFRAME.GLTFModelPlus.registerComponent() method.
+ * Some components have additional logic and attributes defined in their handlers.
+ */
 import { sanitizeUrl } from "@braintree/sanitize-url";
 import "./components/gltf-model-plus";
 import { getSanitizedComponentMapping } from "./utils/component-mappings";
@@ -8,6 +15,7 @@ import { updateAudioSettings } from "./update-audio-settings";
 import { commonInflators, renderAsEntity } from "./utils/jsx-entity";
 import { Networked } from "./bit-components";
 import { addComponent } from "bitecs";
+import { inflateHello } from "./inflators/hello";
 
 const inflatorWrapper = inflator => (el, _componentName, componentData) =>
   inflator(APP.world, el.object3D.eid, componentData);
@@ -598,3 +606,4 @@ AFRAME.GLTFModelPlus.registerComponent("reflection-probe", "reflection-probe", (
 
   el.setAttribute(componentName, componentData);
 });
+AFRAME.GLTFModelPlus.registerComponent("hello", "hello", inflatorWrapper(inflateHello));

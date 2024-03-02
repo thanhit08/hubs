@@ -1,3 +1,12 @@
+/**
+ * This file defines various components used in the application.
+ * It imports functions and types from the "bitecs" library and sets default values for some components.
+ * The components are defined using the "defineComponent" function from "bitecs".
+ * Each component has its own properties and data types.
+ * Some components have additional properties that are set using symbols.
+ * The file also includes maps and constants used for media loading and animation.
+ * Finally, it exports all the defined components for use in other parts of the application.
+ */
 import { defineComponent, setDefaultSize, setRemovedRecycleThreshold, Types } from "bitecs";
 
 // TODO this has to happen before all components are defined. Is there a better spot to be doing this?
@@ -455,3 +464,7 @@ export const ObjectMenuTransform = defineComponent({
   prevObjectRef: Types.eid,
   flags: Types.ui8
 });
+export const Hello = defineComponent({
+  message: Types.ui32
+});
+Hello.message[$isStringType] = true;

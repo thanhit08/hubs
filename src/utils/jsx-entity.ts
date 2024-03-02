@@ -1,3 +1,8 @@
+/**
+ * This file contains utility functions and types related to JSX entities in the Hubs project.
+ * It includes functions for creating and manipulating entities, as well as various inflators for different components.
+ * The file also defines several types and interfaces used throughout the project.
+ */
 import { addComponent, addEntity, Component, hasComponent } from "bitecs";
 import { preloadFont } from "troika-three-text";
 import {
@@ -105,6 +110,7 @@ import { inflateObjectMenuTarget, ObjectMenuTargetParams } from "../inflators/ob
 import { inflateObjectMenuTransform, ObjectMenuTransformParams } from "../inflators/object-menu-transform";
 import { inflatePlane, PlaneParams } from "../inflators/plane";
 import { FollowInFovParams, inflateFollowInFov } from "../inflators/follow-in-fov";
+import { HelloParams, inflateHello } from "../inflators/hello";
 
 preload(
   new Promise(resolve => {
@@ -378,6 +384,7 @@ export interface JSXComponentData extends ComponentData {
   objectMenuTransform?: OptionalParams<ObjectMenuTransformParams>;
   objectMenuTarget?: OptionalParams<ObjectMenuTargetParams>;
   plane?: PlaneParams;
+  hello?: HelloParams;
 }
 
 export interface GLTFComponentData extends ComponentData {
@@ -411,6 +418,7 @@ export interface GLTFComponentData extends ComponentData {
   boxCollider?: BoxColliderParams;
   trimesh?: true;
   heightfield?: HeightFieldParams;
+  hello? : HelloParams;
 }
 
 declare global {
@@ -497,7 +505,8 @@ const jsxInflators: Required<{ [K in keyof JSXComponentData]: InflatorFn }> = {
   link: inflateLink,
   objectMenuTransform: inflateObjectMenuTransform,
   objectMenuTarget: inflateObjectMenuTarget,
-  plane: inflatePlane
+  plane: inflatePlane,
+  hello: inflateHello  
 };
 
 export const gltfInflators: Required<{ [K in keyof GLTFComponentData]: InflatorFn }> = {
@@ -533,7 +542,8 @@ export const gltfInflators: Required<{ [K in keyof GLTFComponentData]: InflatorF
   trimesh: inflateTrimesh,
   heightfield: inflateHeightField,
   audioSettings: inflateAudioSettings,
-  mediaLink: inflateMediaLink
+  mediaLink: inflateMediaLink,
+  hello: inflateHello
 };
 
 function jsxInflatorExists(name: string): name is keyof JSXComponentData {
