@@ -103,6 +103,7 @@ import { usePermissions } from "./room/hooks/usePermissions";
 import { ChatContextProvider } from "./room/contexts/ChatContext";
 import ChatToolbarButton from "./room/components/ChatToolbarButton/ChatToolbarButton";
 import SeePlansCTA from "./room/components/SeePlansCTA/SeePlansCTA";
+import ChatGPTToolbarButton from "./room/components/ChatToolbarButton/ChatGPTToolbarButton";
 
 const avatarEditorDebug = qsTruthy("avatarEditorDebug");
 
@@ -1647,6 +1648,12 @@ class UIRoot extends Component {
                     )}
                     {!isLockedDownDemo && (
                       <ChatToolbarButton
+                        onClick={() => this.toggleSidebar("chat", { chatPrefix: "", chatAutofocus: false })}
+                        selected={this.state.sidebarId === "chat"}
+                      />
+                    )}
+                    {!isLockedDownDemo && (
+                      <ChatGPTToolbarButton
                         onClick={() => this.toggleSidebar("chat", { chatPrefix: "", chatAutofocus: false })}
                         selected={this.state.sidebarId === "chat"}
                       />

@@ -115,6 +115,7 @@
   "chat-sidebar.system-message.scene-change": "{name} 改變場景為 {sceneName}",
   "chat-sidebar.title": "聊天",
   "chat-toolbar-button": "聊天",
+  "chat-gpt-toolbar-button": "ChatGPT",
   "close-room-modal.confirm": "是, 關閉房間",
   "close-room-modal.confirm-room-name-field": "確認房間名稱",
   "close-room-modal.message": "關閉此房間會將你自己及房間裡其他人都從房間裡移除, 永久關閉.{linebreak}你確定嗎? 此動作無法重來.",

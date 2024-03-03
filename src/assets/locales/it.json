@@ -112,6 +112,7 @@
   "chat-sidebar.system-message.scene-change": "{name} ha impostato la scena {sceneName}",
   "chat-sidebar.title": "Chat",
   "chat-toolbar-button": "Chat",
+  "chat-gpt-toolbar-button": "ChatGPT",
   "close-room-modal.confirm": "Si, chiudi la stanza",
   "close-room-modal.confirm-room-name-field": "Conferma il nome della stanza",
   "close-room-modal.message": "Chiudendo questa stanza farai uscire tutti, chiudendola completamente.{linebreak}Sei sicuro? Non potrai tornare in questa stanza.",
