@@ -51,6 +51,7 @@ import { MicSetupModalContainer } from "./room/MicSetupModalContainer";
 import { InvitePopoverContainer } from "./room/InvitePopoverContainer";
 import { MoreMenuPopoverButton, CompactMoreMenuButton, MoreMenuContextProvider } from "./room/MoreMenuPopover";
 import { ChatSidebarContainer } from "./room/ChatSidebarContainer";
+import { ChatGPTSidebarContainer } from "./room/ChatGPTSidebarContainer";
 import { ContentMenu, PeopleMenuButton, ObjectsMenuButton, ECSDebugMenuButton } from "./room/ContentMenu";
 import { ReactComponent as CameraIcon } from "./icons/Camera.svg";
 import { ReactComponent as AvatarIcon } from "./icons/Avatar.svg";
@@ -211,7 +212,9 @@ class UIRoot extends Component {
     sidebarId: null,
     presenceCount: 0,
     chatPrefix: "",
-    chatAutofocus: false
+    chatAutofocus: false,
+    chatGPTPrefix: "",
+    chatGPTAutofocus: false,
   };
 
   constructor(props) {
@@ -797,6 +800,15 @@ class UIRoot extends Component {
       this.setSidebar(null);
     } else {
       this.setSidebar("chat", {
+        chatPrefix: e.detail.prefix,
+        chatAutofocus: true
+      });
+    }
+
+    if (this.state.sidebarId === "chatgpt") {
+      this.setSidebar(null);
+    } else {
+      this.setSidebar("chatgpt", {
         chatPrefix: e.detail.prefix,
         chatAutofocus: true
       });
@@ -1456,6 +1468,17 @@ class UIRoot extends Component {
                         onViewProfile={sessionId => this.setSidebar("user", { selectedUserId: sessionId })}
                       />
                     )}
+                    {this.state.sidebarId !== "chatgpt" && this.props.hub && (
+                      <PresenceLog
+                        preset={"InRoom"}
+                        exclude={isMobile ? [] : ["permission"]}
+                        presences={this.props.presences}
+                        entries={presenceLogEntries}
+                        hubId={this.props.hub.hub_id}
+                        history={this.props.history}
+                        onViewProfile={sessionId => this.setSidebar("user", { selectedUserId: sessionId })}
+                      />
+                    )}
                     <NotificationsContainer>
                       {(this.state.hide || this.state.hideUITip || !this.props.activeObject) && (
                         <TipContainer
@@ -1506,6 +1529,17 @@ class UIRoot extends Component {
                           onClose={() => this.setSidebar(null)}
                           autoFocus={this.state.chatAutofocus}
                           initialValue={this.state.chatPrefix}
+                        />
+                      )}
+                      {this.state.sidebarId === "chatgpt" && (
+                        <ChatGPTSidebarContainer
+                          presences={this.props.presences}
+                          occupantCount={this.occupantCount()}
+                          canSpawnMessages={entered && this.props.hubChannel.can("spawn_and_move_media")}
+                          scene={this.props.scene}
+                          onClose={() => this.setSidebar(null)}
+                          autoFocus={this.state.chatGPTAutofocus}
+                          initialValue={this.state.chatGPTPrefix}
                         />
                       )}
                       {this.state.sidebarId === "objects" && (
@@ -1654,8 +1688,8 @@ class UIRoot extends Component {
                     )}
                     {!isLockedDownDemo && (
                       <ChatGPTToolbarButton
-                        onClick={() => this.toggleSidebar("chat", { chatPrefix: "", chatAutofocus: false })}
-                        selected={this.state.sidebarId === "chat"}
+                        onClick={() => this.toggleSidebar("chatgpt", { chatPrefix: "", chatAutofocus: false })}
+                        selected={this.state.sidebarId === "chatgpt"}
                       />
                     )}
                     {entered && isMobileVR && (

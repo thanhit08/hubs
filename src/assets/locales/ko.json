@@ -106,6 +106,7 @@
   "chat-sidebar.system-message.hub-name-change": "{name}님이 Room 이름을 {hubName} 으로 변경하셨습니다.",
   "chat-sidebar.system-message.hub-change": "당신은 {hubName} 으로 이동했습니다.",
   "chat-sidebar.title": "채팅",
+  "chat-gpt-sidebar.title": "ChatGPT",
   "chat-toolbar-button": "채팅",
   "chat-gpt-toolbar-button": "ChatGPT",
   "more-menu-popover.title": "더보기",

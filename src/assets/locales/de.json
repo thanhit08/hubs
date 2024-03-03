@@ -91,6 +91,7 @@
   "chat-sidebar.system-message.name-change": "{oldName} ist jetzt bekannt als {newName}",
   "chat-sidebar.system-message.scene-change": "{name} hat die Szene zu {sceneName} geändert",
   "chat-sidebar.title": "Chat",
+  "chat-gpt-sidebar.title": "ChatGPT",
   "chat-toolbar-button": "Chat",
   "chat-gpt-toolbar-button": "ChatGPT",
   "close-room-modal.confirm": "Ja, Raum schließen",

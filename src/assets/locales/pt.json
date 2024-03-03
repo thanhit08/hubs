@@ -113,6 +113,7 @@
   "chat-sidebar.system-message.name-change": "{oldName} agora é {newName}",
   "chat-sidebar.system-message.scene-change": "{name} mudou o cenário para {sceneName}",
   "chat-sidebar.title": "Chat",
+  "chat-gpt-sidebar.title": "ChatGPT",
   "chat-toolbar-button": "Chat",
   "chat-gpt-toolbar-button": "ChatGPT",
   "close-room-modal.confirm": "Sim, fechar sala",

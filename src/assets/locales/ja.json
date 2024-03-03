@@ -140,6 +140,7 @@
   "chat-sidebar.system-message.name-change": "名前が {oldName} から {newName} に変更されました",
   "chat-sidebar.system-message.scene-change": "シーンが {name} から {sceneName} に変更されました",
   "chat-sidebar.title": "チャット",
+  "chat-gpt-sidebar.title": "ChatGPT",
   "chat-toolbar-button": "チャット",
   "chat-gpt-toolbar-button": "ChatGPT",
   "close-room-modal.confirm": "はい、ルームを閉じます",

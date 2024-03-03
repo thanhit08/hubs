@@ -114,6 +114,7 @@
   "chat-sidebar.system-message.name-change": "{oldName} 现在是 {newName}",
   "chat-sidebar.system-message.scene-change": "{name} 改变场景为 {sceneName}",
   "chat-sidebar.title": "聊天",
+  "chat-gpt-sidebar.title": "ChatGPT",
   "chat-toolbar-button": "聊天",
   "chat-gpt-toolbar-button": "ChatGPT",
   "close-room-modal.confirm": "是, 关闭房间",

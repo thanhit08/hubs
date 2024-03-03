@@ -141,6 +141,7 @@
   "chat-sidebar.system-message.name-change": "{oldName} ara es coneix com {newName}",
   "chat-sidebar.system-message.scene-change": "{name} ha canviat l'escena a {sceneName}",
   "chat-sidebar.title": "Xat",
+  "chat-gpt-sidebar.title": "XatGPT",
   "close-room-modal.confirm": "Sí, tanca la sala",
   "close-room-modal.confirm-room-name-field": "Confirmeu el nom de la sala",
   "close-room-modal.message": "Tancar aquesta sala us eliminarà a tu i a altres de la sala, tancant-la permanentment.{linebreak}Esteu segur? Aquesta acció no es pot desfer.",
