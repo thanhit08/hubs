@@ -207,6 +207,7 @@ export async function createAndRedirectToNewHub(name, sceneId, replace, qs) {
 
   if (sceneId) {
     payload.hub.scene_id = sceneId;
+    console.log(`Creating hub with scene_id: ${sceneId}`);
   }
 
   const headers = { "content-type": "application/json" };

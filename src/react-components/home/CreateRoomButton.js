@@ -14,7 +14,7 @@ export function CreateRoomButton() {
       preset="landing"
       onClick={e => {
         e.preventDefault();
-        createAndRedirectToNewHub(null, null, false);
+        createAndRedirectToNewHub(null, "t7yVvtP", false);
       }}
     >
       <FormattedMessage id="create-room-button" defaultMessage="Create Room" />
