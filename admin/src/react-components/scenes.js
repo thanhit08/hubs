@@ -40,6 +40,7 @@ export const SceneEdit = props => (
       />
       <BooleanInput source="allow_remixing" />
       <BooleanInput source="allow_promotion" />
+      <BooleanInput source="is_default" />
     </SimpleForm>
   </Edit>
 );
