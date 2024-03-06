@@ -72,6 +72,7 @@ export const RoomToolbar = args => (
         <ToolbarButton icon={<ObjectIcon />} label="Place" preset="accent3" {...args} />
         <ToolbarButton icon={<ReactionIcon />} label="React" preset="accent2" {...args} />
         <ToolbarButton icon={<ChatIcon />} label="Chat" preset="accent4" {...args} />
+        <ToolbarButton icon={<ChatIcon />} label="ChatGPT" preset="accent2" {...args} />
       </>
     }
     toolbarRight={

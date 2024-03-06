@@ -201,6 +201,17 @@ export function fetchReticulumAuthenticated(url, method = "GET", payload) {
   return fetchReticulumAuthenticatedWithToken(store.state.credentials.token, url, method, payload);
 }
 
+export async function joinToAnExistRoom(hubId, replace, qs) {
+  const url = hubUrl(hubId, qs);
+  if (replace) {
+    document.location.replace(url);
+  } else {
+    document.location = url;
+  }
+
+  return url;
+}
+
 export async function createAndRedirectToNewHub(name, sceneId, replace, qs) {
   const createUrl = getReticulumFetchUrl("/api/v1/hubs");
   const payload = { hub: { name: name || generateHubName() } };
