@@ -212,6 +212,80 @@ export async function joinToAnExistRoom(hubId, replace, qs) {
   return url;
 }
 
+
+export async function createAndRedirectToNewHubWithPassword(name, sceneId, passwd, replace, qs) {
+  const createUrl = getReticulumFetchUrl("/api/v1/hubs");
+  const payload = { hub: { name: name || generateHubName() } };
+
+  if (sceneId) {
+    payload.hub.scene_id = sceneId;
+    console.log(`Creating hub with scene_id: ${sceneId}`);
+  }
+
+  if (passwd) {
+    payload.hub.password = passwd;
+    console.log('Creating hub with password');
+  }
+
+  const headers = { "content-type": "application/json" };
+  if (store.state && store.state.credentials.token) {
+    headers.authorization = `bearer ${store.state.credentials.token}`;
+  }
+
+  let res = await fetch(createUrl, {
+    body: JSON.stringify(payload),
+    headers,
+    method: "POST"
+  }).then(r => r.json());
+
+  if (res.error === "invalid_token") {
+    // Clear the invalid token from store.
+    store.update({ credentials: { token: null, email: null } });
+
+    // Create hub anonymously
+    delete headers.authorization;
+    res = await fetch(createUrl, {
+      body: JSON.stringify(payload),
+      headers,
+      method: "POST"
+    }).then(r => r.json());
+  }
+
+  const hub = res;
+  let url = hub.url;
+
+  const creatorAssignmentToken = hub.creator_assignment_token;
+  if (creatorAssignmentToken) {
+    store.update({ creatorAssignmentTokens: [{ hubId: hub.hub_id, creatorAssignmentToken: creatorAssignmentToken }] });
+
+    // Don't need to store the embed token if there's no creator assignment token, since that means
+    // we are the owner and will get the embed token on page load.
+    const embedToken = hub.embed_token;
+
+    if (embedToken) {
+      store.update({ embedTokens: [{ hubId: hub.hub_id, embedToken: embedToken }] });
+    }
+  }
+
+  if (isLocalClient()) {
+    url = `/hub.html?hub_id=${hub.hub_id}`;
+  }
+
+  if (qs) {
+    if (isLocalClient()) {
+      url = `${url}&${qs.toString()}`;
+    } else {
+      url = `${url}?${qs.toString()}`;
+    }
+  }
+
+  if (replace) {
+    document.location.replace(url);
+  } else {
+    document.location = url;
+  }
+}
+
 export async function createAndRedirectToNewHub(name, sceneId, replace, qs) {
   const createUrl = getReticulumFetchUrl("/api/v1/hubs");
   const payload = { hub: { name: name || generateHubName() } };
