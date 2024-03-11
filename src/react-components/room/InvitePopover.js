@@ -9,6 +9,9 @@ import { Column } from "../layout/Column";
 import { InviteLinkInputField } from "./InviteLinkInputField";
 import { FormattedMessage, defineMessage, useIntl } from "react-intl";
 import { ToolTip } from "@mozilla/lilypad-ui";
+import { TextInputField } from "../input/TextInputField";
+import { Button } from "../input/Button";
+import { EmailSentTextInputField } from "../input/EmailSentTextInputField";
 
 function InvitePopoverContent({ url, embed, inviteRequired, fetchingInvite, inviteUrl, revokeInvite }) {
   return (
@@ -19,6 +22,10 @@ function InvitePopoverContent({ url, embed, inviteRequired, fetchingInvite, invi
         </>
       ) : (
         <>
+          <EmailSentTextInputField   
+            value={url}         
+            buttonPreset="accent3"
+          />
           <CopyableTextInputField
             label={<FormattedMessage id="invite-popover.room-link" defaultMessage="Room Link" />}
             value={url}
