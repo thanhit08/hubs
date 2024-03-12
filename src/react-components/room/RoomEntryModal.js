@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { Modal } from "../modal/Modal";
@@ -13,7 +13,7 @@ import { useCssBreakpoints } from "react-use-css-breakpoints";
 import { Column } from "../layout/Column";
 import { AppLogo } from "../misc/AppLogo";
 import { FormattedMessage } from "react-intl";
-
+import { TextInputField } from "../input/TextInputField";
 export function RoomEntryModal({
   className,
   roomName,
@@ -28,6 +28,7 @@ export function RoomEntryModal({
   ...rest
 }) {
   const breakpoint = useCssBreakpoints();
+  const [password, setPassword] = useState();
   return (
     <Modal className={classNames(styles.roomEntryModal, className)} disableFullscreen {...rest}>
       <Column center className={styles.content}>
@@ -40,12 +41,21 @@ export function RoomEntryModal({
         </div>
         <Column center className={styles.buttons}>
           {showJoinRoom && (
-            <Button preset="accent4" onClick={onJoinRoom}>
-              <EnterIcon />
-              <span>
-                <FormattedMessage id="room-entry-modal.join-room-button" defaultMessage="Join Room" />
-              </span>
-            </Button>
+            <>
+              <TextInputField
+                type="password"
+                label="Room Password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+              />
+              <Button preset="accent4" onClick={onJoinRoom}>
+                <EnterIcon />
+                <span>
+                  <FormattedMessage id="room-entry-modal.join-room-button" defaultMessage="Join Room" />
+                </span>
+              </Button>
+            </>
+
           )}
           {showEnterOnDevice && (
             <Button preset="accent5" onClick={onEnterOnDevice}>
