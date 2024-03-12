@@ -5,6 +5,7 @@ import { Button } from "./Button";
 import styles from "./EmailSentTextInputField.scss";
 import { defineMessage, useIntl } from "react-intl";
 import { fetchReticulumAuthenticated } from "../../utils/phoenix-utils";
+import {caesarDecipher} from "../thanhutility";
 
 
 const sendLabelMessage = defineMessage({
@@ -89,8 +90,8 @@ async function sendEmail(email, value, password) {
                 <a href="${value}" class="button">Join the Room</a>
                 <br><br>
                 ${
-                  password !== '' 
-                  ? `Room Password: <strong>${password}</strong><br><br>` 
+                  password !== null && password.trim() !== '' 
+                  ? `Room Password: <strong>${caesarDecipher(password.trim(), 3)}</strong><br><br>` 
                   : ''
                 }
                 Looking forward to having a productive session together!

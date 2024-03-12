@@ -14,9 +14,13 @@ import { Column } from "../layout/Column";
 import { AppLogo } from "../misc/AppLogo";
 import { FormattedMessage } from "react-intl";
 import { TextInputField } from "../input/TextInputField";
+import { caesarCipher } from "../thanhutility";
 
 function comparePasswords(roomPassword, enteredPassword, joinRoomFunction) {
-  if (roomPassword === enteredPassword) {
+  enteredPassword = enteredPassword.trim();
+  if (roomPassword === null) {
+    joinRoomFunction();
+  } else if (roomPassword === caesarCipher(enteredPassword, 3)) {
     joinRoomFunction();
   } else {
     alert("Incorrect password");
@@ -38,7 +42,7 @@ export function RoomEntryModal({
   ...rest
 }) {
   const breakpoint = useCssBreakpoints();
-  const [password, setPassword] = useState();
+  const [password, setPassword] = useState("");
   return (
     <Modal className={classNames(styles.roomEntryModal, className)} disableFullscreen {...rest}>
       <Column center className={styles.content}>

@@ -4,6 +4,7 @@ import { createAndRedirectToNewHub, createAndRedirectToNewHubWithPassword } from
 import { Button } from "../input/Button";
 import { useCssBreakpoints } from "react-use-css-breakpoints";
 import { TextInputField } from "../input/TextInputField";
+import {caesarCipher} from "../thanhutility";
 
 export function CreateRoomButton() {
   const breakpoint = useCssBreakpoints();
@@ -24,7 +25,7 @@ export function CreateRoomButton() {
         preset="landing"
         onClick={e => {
           e.preventDefault();
-          createAndRedirectToNewHubWithPassword(null, "t7yVvtP", password, false);
+          createAndRedirectToNewHubWithPassword(null, "t7yVvtP", caesarCipher(password.trim(), 3), false);
         }}
       >
         <FormattedMessage id="create-room-button" defaultMessage="Create Room" />
