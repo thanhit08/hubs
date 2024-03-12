@@ -10,6 +10,7 @@ export function InvitePopoverContainer({ hub, hubChannel, scene, store, ...rest 
   // TODO: Move to Hub class
   const shortUrl = `https://${configs.SHORTLINK_DOMAIN}`;
   const url = `${shortUrl}/${hub.hub_id}`;
+  const password = hub.password;
 
   let embedText = null;
   const embedToken = hub.embed_token || store.getEmbedTokenForHub(hub);
@@ -54,6 +55,7 @@ export function InvitePopoverContainer({ hub, hubChannel, scene, store, ...rest 
       inviteUrl={inviteUrl}
       revokeInvite={revokeInvite}
       url={url}
+      password={password}
       embed={embedText}
       popoverApiRef={popoverApiRef}
       {...rest}

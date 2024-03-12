@@ -13,7 +13,7 @@ import { TextInputField } from "../input/TextInputField";
 import { Button } from "../input/Button";
 import { EmailSentTextInputField } from "../input/EmailSentTextInputField";
 
-function InvitePopoverContent({ url, embed, inviteRequired, fetchingInvite, inviteUrl, revokeInvite }) {
+function InvitePopoverContent({ url, password, embed, inviteRequired, fetchingInvite, inviteUrl, revokeInvite }) {
   return (
     <Column center padding grow gap="lg" className={styles.invitePopover}>
       {inviteRequired ? (
@@ -23,7 +23,8 @@ function InvitePopoverContent({ url, embed, inviteRequired, fetchingInvite, invi
       ) : (
         <>
           <EmailSentTextInputField   
-            value={url}         
+            value={url}  
+            password={password}       
             buttonPreset="accent3"
           />
           <CopyableTextInputField
@@ -65,6 +66,7 @@ const invitePopoverTitle = defineMessage({
 
 export function InvitePopoverButton({
   url,
+  password,
   embed,
   initiallyVisible,
   popoverApiRef,
@@ -84,6 +86,7 @@ export function InvitePopoverButton({
       content={() => (
         <InvitePopoverContent
           url={url}
+          password={password}
           embed={embed}
           inviteRequired={inviteRequired}
           fetchingInvite={fetchingInvite}

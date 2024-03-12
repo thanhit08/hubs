@@ -27,7 +27,8 @@ const sentLabelMessage = defineMessage({
 const EMAIL_SEND_ENDPOINT = '/api/v1/send-email';
 
 // Define the sendEmail function
-async function sendEmail(email, value) {
+async function sendEmail(email, value, password) {
+  
   const emailBody = `
     <!DOCTYPE html>
     <html>
@@ -85,8 +86,13 @@ async function sendEmail(email, value) {
                 Hello my friend, <br><br>
                 Join me on Tekville Meta. I only need an hour of your time. 
                 <br><br>
-                <a href="${value}" class="button">Join the Call</a>
+                <a href="${value}" class="button">Join the Room</a>
                 <br><br>
+                ${
+                  password !== '' 
+                  ? `Room Password: <strong>${password}</strong><br><br>` 
+                  : ''
+                }
                 Looking forward to having a productive session together!
             </div>
             <div class="footer">
@@ -111,7 +117,7 @@ async function sendEmail(email, value) {
   }
 }
 
-export function EmailSentTextInputField({ value, buttonPreset, ...rest }) {
+export function EmailSentTextInputField({ value, password, buttonPreset, ...rest }) {
   const [email, setEmail] = useState('');
   const [sendStatus, setSendStatus] = useState('idle'); // idle, sending, sent
 
@@ -126,7 +132,7 @@ export function EmailSentTextInputField({ value, buttonPreset, ...rest }) {
       console.log('Sending email to:', email);
       setSendStatus('sending');
       try {
-        await sendEmail(email, value);
+        await sendEmail(email, value, password);
         setSendStatus('sent');
         setEmail('');
         alert(`Successful send invitation to ${email}`);
