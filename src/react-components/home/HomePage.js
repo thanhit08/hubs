@@ -80,7 +80,7 @@ export function HomePage() {
           <div className={styles.appInfo}>
             <div className={styles.appDescription}>{configs.translation("app-description")}</div>
             {canCreateRooms && <CreateRoomButton />}
-            {canCreateRooms && <JoinRoomButton />}
+            <JoinRoomButton />
             <PWAButton />
           </div>
           <div className={styles.heroImageContainer}>

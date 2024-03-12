@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { joinToAnExistRoom } from "../../utils/phoenix-utils";
 import { Button } from "../input/Button";
@@ -7,6 +7,8 @@ import { TextInputField } from "../input/TextInputField";
 
 export function JoinRoomButton() {
   const breakpoint = useCssBreakpoints();
+  const [roomID, setRoomID] = useState("");
+
 
   return (
     <>
@@ -14,6 +16,8 @@ export function JoinRoomButton() {
       <TextInputField
         label="Room ID"
         placeholder="Room ID"
+        value={roomID}
+        onChange={(e) => setRoomID(e.target.value)}
         description={
           <>
             Enter room ID to join <a href="#">Learn More</a>
@@ -26,7 +30,12 @@ export function JoinRoomButton() {
         preset="accent3"
         onClick={(e) => {
           e.preventDefault();
-          joinToAnExistRoom("akgaha", false);
+          if (roomID.trim() === "") {
+            alert("Please enter room ID");
+            return;
+          } else {
+            joinToAnExistRoom(roomID.trim(), false);
+          }
         }}
       >
         <FormattedMessage

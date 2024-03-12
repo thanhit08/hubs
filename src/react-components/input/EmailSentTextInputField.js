@@ -28,7 +28,7 @@ const sentLabelMessage = defineMessage({
 const EMAIL_SEND_ENDPOINT = '/api/v1/send-email';
 
 // Define the sendEmail function
-async function sendEmail(email, value, password) {
+async function sendEmail(email, value, password, hubId, shortUrl) {
   
   const emailBody = `
     <!DOCTYPE html>
@@ -89,6 +89,8 @@ async function sendEmail(email, value, password) {
                 <br><br>
                 <a href="${value}" class="button">Join the Room</a>
                 <br><br>
+                Or copy and paste <strong>"${hubId}"</strong> into Room ID in <a href="${shortUrl}">home page</a>.
+                <br><br>
                 ${
                   password !== null && password.trim() !== '' 
                   ? `Room Password: <strong>${caesarDecipher(password.trim(), 3)}</strong><br><br>` 
@@ -118,7 +120,7 @@ async function sendEmail(email, value, password) {
   }
 }
 
-export function EmailSentTextInputField({ value, password, buttonPreset, ...rest }) {
+export function EmailSentTextInputField({ value, password, hubId, shortUrl, buttonPreset, ...rest }) {
   const [email, setEmail] = useState('');
   const [sendStatus, setSendStatus] = useState('idle'); // idle, sending, sent
 
@@ -133,7 +135,7 @@ export function EmailSentTextInputField({ value, password, buttonPreset, ...rest
       console.log('Sending email to:', email);
       setSendStatus('sending');
       try {
-        await sendEmail(email, value, password);
+        await sendEmail(email, value, password, hubId, shortUrl);
         setSendStatus('sent');
         setEmail('');
         alert(`Successful send invitation to ${email}`);

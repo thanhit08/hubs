@@ -11,6 +11,7 @@ export function InvitePopoverContainer({ hub, hubChannel, scene, store, ...rest 
   const shortUrl = `https://${configs.SHORTLINK_DOMAIN}`;
   const url = `${shortUrl}/${hub.hub_id}`;
   const password = hub.password;
+  const hubID = hub.hub_id;
 
   let embedText = null;
   const embedToken = hub.embed_token || store.getEmbedTokenForHub(hub);
@@ -55,6 +56,8 @@ export function InvitePopoverContainer({ hub, hubChannel, scene, store, ...rest 
       inviteUrl={inviteUrl}
       revokeInvite={revokeInvite}
       url={url}
+      hubId={hubID}
+      shortUrl={shortUrl}
       password={password}
       embed={embedText}
       popoverApiRef={popoverApiRef}
