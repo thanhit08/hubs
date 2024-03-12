@@ -56,12 +56,14 @@ export function RoomEntryModal({
         <Column center className={styles.buttons}>
           {showJoinRoom && (
             <>
-              <TextInputField
-                type="password"
-                label="Room Password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-              />
+              {roomPassword !== null && roomPassword.trim() !== '' && (
+                <TextInputField
+                  type="password"
+                  label="Room Password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                />
+              )}
               <Button preset="accent4" onClick={() => comparePasswords(roomPassword, password, onJoinRoom)}>
                 <EnterIcon />
                 <span>
@@ -69,7 +71,6 @@ export function RoomEntryModal({
                 </span>
               </Button>
             </>
-
           )}
           {showEnterOnDevice && (
             <Button preset="accent5" onClick={onEnterOnDevice}>
