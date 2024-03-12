@@ -850,6 +850,7 @@ class UIRoot extends Component {
       <>
         <RoomEntryModal
           roomName={this.props.hub.name}
+          roomPassword={this.props.hub.password}
           showJoinRoom={!this.state.waitingOnAudio && !this.props.entryDisallowed}
           onJoinRoom={() => {
             if (isLockedDownDemo) {

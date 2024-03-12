@@ -7,7 +7,7 @@ import { TextInputField } from "../input/TextInputField";
 
 export function CreateRoomButton() {
   const breakpoint = useCssBreakpoints();
-  const [password, setPassword] = useState("12345");
+  const [password, setPassword] = useState("");
 
   return (
     <>

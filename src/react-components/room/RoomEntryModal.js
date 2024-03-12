@@ -14,9 +14,19 @@ import { Column } from "../layout/Column";
 import { AppLogo } from "../misc/AppLogo";
 import { FormattedMessage } from "react-intl";
 import { TextInputField } from "../input/TextInputField";
+
+function comparePasswords(roomPassword, enteredPassword, joinRoomFunction) {
+  if (roomPassword === enteredPassword) {
+    joinRoomFunction();
+  } else {
+    alert("Incorrect password");
+    return null;
+  }
+}
 export function RoomEntryModal({
   className,
   roomName,
+  roomPassword,
   showJoinRoom,
   onJoinRoom,
   showEnterOnDevice,
@@ -48,7 +58,7 @@ export function RoomEntryModal({
                 value={password}
                 onChange={e => setPassword(e.target.value)}
               />
-              <Button preset="accent4" onClick={onJoinRoom}>
+              <Button preset="accent4" onClick={() => comparePasswords(roomPassword, password, onJoinRoom)}>
                 <EnterIcon />
                 <span>
                   <FormattedMessage id="room-entry-modal.join-room-button" defaultMessage="Join Room" />
