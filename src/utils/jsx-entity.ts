@@ -111,6 +111,8 @@ import { inflateObjectMenuTransform, ObjectMenuTransformParams } from "../inflat
 import { inflatePlane, PlaneParams } from "../inflators/plane";
 import { FollowInFovParams, inflateFollowInFov } from "../inflators/follow-in-fov";
 import { HelloParams, inflateHello } from "../inflators/hello";
+import { TFCTicTacToeParams, inflateTFCTicTacToe } from "../inflators/tfc-tic-tac-toe";
+import { TFCMyThreeJSParams, inflateTFCMyThreeJS } from "../inflators/tfc-my-threejs";
 
 preload(
   new Promise(resolve => {
@@ -385,6 +387,8 @@ export interface JSXComponentData extends ComponentData {
   objectMenuTarget?: OptionalParams<ObjectMenuTargetParams>;
   plane?: PlaneParams;
   hello?: HelloParams;
+  tictactoe?: TFCTicTacToeParams;
+  tfcMyThreeJS?: TFCMyThreeJSParams;
 }
 
 export interface GLTFComponentData extends ComponentData {
@@ -419,6 +423,8 @@ export interface GLTFComponentData extends ComponentData {
   trimesh?: true;
   heightfield?: HeightFieldParams;
   hello? : HelloParams;
+  tictactoe?: TFCTicTacToeParams;
+  tfcMyThreeJS?: TFCMyThreeJSParams;
 }
 
 declare global {
@@ -506,7 +512,9 @@ const jsxInflators: Required<{ [K in keyof JSXComponentData]: InflatorFn }> = {
   objectMenuTransform: inflateObjectMenuTransform,
   objectMenuTarget: inflateObjectMenuTarget,
   plane: inflatePlane,
-  hello: inflateHello  
+  hello: inflateHello,
+  tictactoe: inflateTFCTicTacToe,
+  tfcMyThreeJS: inflateTFCMyThreeJS
 };
 
 export const gltfInflators: Required<{ [K in keyof GLTFComponentData]: InflatorFn }> = {
@@ -543,7 +551,9 @@ export const gltfInflators: Required<{ [K in keyof GLTFComponentData]: InflatorF
   heightfield: inflateHeightField,
   audioSettings: inflateAudioSettings,
   mediaLink: inflateMediaLink,
-  hello: inflateHello
+  hello: inflateHello,
+  tictactoe: inflateTFCTicTacToe,
+  tfcMyThreeJS: inflateTFCMyThreeJS
 };
 
 function jsxInflatorExists(name: string): name is keyof JSXComponentData {

@@ -94,6 +94,9 @@ import { inspectSystem } from "../bit-systems/inspect-system";
 import { snapMediaSystem } from "../bit-systems/snap-media-system";
 import { scaleWhenGrabbedSystem } from "../bit-systems/scale-when-grabbed-system";
 import { helloSystem } from "../bit-systems/hello";
+import { TFCTicTacToeSystem } from "../bit-systems/tfc-tic-tac-toe";
+import { TFCMyThreeJSSystem } from "../bit-systems/tfc-my-threejs";
+
 declare global {
   interface Window {
     $S: HubsSystems;
@@ -327,6 +330,9 @@ export function mainTick(xrFrame: XRFrame, renderer: WebGLRenderer, scene: Scene
     renderer.render(scene, camera);
   }
   helloSystem(world);
+  TFCTicTacToeSystem(world);
+  TFCMyThreeJSSystem(world);
+
   // tock()s on components and system will fire here. (As well as any other time render() is called without unbinding onAfterRender)
   // TODO inline invoking tocks instead of using onAfterRender registered in a-scene
 }

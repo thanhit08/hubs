@@ -16,6 +16,8 @@ import { commonInflators, renderAsEntity } from "./utils/jsx-entity";
 import { Networked } from "./bit-components";
 import { addComponent } from "bitecs";
 import { inflateHello } from "./inflators/hello";
+import { inflateTFCTicTacToe } from "./inflators/tfc-tic-tac-toe";
+import { inflateTFCMyThreeJS } from "./inflators/tfc-my-threejs";
 
 const inflatorWrapper = inflator => (el, _componentName, componentData) =>
   inflator(APP.world, el.object3D.eid, componentData);
@@ -607,3 +609,5 @@ AFRAME.GLTFModelPlus.registerComponent("reflection-probe", "reflection-probe", (
   el.setAttribute(componentName, componentData);
 });
 AFRAME.GLTFModelPlus.registerComponent("hello", "hello", inflatorWrapper(inflateHello));
+AFRAME.GLTFModelPlus.registerComponent("tfc-tic-tac-toe", "tfc-tic-tac-toe", inflatorWrapper(inflateTFCTicTacToe));
+AFRAME.GLTFModelPlus.registerComponent("tfc-my-threejs", "tfc-my-threejs", inflatorWrapper(inflateTFCMyThreeJS));

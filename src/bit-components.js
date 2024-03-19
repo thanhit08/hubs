@@ -468,3 +468,16 @@ export const Hello = defineComponent({
   message: Types.ui32
 });
 Hello.message[$isStringType] = true;
+
+
+export const TFCTicTacToe = defineComponent({
+  source: Types.ui32
+});
+TFCTicTacToe.source[$isStringType] = true;
+
+export const TFCMyThreeJS = defineComponent({
+  category: Types.ui32,
+  unit: Types.ui32
+});
+TFCMyThreeJS.category[$isStringType] = true;
+TFCMyThreeJS.unit[$isStringType] = true;
