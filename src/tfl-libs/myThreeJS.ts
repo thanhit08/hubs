@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { createUIButton } from './myButton';
 
 const curveData: THREE.Vector3[] = [];
 const numPoints = 30;
@@ -11,18 +12,15 @@ const angles = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90,
 const anglesStatus: boolean[] = [false, false, false, false, false, false, false, false, false];
 const curves: THREE.Line[] = [];
 let angle = 45;
-const point_curves: THREE.Vector3[][] = [];
-let line1: any = null;
-let line2: any = null;
-let line3: any = null;
-let line4: any = null;
 export function createMyThreeJS(props: any) {
+  const point_curves: THREE.Vector3[][] = [];
   const baseProps = {
     category: "Transformation",
     unit: "1",
     position: new THREE.Vector3(0, 0, 0),
     rotation: new THREE.Quaternion(),
-    scale: new THREE.Vector3(1, 1, 1)
+    scale: new THREE.Vector3(1, 1, 1),
+    steps: angles.length
   }
   Object.assign(baseProps, props);
 
@@ -46,7 +44,11 @@ export function createMyThreeJS(props: any) {
   const curve = new THREE.Line(curveGeometry, curveMaterial);
   curve.position.copy(baseProps.position);
   myThreeJSGroup.add(curve);
-  for (let i = 0; i < angles.length; i++) {
+  let angleSteps = baseProps.steps;
+  if (baseProps.steps > angles.length) {
+    angleSteps = angles.length;
+  }
+  for (let i = 0; i < angleSteps; i++) {
     angle = angles[i];
 
     let new_curve_data = [];
@@ -93,10 +95,10 @@ export function createMyThreeJS(props: any) {
     const point_curve_material_line3 = new THREE.LineBasicMaterial({ color: 0x0000ff });
     const point_curve_material_line4 = new THREE.LineBasicMaterial({ color: 0x0000ff });
 
-    line1 = new THREE.Line(point_curve_geometry_line1, point_curve_material_line1);
-    line2 = new THREE.Line(point_curve_geometry_line2, point_curve_material_line2);
-    line3 = new THREE.Line(point_curve_geometry_line3, point_curve_material_line3);
-    line4 = new THREE.Line(point_curve_geometry_line4, point_curve_material_line4);
+    const line1 = new THREE.Line(point_curve_geometry_line1, point_curve_material_line1);
+    const line2 = new THREE.Line(point_curve_geometry_line2, point_curve_material_line2);
+    const line3 = new THREE.Line(point_curve_geometry_line3, point_curve_material_line3);
+    const line4 = new THREE.Line(point_curve_geometry_line4, point_curve_material_line4);
 
     line1.position.copy(baseProps.position);
     line2.position.copy(baseProps.position);
@@ -109,6 +111,8 @@ export function createMyThreeJS(props: any) {
     myThreeJSGroup.add(line4);
 
   }
+
+
   // Scale the group
   myThreeJSGroup.scale.copy(new THREE.Vector3(0.5, 0.5, 0.5));
 

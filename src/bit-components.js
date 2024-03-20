@@ -481,3 +481,9 @@ export const TFCMyThreeJS = defineComponent({
 });
 TFCMyThreeJS.category[$isStringType] = true;
 TFCMyThreeJS.unit[$isStringType] = true;
+
+export const TFCMyThreeJSButton = defineComponent({
+  name: Types.ui32,
+  targetObjectRef: Types.eid
+});
+TFCMyThreeJSButton.name[$isStringType] = true;
