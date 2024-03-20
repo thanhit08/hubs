@@ -113,6 +113,7 @@ import { FollowInFovParams, inflateFollowInFov } from "../inflators/follow-in-fo
 import { HelloParams, inflateHello } from "../inflators/hello";
 import { TFCTicTacToeParams, inflateTFCTicTacToe } from "../inflators/tfc-tic-tac-toe";
 import { TFCMyThreeJSParams, inflateTFCMyThreeJS } from "../inflators/tfc-my-threejs";
+import { TFCNetworkedContentDataParams, inflateTFCNetworkedContentData } from "../inflators/tfc-networked-content-data";
 
 preload(
   new Promise(resolve => {
@@ -389,6 +390,7 @@ export interface JSXComponentData extends ComponentData {
   hello?: HelloParams;
   tictactoe?: TFCTicTacToeParams;
   tfcMyThreeJS?: TFCMyThreeJSParams;
+  tfcNetworkedContentData?: TFCNetworkedContentDataParams;
 }
 
 export interface GLTFComponentData extends ComponentData {
@@ -422,18 +424,19 @@ export interface GLTFComponentData extends ComponentData {
   boxCollider?: BoxColliderParams;
   trimesh?: true;
   heightfield?: HeightFieldParams;
-  hello? : HelloParams;
+  hello?: HelloParams;
   tictactoe?: TFCTicTacToeParams;
   tfcMyThreeJS?: TFCMyThreeJSParams;
+  tfcNetworkedContentData?: TFCNetworkedContentDataParams;
 }
 
 declare global {
   namespace createElementEntity.JSX {
     interface IntrinsicElements {
       entity: JSXComponentData &
-        Attrs & {
-          children?: IntrinsicElements[];
-        };
+      Attrs & {
+        children?: IntrinsicElements[];
+      };
     }
 
     interface ElementChildrenAttribute {
@@ -514,7 +517,8 @@ const jsxInflators: Required<{ [K in keyof JSXComponentData]: InflatorFn }> = {
   plane: inflatePlane,
   hello: inflateHello,
   tictactoe: inflateTFCTicTacToe,
-  tfcMyThreeJS: inflateTFCMyThreeJS
+  tfcMyThreeJS: inflateTFCMyThreeJS,
+  tfcNetworkedContentData: inflateTFCNetworkedContentData
 };
 
 export const gltfInflators: Required<{ [K in keyof GLTFComponentData]: InflatorFn }> = {
@@ -553,7 +557,8 @@ export const gltfInflators: Required<{ [K in keyof GLTFComponentData]: InflatorF
   mediaLink: inflateMediaLink,
   hello: inflateHello,
   tictactoe: inflateTFCTicTacToe,
-  tfcMyThreeJS: inflateTFCMyThreeJS
+  tfcMyThreeJS: inflateTFCMyThreeJS,
+  tfcNetworkedContentData: inflateTFCNetworkedContentData
 };
 
 function jsxInflatorExists(name: string): name is keyof JSXComponentData {

@@ -1,5 +1,5 @@
 import { HubsWorld } from "../app";
-import { TFCMyThreeJS, TFCMyThreeJSButton } from "../bit-components";
+import { TFCMyThreeJS, TFCMyThreeJSButton, TFCNetworkedContentData } from "../bit-components";
 import { Interacted, CursorRaycastable, RemoteHoverTarget, SingleActionButton, HoveredRemoteRight } from "../bit-components";
 import { defineQuery, enterQuery, exitQuery, hasComponent, addEntity, addComponent } from "bitecs";
 import { addObject3DComponent } from "../utils/jsx-entity";
@@ -19,7 +19,7 @@ const TFCMyThreeJSQuery = defineQuery([TFCMyThreeJS]);
 const TFCMyThreeJSEnterQuery = enterQuery(TFCMyThreeJSQuery);
 const TFCMyThreeJSExitQuery = exitQuery(TFCMyThreeJSQuery);
 
-const TFCMYThreeJSButtonQuery = defineQuery([TFCMyThreeJSButton]);
+const TFCMyThreeJSButtonQuery = defineQuery([TFCMyThreeJSButton]);
 
 let networkClientId: string = "";
 let category: string = "";
@@ -135,8 +135,15 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
             console.log("My ThreeJS clicked", eid);
         }
     }
+    // TFCMyThreeJSQuery(world).forEach(eid => {
+    //     const networkedEid = anyEntityWith(world, TFCNetworkedContentData);
+    //     if(networkedEid) {
+    //         networkClientId = APP.getString(TFCNetworkedContentData.clientId[networkedEid]);
+    //         currentSteps = parseInt(APP.getString(TFCNetworkedContentData.steps[networkedEid]));
+    //     }
+    // });
 
-    TFCMYThreeJSButtonQuery(world).forEach(eid => {
+    TFCMyThreeJSButtonQuery(world).forEach(eid => {
         if (clicked(world, eid)) {
             console.log("My ThreeJS Button clicked", eid);
             const targetObjectRef = TFCMyThreeJSButton.targetObjectRef[eid];

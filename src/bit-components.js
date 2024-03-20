@@ -487,3 +487,13 @@ export const TFCMyThreeJSButton = defineComponent({
   targetObjectRef: Types.eid
 });
 TFCMyThreeJSButton.name[$isStringType] = true;
+
+export const TFCNetworkedContentData = defineComponent({
+  type: Types.ui32,
+  steps: Types.ui32,
+  control: Types.ui32,
+  clientId: Types.ui32
+});
+TFCNetworkedContentData.type[$isStringType] = true;
+TFCNetworkedContentData.control[$isStringType] = true;
+TFCNetworkedContentData.clientId[$isStringType] = true;
