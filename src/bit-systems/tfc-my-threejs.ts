@@ -68,7 +68,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                     scale: myThreeJSScale,
                     steps: currentSteps
                 }
-                const myThreeJSObject = createMyThreeJS(myThreeJSProps);
+                const [myThreeJSObject, outputSteps] = createMyThreeJS(myThreeJSProps);
                 addObject3DComponent(world, myThreeJSContentEid, myThreeJSObject);
                 world.scene.add(myThreeJSObject);
 
@@ -179,9 +179,12 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                         steps: currentSteps
                     }
                     const myNewThreeJSContentEid = addEntity(world);
-                    const myNewThreeJSObject = createMyThreeJS(myNewThreeJSProps);
+                    // let myNewThreeJSObject = new THREE.Group();
+                    // let outputSteps = 0;
+                    const [myNewThreeJSObject, outputSteps] = createMyThreeJS(myNewThreeJSProps);
                     addObject3DComponent(world, myNewThreeJSContentEid, myNewThreeJSObject);
                     world.scene.add(myNewThreeJSObject);
+                    currentSteps = outputSteps;
                     TFCMyThreeJSButton.targetObjectRef[myThreeJSNextButtonEid] = myNewThreeJSContentEid;
                     TFCMyThreeJSButton.targetObjectRef[myThreeJSBackButtonEid] = myNewThreeJSContentEid;
 

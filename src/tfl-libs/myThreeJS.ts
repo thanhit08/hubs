@@ -12,7 +12,7 @@ const angles = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90,
 const anglesStatus: boolean[] = [false, false, false, false, false, false, false, false, false];
 const curves: THREE.Line[] = [];
 let angle = 45;
-export function createMyThreeJS(props: any) {
+export function createMyThreeJS(props: any) : [THREE.Group, number] {
   const point_curves: THREE.Vector3[][] = [];
   const baseProps = {
     category: "Transformation",
@@ -47,6 +47,9 @@ export function createMyThreeJS(props: any) {
   let angleSteps = baseProps.steps;
   if (baseProps.steps > angles.length) {
     angleSteps = angles.length;
+  }
+  if (baseProps.steps <= 0) {
+    angleSteps = 0;
   }
   for (let i = 0; i < angleSteps; i++) {
     angle = angles[i];
@@ -116,7 +119,7 @@ export function createMyThreeJS(props: any) {
   // Scale the group
   myThreeJSGroup.scale.copy(new THREE.Vector3(0.5, 0.5, 0.5));
 
-  return myThreeJSGroup;
+  return [myThreeJSGroup, angleSteps];
 }
 
 const generateCurveData = () => {
