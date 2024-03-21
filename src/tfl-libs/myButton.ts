@@ -24,8 +24,8 @@ export function createUIButton(options: CreateUIButtonOptions): THREE.Mesh {
   // Create canvas for text texture
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d')!;
-  canvas.width = 256; // Texture width (power of 2)
-  canvas.height = 128; // Texture height (power of 2)
+  canvas.width = 128 * width; // Texture width (power of 2)
+  canvas.height = 128 * height; // Texture height (power of 2)
 
   // Draw background
   context.fillStyle = backgroundColor;

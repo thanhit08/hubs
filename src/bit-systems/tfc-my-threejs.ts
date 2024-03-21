@@ -7,7 +7,8 @@ import { anyEntityWith } from "../utils/bit-utils";
 import { createNetworkedEntity } from "../utils/create-networked-entity";
 import { takeOwnership } from "../utils/take-ownership";
 import type { EntityID } from "../utils/networking-types";
-import { createMyThreeJS } from '../tfl-libs/myThreeJS';
+import { createMyThreeJSTrans06 } from '../tfl-libs/Trans06';
+import { createMyThreeJSTrans01 } from "../tfl-libs/Trans01";
 import { createUIButton } from "../tfl-libs/myButton";
 
 
@@ -32,9 +33,9 @@ let myThreeJSSyncButtonEid = -1;
 let objectPosition = new THREE.Vector3();
 let objectRotation = new THREE.Quaternion();
 let objectScale = new THREE.Vector3();
-let currentSteps = 10;
-let myThreeJSSyncButton : THREE.Mesh;
-let contentObjectRef : number = 0;
+let currentSteps = 36;
+let myThreeJSSyncButton: THREE.Mesh;
+let contentObjectRef: number = 0;
 
 
 
@@ -46,8 +47,8 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
         for (let i = 0; i < entered.length; i++) {
             const eid = entered[i];
             console.log("My ThreeJS entered", eid);
-            const category = APP.getString(TFCMyThreeJS.category[eid]);
-            const unit = APP.getString(TFCMyThreeJS.unit[eid]);
+            category = APP.getString(TFCMyThreeJS.category[eid])!;
+            unit = APP.getString(TFCMyThreeJS.unit[eid])!;
             console.log("Category: ", category);
             console.log("Unit: ", unit);
             const myThreeJS = world.eid2obj.get(eid);
@@ -69,13 +70,19 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                 const myThreeJSContentEid = addEntity(world);
                 const myThreeJSProps = {
                     category: category,
-                    unit: unit,
+                    unit: 6,
                     position: myThreeJSPosition,
                     rotation: myThreeJSRotation,
                     scale: myThreeJSScale,
                     steps: currentSteps
                 }
-                const [myThreeJSObject, outputSteps] = createMyThreeJS(myThreeJSProps);
+                const [myThreeJSObject, outputSteps] = createMyThreeJSTrans01(myThreeJSProps);
+                if (category == "Transformation" && unit == "1") {
+                    myThreeJSObject.position.x += 4;
+                    myThreeJSObject.position.z -= 2;
+                    myThreeJSObject.rotation.z += 1.57;
+                    myThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                }
                 addObject3DComponent(world, myThreeJSContentEid, myThreeJSObject);
                 contentObjectRef = myThreeJSContentEid;
                 world.scene.add(myThreeJSObject);
@@ -92,7 +99,8 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                     font: 'Arial',
                 });
                 myThreeJSNextButton.position.copy(myThreeJSPosition);
-                myThreeJSNextButton.position.x += 5;
+                myThreeJSNextButton.position.x += 6;
+                myThreeJSNextButton.position.y -= 1;
 
                 addObject3DComponent(world, myThreeJSNextButtonEid, myThreeJSNextButton);
                 addComponent(world, TFCMyThreeJSButton, myThreeJSNextButtonEid);
@@ -114,7 +122,8 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                     font: 'Arial',
                 });
                 myThreeJSBackButton.position.copy(myThreeJSPosition);
-                myThreeJSBackButton.position.x += 2;
+                myThreeJSBackButton.position.x += 3;
+                myThreeJSBackButton.position.y -= 1;
 
                 addObject3DComponent(world, myThreeJSBackButtonEid, myThreeJSBackButton);
                 addComponent(world, TFCMyThreeJSButton, myThreeJSBackButtonEid);
@@ -126,18 +135,19 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                 world.scene.add(myThreeJSBackButton);
 
                 myThreeJSSyncButtonEid = addEntity(world);
+                const syncButtonText = 'Sync ' + category + ' - ' + unit;
                 myThreeJSSyncButton = createUIButton({
                     width: 2,
                     height: 1,
                     backgroundColor: '#007bff',
                     textColor: '#ffffff',
-                    text: 'Sync',
+                    text: 'Sync ',
                     fontSize: 32,
                     font: 'Arial',
                 });
                 myThreeJSSyncButton.position.copy(myThreeJSPosition);
-                myThreeJSSyncButton.position.x += 3.5;
-                myThreeJSSyncButton.position.y += 2;
+                myThreeJSSyncButton.position.x += 4.5;
+                myThreeJSSyncButton.position.y += 1;
 
                 addObject3DComponent(world, myThreeJSSyncButtonEid, myThreeJSSyncButton);
                 addComponent(world, TFCNetworkedSyncButton, myThreeJSSyncButtonEid);
@@ -149,6 +159,23 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                 addComponent(world, CursorRaycastable, myThreeJSSyncButtonEid);
                 addComponent(world, SingleActionButton, myThreeJSSyncButtonEid);
                 world.scene.add(myThreeJSSyncButton);
+
+                const myThreeJSBannerButtonEid = addEntity(world);
+                const bannerText = "Category: " + category + " - " + unit;
+                const myThreeJSBannerButton = createUIButton({
+                    width: 5,
+                    height: 1,
+                    backgroundColor: '#007bff',
+                    textColor: '#ffffff',
+                    text: bannerText,
+                    fontSize: 32,
+                    font: 'Arial',
+                });
+                myThreeJSBannerButton.position.copy(myThreeJSPosition);
+                myThreeJSBannerButton.position.x += 4.5;
+                myThreeJSBannerButton.position.y += 3;
+                addObject3DComponent(world, myThreeJSBannerButtonEid, myThreeJSBannerButton);
+                world.scene.add(myThreeJSBannerButton);
 
 
             }
@@ -247,7 +274,13 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                         const myNewThreeJSContentEid = addEntity(world);
                         // let myNewThreeJSObject = new THREE.Group();
                         // let outputSteps = 0;
-                        const [myNewThreeJSObject, outputSteps] = createMyThreeJS(myNewThreeJSProps);
+                        const [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans01(myNewThreeJSProps);
+                        if (category === "Transformation" && unit === "1") {
+                            myNewThreeJSObject.position.x += 4;
+                            myNewThreeJSObject.position.z -= 2;
+                            myNewThreeJSObject.rotation.z += 1.57;
+                            myNewThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                        }
                         addObject3DComponent(world, myNewThreeJSContentEid, myNewThreeJSObject);
                         contentObjectRef = myNewThreeJSContentEid;
                         world.scene.add(myNewThreeJSObject);
@@ -256,13 +289,8 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                         TFCMyThreeJSButton.targetObjectRef[myThreeJSBackButtonEid] = myNewThreeJSContentEid;
                         TFCNetworkedContentData.steps[networkedEid] = currentSteps;
                     }
-
                 }
-
-
-
             }
-
 
             if (APP.getString(TFCNetworkedContentData.type[networkedEid]) == "control") {
                 if (APP.getString(TFCNetworkedContentData.clientId[networkedEid]) == NAF.clientId) {
@@ -293,9 +321,13 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                             steps: steps
                         }
                         const myNewThreeJSContentEid = addEntity(world);
-                        // let myNewThreeJSObject = new THREE.Group();
-                        // let outputSteps = 0;
-                        const [myNewThreeJSObject, outputSteps] = createMyThreeJS(myNewThreeJSProps);
+                        const [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans01(myNewThreeJSProps);
+                        if (category == "Transformation" && unit == "1") {
+                            myNewThreeJSObject.position.x += 4;
+                            myNewThreeJSObject.position.z -= 2;
+                            myNewThreeJSObject.rotation.z += 1.57;
+                            myNewThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                        }
                         addObject3DComponent(world, myNewThreeJSContentEid, myNewThreeJSObject);
                         contentObjectRef = myNewThreeJSContentEid;
                         world.scene.add(myNewThreeJSObject);

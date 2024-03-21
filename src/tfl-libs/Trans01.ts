@@ -1,17 +1,13 @@
 import * as THREE from 'three'
-import { createUIButton } from './myButton';
 
-const curveDataTrans06: THREE.Vector3[] = [];
 const curveDataTrans01: THREE.Vector3[] = [];
 const numPoints = 30;
-let minTTrans01 = -2.1; // Initial minimum value of t
-let maxTTrans01 = 2.1; // Initial maximum value of t
+let minTTrans01 = -2.0; // Initial minimum value of t
+let maxTTrans01 = 1.7; // Initial maximum value of t
 const angles = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90,
   100, 110, 120, 130, 140, 150, 160, 170, 180,
   190, 200, 210, 220, 230, 240, 250, 260, 270,
   280, 290, 300, 310, 320, 330, 340, 350, 360];
-const anglesStatus: boolean[] = [false, false, false, false, false, false, false, false, false];
-const curves: THREE.Line[] = [];
 let angle = 45;
 export function createMyThreeJSTrans01(props: any): [THREE.Group, number] {
   const point_curves: THREE.Vector3[][] = [];
@@ -59,75 +55,10 @@ export function createMyThreeJSTrans01(props: any): [THREE.Group, number] {
     const new_CurveGeometry = new THREE.BufferGeometry().setFromPoints(new_curve_data);
     const new_CurveMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
     let new_curve = new THREE.Line(new_CurveGeometry, new_CurveMaterial);
-    // curves[i] = new_curve;
     new_curve.position.copy(baseProps.position);
     console.log("New Curve");
     myThreeJSGroup.add(new_curve);
   }
-
-  return [myThreeJSGroup, angleSteps];
-}
-export function createMyThreeJSTrans06(props: any): [THREE.Group, number] {
-  const point_curves: THREE.Vector3[][] = [];
-  const baseProps = {
-    category: "Transformation",
-    unit: "1",
-    position: new THREE.Vector3(0, 0, 0),
-    rotation: new THREE.Quaternion(),
-    scale: new THREE.Vector3(1, 1, 1),
-    steps: angles.length
-  }
-  Object.assign(baseProps, props);
-
-  const myThreeJSGroup = new THREE.Group();
-
-  // const geometry = new THREE.BoxGeometry(1, 1, 1);
-  // const material = new THREE.MeshStandardMaterial({ color: 'hotpink' });
-  // const mesh = new THREE.Mesh(geometry, material);
-  // mesh.position.copy(baseProps.position);
-  // mesh.quaternion.copy(baseProps.rotation);
-  // mesh.scale.copy(baseProps.scale);
-
-  // myThreeJSGroup.add(mesh);
-
-  generateCurveDataTrans06();
-  // Create a curve geometry and add the points
-  const curveGeometry = new THREE.BufferGeometry().setFromPoints(curveDataTrans06);
-  // Create a material for the curve
-  const curveMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
-  // Create the curve mesh
-  const curve = new THREE.Line(curveGeometry, curveMaterial);
-  curve.position.copy(baseProps.position);
-  myThreeJSGroup.add(curve);
-  let angleSteps = baseProps.steps;
-  if (baseProps.steps > angles.length) {
-    angleSteps = angles.length;
-  }
-  if (baseProps.steps <= 0) {
-    angleSteps = 0;
-  }
-  for (let i = 0; i < angleSteps; i++) {
-    angle = angles[i];
-
-    let new_curve_data = [];
-    for (let i = 0; i < curveDataTrans06.length; i++) {
-      const x = curveDataTrans06[i].x;
-      const y = curveDataTrans06[i].y;
-      const z = curveDataTrans06[i].z;
-      const new_x = x * Math.cos(((360 - angle) * Math.PI) / 180) - z * Math.sin(((360 - angle) * Math.PI) / 180);
-      const new_z = x * Math.sin(((360 - angle) * Math.PI) / 180) + z * Math.cos(((360 - angle) * Math.PI) / 180);
-      new_curve_data.push(new THREE.Vector3(new_x, y, new_z));
-    }
-    point_curves[i] = new_curve_data;
-    const new_CurveGeometry = new THREE.BufferGeometry().setFromPoints(new_curve_data);
-    const new_CurveMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
-    let new_curve = new THREE.Line(new_CurveGeometry, new_CurveMaterial);
-    // curves[i] = new_curve;
-    new_curve.position.copy(baseProps.position);
-    console.log("New Curve");
-    myThreeJSGroup.add(new_curve);
-  }
-
   let point_curve_data_line_1 = [];
   let point_curve_data_line_2 = [];
   let point_curve_data_line_3 = [];
@@ -171,23 +102,8 @@ export function createMyThreeJSTrans06(props: any): [THREE.Group, number] {
   }
 
 
-  // Scale the group
-  myThreeJSGroup.scale.copy(new THREE.Vector3(0.5, 0.5, 0.5));
-
   return [myThreeJSGroup, angleSteps];
 }
-
-
-
-const generateCurveDataTrans06 = () => {
-  curveDataTrans06.length = 0;
-  for (let i = 0; i < numPoints; i++) {
-    const t = minTTrans01 + (i / (numPoints - 1)) * (maxTTrans01 - minTTrans01);
-    const x = t;
-    const y = 0.5 * Math.pow(Math.E, t);
-    curveDataTrans06.push(new THREE.Vector3(x, y, 0));
-  }
-};
 
 const generateCurveDataTrans01 = () => {
   curveDataTrans01.length = 0;

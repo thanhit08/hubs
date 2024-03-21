@@ -14,8 +14,8 @@ const DEFAULTS: Required<TFCMyThreeJSParams> = {
 
 export function inflateTFCMyThreeJS(world: HubsWorld, eid: number, params: TFCMyThreeJSParams) {
     console.log("inflating a MyThreeJS Component ", {eid, params});
-    const requiredParams =Object.assign({}, params, DEFAULTS) as Required<TFCMyThreeJSParams>;
-    addComponent(world, TFCMyThreeJS, eid);
+    const requiredParams =Object.assign({}, DEFAULTS, params) as Required<TFCMyThreeJSParams>;
+    addComponent(world, TFCMyThreeJS, eid); 
     TFCMyThreeJS.category[eid] = APP.getSid(requiredParams.category);
     TFCMyThreeJS.unit[eid] = APP.getSid(requiredParams.unit);
     addComponent(world, CursorRaycastable, eid);
