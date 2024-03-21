@@ -1,5 +1,5 @@
 import { HubsWorld } from "../app";
-import { TFCMyThreeJS, TFCMyThreeJSButton, TFCNetworkedContentData } from "../bit-components";
+import { TFCMyThreeJS, TFCMyThreeJSButton, TFCNetworkedContentData, TFCNetworkedSyncButton } from "../bit-components";
 import { Interacted, CursorRaycastable, RemoteHoverTarget, SingleActionButton, HoveredRemoteRight } from "../bit-components";
 import { defineQuery, enterQuery, exitQuery, hasComponent, addEntity, addComponent } from "bitecs";
 import { addObject3DComponent } from "../utils/jsx-entity";
@@ -21,15 +21,22 @@ const TFCMyThreeJSExitQuery = exitQuery(TFCMyThreeJSQuery);
 
 const TFCMyThreeJSButtonQuery = defineQuery([TFCMyThreeJSButton]);
 
+const TFCNetworkedSyncButtonQuery = defineQuery([TFCNetworkedSyncButton]);
+
 let networkClientId: string = "";
 let category: string = "";
 let unit: string = "";
 let myThreeJSNextButtonEid = -1;
 let myThreeJSBackButtonEid = -1;
+let myThreeJSSyncButtonEid = -1;
 let objectPosition = new THREE.Vector3();
 let objectRotation = new THREE.Quaternion();
 let objectScale = new THREE.Vector3();
 let currentSteps = 10;
+let myThreeJSSyncButton : THREE.Mesh;
+let contentObjectRef : number = 0;
+
+
 
 export function TFCMyThreeJSSystem(world: HubsWorld) {
     const myThreeJSEid = anyEntityWith(world, TFCMyThreeJS);
@@ -70,6 +77,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                 }
                 const [myThreeJSObject, outputSteps] = createMyThreeJS(myThreeJSProps);
                 addObject3DComponent(world, myThreeJSContentEid, myThreeJSObject);
+                contentObjectRef = myThreeJSContentEid;
                 world.scene.add(myThreeJSObject);
 
 
@@ -117,6 +125,31 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                 addComponent(world, SingleActionButton, myThreeJSBackButtonEid);
                 world.scene.add(myThreeJSBackButton);
 
+                myThreeJSSyncButtonEid = addEntity(world);
+                myThreeJSSyncButton = createUIButton({
+                    width: 2,
+                    height: 1,
+                    backgroundColor: '#007bff',
+                    textColor: '#ffffff',
+                    text: 'Sync',
+                    fontSize: 32,
+                    font: 'Arial',
+                });
+                myThreeJSSyncButton.position.copy(myThreeJSPosition);
+                myThreeJSSyncButton.position.x += 3.5;
+                myThreeJSSyncButton.position.y += 2;
+
+                addObject3DComponent(world, myThreeJSSyncButtonEid, myThreeJSSyncButton);
+                addComponent(world, TFCNetworkedSyncButton, myThreeJSSyncButtonEid);
+                TFCNetworkedSyncButton.type[myThreeJSSyncButtonEid] = APP.getSid("control");
+                TFCNetworkedSyncButton.control[myThreeJSSyncButtonEid] = APP.getSid("control");
+                TFCNetworkedSyncButton.steps[myThreeJSSyncButtonEid] = APP.getSid(currentSteps.toString());
+                TFCNetworkedSyncButton.targetObjectRef[myThreeJSSyncButtonEid] = myThreeJSContentEid;
+                addComponent(world, RemoteHoverTarget, myThreeJSSyncButtonEid);
+                addComponent(world, CursorRaycastable, myThreeJSSyncButtonEid);
+                addComponent(world, SingleActionButton, myThreeJSSyncButtonEid);
+                world.scene.add(myThreeJSSyncButton);
+
 
             }
         }
@@ -135,72 +168,143 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
             console.log("My ThreeJS clicked", eid);
         }
     }
-    // TFCMyThreeJSQuery(world).forEach(eid => {
-    //     const networkedEid = anyEntityWith(world, TFCNetworkedContentData);
-    //     if(networkedEid) {
-    //         networkClientId = APP.getString(TFCNetworkedContentData.clientId[networkedEid]);
-    //         currentSteps = parseInt(APP.getString(TFCNetworkedContentData.steps[networkedEid]));
-    //     }
-    // });
+
+    TFCNetworkedSyncButtonQuery(world).forEach(eid => {
+        if (clicked(world, eid)) {
+            let networkedEid = anyEntityWith(world, TFCNetworkedContentData)!;
+
+            const type = APP.getString(TFCNetworkedSyncButton.type[eid])!;
+            const steps = TFCNetworkedSyncButton.steps[eid]!;
+
+            if (type == "control") {
+                if (networkedEid) {
+                    takeOwnership(world, networkedEid);
+                    TFCNetworkedContentData.type[networkedEid] = APP.getSid("control");
+                    TFCNetworkedContentData.control[networkedEid] = APP.getSid("");
+                    TFCNetworkedContentData.steps[networkedEid] = currentSteps;
+                    TFCNetworkedContentData.clientId[networkedEid] = APP.getSid(NAF.clientId);
+
+                } else {
+                    const nid = createNetworkedEntity(world, "tfc-networked-content-data", { type: type, steps: steps, control: "", clientId: NAF.clientId });
+                    networkedEid = anyEntityWith(world, TFCNetworkedContentData)!;
+                    TFCNetworkedContentData.steps[networkedEid] = currentSteps;
+                }
+            } else {
+                if (networkedEid && networkClientId == NAF.clientId) {
+                    TFCNetworkedContentData.type[networkedEid] = APP.getSid(type);
+                    TFCNetworkedContentData.control[networkedEid] = APP.getSid("");
+                    TFCNetworkedContentData.steps[networkedEid] = currentSteps;
+                    TFCNetworkedContentData.clientId[networkedEid] = APP.getSid(NAF.clientId);
+                }
+            }
+        }
+    });
 
     TFCMyThreeJSButtonQuery(world).forEach(eid => {
-        if (clicked(world, eid)) {
-            console.log("My ThreeJS Button clicked", eid);
-            const targetObjectRef = TFCMyThreeJSButton.targetObjectRef[eid];
-            const targetObject = world.eid2obj.get(targetObjectRef);
-            const buttonName = APP.getString(TFCMyThreeJSButton.name[eid]);
-            let nextStep = true;
-            let buttonClicked = false;
-            if (buttonName === "Next") {
-                console.log("Next button clicked");
-                nextStep = true;
-                buttonClicked = true;
-            } else if (buttonName === "Back") {
-                console.log("Back button clicked");
-                nextStep = false;
-                buttonClicked = true;
-            }
+        const networkedEid = anyEntityWith(world, TFCNetworkedContentData)!;
+        if (networkedEid) {
+            if (clicked(world, eid)) {
+                console.log("My ThreeJS Button clicked", eid);
+                const targetObjectRef = TFCMyThreeJSButton.targetObjectRef[eid];
+                const targetObject = world.eid2obj.get(targetObjectRef);
+                const buttonName = APP.getString(TFCMyThreeJSButton.name[eid]);
+                let nextStep = true;
+                let buttonClicked = false;
+                if (buttonName === "Next") {
+                    console.log("Next button clicked");
+                    nextStep = true;
+                    buttonClicked = true;
+                } else if (buttonName === "Back") {
+                    console.log("Back button clicked");
+                    nextStep = false;
+                    buttonClicked = true;
+                }
 
-            if (buttonClicked) {
-                if (targetObject) {
-                    console.log("Target Object: ", targetObject);
-                    console.log("Current Steps: ", currentSteps);
-                    if (nextStep) {
-                        console.log("Next Step");
-                        currentSteps += 1;
-                    } else {
-                        console.log("Previous Step");
-                        currentSteps -= 1;
-                    }
+                if (buttonClicked) {
+                    if (targetObject) {
+                        console.log("Target Object: ", targetObject);
+                        console.log("Current Steps: ", currentSteps);
+                        if (nextStep) {
+                            console.log("Next Step");
+                            currentSteps += 1;
+                        } else {
+                            console.log("Previous Step");
+                            currentSteps -= 1;
+                        }
 
-                    console.log("After click -> Steps: ", currentSteps);
-                    
-                    world.scene.remove(targetObject);
-                    // create a new object
-                    const myNewThreeJSProps = {
-                        category: category,
-                        unit: unit,
-                        position: objectPosition,
-                        rotation: objectRotation,
-                        scale: objectScale,
-                        steps: currentSteps
+                        console.log("After click -> Steps: ", currentSteps);
+
+                        world.scene.remove(targetObject);
+                        // create a new object
+                        const myNewThreeJSProps = {
+                            category: category,
+                            unit: unit,
+                            position: objectPosition,
+                            rotation: objectRotation,
+                            scale: objectScale,
+                            steps: currentSteps
+                        }
+                        const myNewThreeJSContentEid = addEntity(world);
+                        // let myNewThreeJSObject = new THREE.Group();
+                        // let outputSteps = 0;
+                        const [myNewThreeJSObject, outputSteps] = createMyThreeJS(myNewThreeJSProps);
+                        addObject3DComponent(world, myNewThreeJSContentEid, myNewThreeJSObject);
+                        contentObjectRef = myNewThreeJSContentEid;
+                        world.scene.add(myNewThreeJSObject);
+                        currentSteps = outputSteps;
+                        TFCMyThreeJSButton.targetObjectRef[myThreeJSNextButtonEid] = myNewThreeJSContentEid;
+                        TFCMyThreeJSButton.targetObjectRef[myThreeJSBackButtonEid] = myNewThreeJSContentEid;
+                        TFCNetworkedContentData.steps[networkedEid] = currentSteps;
                     }
-                    const myNewThreeJSContentEid = addEntity(world);
-                    // let myNewThreeJSObject = new THREE.Group();
-                    // let outputSteps = 0;
-                    const [myNewThreeJSObject, outputSteps] = createMyThreeJS(myNewThreeJSProps);
-                    addObject3DComponent(world, myNewThreeJSContentEid, myNewThreeJSObject);
-                    world.scene.add(myNewThreeJSObject);
-                    currentSteps = outputSteps;
-                    TFCMyThreeJSButton.targetObjectRef[myThreeJSNextButtonEid] = myNewThreeJSContentEid;
-                    TFCMyThreeJSButton.targetObjectRef[myThreeJSBackButtonEid] = myNewThreeJSContentEid;
 
                 }
 
+
+
             }
 
 
+            if (APP.getString(TFCNetworkedContentData.type[networkedEid]) == "control") {
+                if (APP.getString(TFCNetworkedContentData.clientId[networkedEid]) == NAF.clientId) {
+                    // If the current client owns the control, highlight the button.
+                    (myThreeJSSyncButton.material as THREE.MeshBasicMaterial).color.setHex(0x5CB85C);
+                } else {
+                    // If another client owns the control, revert the button color.
+                    (myThreeJSSyncButton.material as THREE.MeshBasicMaterial).color.setHex(0x000000);
+                }
+                networkClientId = APP.getString(TFCNetworkedContentData.clientId[networkedEid])!;
+            } else {
+            }
 
+            if (APP.getString(TFCNetworkedContentData.type[networkedEid]) != "" &&
+                APP.getString(TFCNetworkedContentData.steps[networkedEid]) != "") {
+                if (TFCNetworkedContentData.steps[networkedEid] != currentSteps) {
+                    const contentObject = world.eid2obj.get(contentObjectRef);
+                    if (contentObject) {
+                        const steps = TFCNetworkedContentData.steps[networkedEid]!;
+                        world.scene.remove(contentObject);
+                        // create a new object
+                        const myNewThreeJSProps = {
+                            category: category,
+                            unit: unit,
+                            position: objectPosition,
+                            rotation: objectRotation,
+                            scale: objectScale,
+                            steps: steps
+                        }
+                        const myNewThreeJSContentEid = addEntity(world);
+                        // let myNewThreeJSObject = new THREE.Group();
+                        // let outputSteps = 0;
+                        const [myNewThreeJSObject, outputSteps] = createMyThreeJS(myNewThreeJSProps);
+                        addObject3DComponent(world, myNewThreeJSContentEid, myNewThreeJSObject);
+                        contentObjectRef = myNewThreeJSContentEid;
+                        world.scene.add(myNewThreeJSObject);
+                        currentSteps = outputSteps;
+                        TFCMyThreeJSButton.targetObjectRef[myThreeJSNextButtonEid] = myNewThreeJSContentEid;
+                        TFCMyThreeJSButton.targetObjectRef[myThreeJSBackButtonEid] = myNewThreeJSContentEid;
+                    }
+                }
+            }
         }
     });
 }

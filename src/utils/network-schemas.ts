@@ -7,7 +7,8 @@ import {
   NetworkedPDF,
   NetworkedTransform,
   NetworkedVideo,
-  NetworkedWaypoint
+  NetworkedWaypoint,
+  TFCNetworkedContentData
 } from "../bit-components";
 import { defineNetworkSchema } from "./define-network-schema";
 import { NetworkedMediaFrameSchema } from "./networked-media-frame-schema";
@@ -16,6 +17,7 @@ import { NetworkedTransformSchema } from "./networked-transform-schema";
 import { NetworkedVideoSchema } from "./networked-video-schema";
 import { NetworkedWaypointSchema } from "./networked-waypoint-schema";
 import type { CursorBuffer, EntityID } from "./networking-types";
+import { TFCNetworkedContentDataSchema } from "../network-schemas/tfc-networked-my-threejs-data-schema";
 
 export interface StoredComponent {
   version: number;
@@ -46,6 +48,7 @@ schemas.set(NetworkedFloatyObject, {
   ...defineNetworkSchema(NetworkedFloatyObject)
 });
 schemas.set(NetworkedPDF, NetworkedPDFSchema);
+schemas.set(TFCNetworkedContentData, TFCNetworkedContentDataSchema);
 
 export const networkableComponents = Array.from(schemas.keys());
 

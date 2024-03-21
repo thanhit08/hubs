@@ -497,3 +497,16 @@ export const TFCNetworkedContentData = defineComponent({
 TFCNetworkedContentData.type[$isStringType] = true;
 TFCNetworkedContentData.control[$isStringType] = true;
 TFCNetworkedContentData.clientId[$isStringType] = true;
+
+export const TFCNetworkedSyncButton = defineComponent({
+  targetObjectRef: Types.eid,
+  type: Types.ui32,
+  steps: Types.ui32,
+  control: Types.ui32,
+  clientId: Types.ui32
+});
+TFCNetworkedSyncButton.type[$isStringType] = true;
+TFCNetworkedSyncButton.control[$isStringType] = true;
+TFCNetworkedSyncButton.steps[$isStringType] = true;
+TFCNetworkedSyncButton.clientId[$isStringType] = true;
+
