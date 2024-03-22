@@ -10,6 +10,7 @@ import type { EntityID } from "../utils/networking-types";
 import { createMyThreeJSTrans06 } from '../tfl-libs/Trans06';
 import { createMyThreeJSTrans01 } from "../tfl-libs/Trans01";
 import { createUIButton } from "../tfl-libs/myButton";
+import { createMyThreeJSTrans07 } from "../tfl-libs/Trans07";
 
 
 function clicked(world: HubsWorld, eid: EntityID) {
@@ -76,9 +77,31 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                     scale: myThreeJSScale,
                     steps: currentSteps
                 }
-                let myThreeJSObject = new THREE.Group;
+                let myThreeJSObject = new THREE.Group();
                 let outputSteps = 0;
-                createContent(myThreeJSObject, outputSteps, myThreeJSProps);
+                if (category === "Transformation" && unit === "1") {
+                    [myThreeJSObject, outputSteps] = createMyThreeJSTrans01(myThreeJSProps);
+                } else if (category === "Transformation" && unit === "6") {
+                    [myThreeJSObject, outputSteps] = createMyThreeJSTrans06(myThreeJSProps);
+                } else if (category === "Transformation" && unit === "7") {
+                    [myThreeJSObject, outputSteps] = createMyThreeJSTrans07(myThreeJSProps);
+                }
+
+                if (category == "Transformation" && unit == "1") {
+                    myThreeJSObject.position.x += 4;
+                    myThreeJSObject.position.z -= 2;
+                    myThreeJSObject.rotation.z += 1.57;
+                    myThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                }
+
+                if (category == "Transformation" && unit == "7") {
+                    myThreeJSObject.position.x += 3.5;
+                    myThreeJSObject.position.z -= 2;
+                    myThreeJSObject.position.y -= 1;
+                    myThreeJSObject.rotation.z += 1.57;
+                    myThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                }
+
                 addObject3DComponent(world, myThreeJSContentEid, myThreeJSObject);
                 contentObjectRef = myThreeJSContentEid;
                 world.scene.add(myThreeJSObject);
@@ -269,9 +292,31 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                         const myNewThreeJSContentEid = addEntity(world);
                         // let myNewThreeJSObject = new THREE.Group();
                         // let outputSteps = 0;
-                        let myNewThreeJSObject = new THREE.Group;
+                        let myNewThreeJSObject = new THREE.Group();
                         let outputSteps = 0;
-                        createContent(myNewThreeJSObject, outputSteps, myNewThreeJSProps);
+                        if (category === "Transformation" && unit === "1") {
+                            [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans01(myNewThreeJSProps);
+                        } else if (category === "Transformation" && unit === "6") {
+                            [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans06(myNewThreeJSProps);
+                        } else if (category === "Transformation" && unit === "7") {
+                            [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans07(myNewThreeJSProps);
+                        }
+
+                        if (category === "Transformation" && unit === "1") {
+                            myNewThreeJSObject.position.x += 4;
+                            myNewThreeJSObject.position.z -= 2;
+                            myNewThreeJSObject.rotation.z += 1.57;
+                            myNewThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                        }
+
+                        if (category == "Transformation" && unit == "7") {
+                            myNewThreeJSObject.position.x += 3.5;
+                            myNewThreeJSObject.position.z -= 2;
+                            myNewThreeJSObject.position.y -= 1;
+                            myNewThreeJSObject.rotation.z += 1.57;
+                            myNewThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                        }
+
                         addObject3DComponent(world, myNewThreeJSContentEid, myNewThreeJSObject);
                         contentObjectRef = myNewThreeJSContentEid;
                         world.scene.add(myNewThreeJSObject);
@@ -312,9 +357,31 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                             steps: steps
                         }
                         const myNewThreeJSContentEid = addEntity(world);
-                        let myNewThreeJSObject = new THREE.Group;
+                        let myNewThreeJSObject = new THREE.Group();
                         let outputSteps = 0;
-                        createContent(myNewThreeJSObject, outputSteps, myNewThreeJSProps);
+                        if (category === "Transformation" && unit === "1") {
+                            [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans01(myNewThreeJSProps);
+                        } else if (category === "Transformation" && unit === "6") {
+                            [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans06(myNewThreeJSProps);
+                        } else if (category === "Transformation" && unit === "7") {
+                            [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans07(myNewThreeJSProps);
+                        }
+                        
+                        if (category == "Transformation" && unit == "1") {
+                            myNewThreeJSObject.position.x += 4;
+                            myNewThreeJSObject.position.z -= 2;
+                            myNewThreeJSObject.rotation.z += 1.57;
+                            myNewThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                        }
+
+                        if (category == "Transformation" && unit == "7") {
+                            myNewThreeJSObject.position.x += 3.5;
+                            myNewThreeJSObject.position.z -= 2;
+                            myNewThreeJSObject.position.y -= 1;
+                            myNewThreeJSObject.rotation.z += 1.57;
+                            myNewThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                        }
+
                         addObject3DComponent(world, myNewThreeJSContentEid, myNewThreeJSObject);
                         contentObjectRef = myNewThreeJSContentEid;
                         world.scene.add(myNewThreeJSObject);
