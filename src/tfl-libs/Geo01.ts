@@ -2444,23 +2444,23 @@ export function drawBox(props: any): THREE.Group {
     ]);
 
     const colors = [
-        '#ff0000', // red
-        '#00ff00', // green
-        '#0000ff', // blue
-        '#ffff00', // yellow
-        '#ff00ff', // magenta 
-        '#00ffff', // cyan
-        '#ffffff', // white
-        '#000000', // black
-        '#808000', // olive
-        '#80ff00', // lime
-        '#0080ff', // navy
-        '#ff8080', // pink 
-        '#ff80ff', // purple
-        '#80b3ff', // light blue
+        '#ff0000', // red // 00
+        '#00ff00', // green // 01
+        '#0000ff', // blue // 02
+        '#ffff00', // yellow // 03
+        '#ff00ff', // magenta // 04
+        '#00ffff', // cyan // 05
+        '#ffffff', // white // 06
+        '#000000', // black // 07
+        '#808000', // olive // 08
+        '#80ff00', // lime // 09
+        '#0080ff', // navy // 10
+        '#ff8080', // pink // 11
+        '#ff80ff', // purple // 12
+        '#80b3ff', // light blue // 13
     ];
 
-    const faces = [
+    let faces = [
         [0, 1, 2, 3],
         [0, 3, 4, 5],
         [0, 6, 7, 1],
@@ -2468,6 +2468,110 @@ export function drawBox(props: any): THREE.Group {
         [1, 10, 11, 2],
         [10, 12, 13, 11]
     ]
+
+    switch (baseProps.type) {
+        case 1:
+            faces = [
+                [0, 1, 2, 3],
+                [0, 3, 4, 5],
+                [0, 6, 7, 1],
+                [11, 8, 9, 2],
+                [1, 10, 11, 2],
+                [10, 12, 13, 11]
+            ]
+            break;
+        case 2:
+            faces = [
+                [0, 1, 2, 3],
+                [0, 3, 4, 5],
+                [0, 6, 7, 1],
+                [1, 10, 11, 2],
+                [10, 12, 13, 11],
+                [13, 8, 9, 11]
+            ]
+            break;
+        case 3:
+            faces = [
+                [0, 1, 2, 3], // red
+                [0, 3, 4, 5], // green
+                [10, 6, 7, 12], // blue
+                [1, 10, 11, 2], // pink
+                [10, 12, 13, 11], // cyan
+                [13, 8, 9, 11] // yellow
+            ]
+            break;
+        case 4:
+            faces = [
+                [0, 1, 2, 3], // red
+                [0, 3, 4, 5], // green
+                [5, 7, 6, 0], // blue
+                [1, 10, 11, 2], // pink
+                [10, 12, 13, 11], // cyan
+                [13, 8, 9, 11] // yellow
+            ]
+            break;
+        case 5:
+            faces = [
+                [0, 1, 2, 3],
+                [0, 3, 4, 5],
+                [0, 6, 7, 1],
+                [3, 8, 9, 4],
+                [1, 10, 11, 2],
+                [10, 12, 13, 11]
+            ]
+            break;
+        case 6:
+            faces = [
+                [0, 1, 2, 3],
+                [0, 3, 4, 5],
+                [1, 6, 7, 10],
+                [2, 8, 9, 3],
+                [1, 10, 11, 2],
+                [8, 12, 13, 9]
+            ]
+            break;
+        case 7:
+            faces = [
+                [0, 1, 2, 3],
+                [0, 3, 4, 5],
+                [1, 6, 7, 10],
+                [2, 8, 9, 3],
+                [1, 10, 11, 2],
+                [7, 13, 12, 10]
+            ]
+            break;
+        case 8:
+            faces = [
+                [0, 1, 2, 3],
+                [0, 3, 4, 5],
+                [1, 6, 7, 2],
+                [3, 8, 9, 4],
+                [4, 9, 11, 10],
+                [10, 12, 13, 11]
+            ]
+
+            break;
+        case 9:
+            faces = [
+                [0, 1, 2, 3],
+                [0, 3, 4, 5],
+                [1, 6, 7, 2],
+                [1, 9, 8, 6],
+                [3, 10, 11, 4],
+                [4, 11, 13, 12]
+            ]
+            break;
+        case 10:
+            faces = [
+                [0, 1, 2, 3],
+                [0, 3, 4, 5],
+                [0, 6, 7, 1],
+                [1, 7, 8, 9],
+                [3, 10, 11, 4],
+                [4, 11, 13, 12]
+            ]
+            break;
+    }
 
     // draw points
     for (let i = 0; i < 14; i++) {
@@ -2492,7 +2596,7 @@ export function drawBox(props: any): THREE.Group {
             2, 3, 0  // Triangle 2
         ]);
         geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3))
-        geometry.setIndex(new THREE.BufferAttribute(indices, 1));        
+        geometry.setIndex(new THREE.BufferAttribute(indices, 1));
         const material = new THREE.MeshBasicMaterial({ color: colors[i], side: THREE.DoubleSide });
         const mesh = new THREE.Mesh(geometry, material);
         myThreeJSGroup.add(mesh);

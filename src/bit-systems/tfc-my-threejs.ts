@@ -12,6 +12,8 @@ import { createMyThreeJSTrans01 } from "../tfl-libs/Trans01";
 import { createUIButton } from "../tfl-libs/myButton";
 import { createMyThreeJSTrans07 } from "../tfl-libs/Trans07";
 import { drawBox } from "../tfl-libs/Geo01";
+import { inc } from "semver";
+import { createPentagon } from "../tfl-libs/Pentagon";
 
 
 function clicked(world: HubsWorld, eid: EntityID) {
@@ -38,6 +40,8 @@ let objectScale = new THREE.Vector3();
 let currentSteps = 36;
 let myThreeJSSyncButton: THREE.Mesh;
 let contentObjectRef: number = 0;
+const objectsInScene: THREE.Object3D[] = [];
+let increaseSteps = 1;
 
 
 
@@ -98,7 +102,17 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                     }
                     myThreeJSObject = drawBox(myThreeJSModel3DProps);
                     myThreeJSObject.position.y += 2;
+                    if (unit === "8") {
+                        myThreeJSObject.position.y += 2;
+                    }
                     currentSteps = 0;
+                    increaseSteps = 5;
+                } else if (category === "Pentagon") {
+                    const myThreeJSModel3DProps = {
+                        radius: 2,
+                        position: myThreeJSPosition
+                    }
+                    myThreeJSObject = createPentagon(myThreeJSModel3DProps.radius, myThreeJSModel3DProps.position);
                 }
 
                 if (category == "Transformation" && unit == "1") {
@@ -119,6 +133,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                 addObject3DComponent(world, myThreeJSContentEid, myThreeJSObject);
                 contentObjectRef = myThreeJSContentEid;
                 world.scene.add(myThreeJSObject);
+                objectsInScene.push(myThreeJSObject);
 
                 myThreeJSNextButtonEid = addEntity(world);
                 const myThreeJSNextButton = createUIButton({
@@ -142,6 +157,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                 addComponent(world, CursorRaycastable, myThreeJSNextButtonEid);
                 addComponent(world, SingleActionButton, myThreeJSNextButtonEid);
                 world.scene.add(myThreeJSNextButton);
+                objectsInScene.push(myThreeJSNextButton);
 
                 myThreeJSBackButtonEid = addEntity(world);
                 const myThreeJSBackButton = createUIButton({
@@ -165,6 +181,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                 addComponent(world, CursorRaycastable, myThreeJSBackButtonEid);
                 addComponent(world, SingleActionButton, myThreeJSBackButtonEid);
                 world.scene.add(myThreeJSBackButton);
+                objectsInScene.push(myThreeJSBackButton);
 
                 myThreeJSSyncButtonEid = addEntity(world);
                 const syncButtonText = 'Sync ' + category + ' - ' + unit;
@@ -191,6 +208,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                 addComponent(world, CursorRaycastable, myThreeJSSyncButtonEid);
                 addComponent(world, SingleActionButton, myThreeJSSyncButtonEid);
                 world.scene.add(myThreeJSSyncButton);
+                objectsInScene.push(myThreeJSSyncButton);
 
                 const myThreeJSBannerButtonEid = addEntity(world);
                 const bannerText = "Category: " + category + " - " + unit;
@@ -208,7 +226,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                 myThreeJSBannerButton.position.y += 3;
                 addObject3DComponent(world, myThreeJSBannerButtonEid, myThreeJSBannerButton);
                 world.scene.add(myThreeJSBannerButton);
-
+                objectsInScene.push(myThreeJSBannerButton);
 
             }
         }
@@ -218,6 +236,11 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
     for (let i = 0; i < exited.length; i++) {
         const eid = exited[i];
         console.log("My ThreeJS exited", eid);
+        for (let i = 0; i < objectsInScene.length; i++) {
+            console.log("Removing object from scene: " + objectsInScene[i].name);
+            world.scene.remove(objectsInScene[i]);
+        }
+
     }
 
     const query = TFCMyThreeJSQuery(world);
@@ -287,10 +310,10 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                         console.log("Current Steps: ", currentSteps);
                         if (nextStep) {
                             console.log("Next Step");
-                            currentSteps += 1;
+                            currentSteps += increaseSteps;
                         } else {
                             console.log("Previous Step");
-                            currentSteps -= 1;
+                            currentSteps -= increaseSteps;
                         }
 
                         console.log("After click -> Steps: ", currentSteps);
@@ -348,6 +371,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                         addObject3DComponent(world, myNewThreeJSContentEid, myNewThreeJSObject);
                         contentObjectRef = myNewThreeJSContentEid;
                         world.scene.add(myNewThreeJSObject);
+                        objectsInScene.push(myNewThreeJSObject);
                         currentSteps = outputSteps;
                         TFCMyThreeJSButton.targetObjectRef[myThreeJSNextButtonEid] = myNewThreeJSContentEid;
                         TFCMyThreeJSButton.targetObjectRef[myThreeJSBackButtonEid] = myNewThreeJSContentEid;
@@ -425,6 +449,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                         addObject3DComponent(world, myNewThreeJSContentEid, myNewThreeJSObject);
                         contentObjectRef = myNewThreeJSContentEid;
                         world.scene.add(myNewThreeJSObject);
+                        objectsInScene.push(myNewThreeJSObject);
                         currentSteps = outputSteps;
                         TFCMyThreeJSButton.targetObjectRef[myThreeJSNextButtonEid] = myNewThreeJSContentEid;
                         TFCMyThreeJSButton.targetObjectRef[myThreeJSBackButtonEid] = myNewThreeJSContentEid;
