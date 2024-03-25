@@ -109,10 +109,11 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                     increaseSteps = 5;
                 } else if (category === "Pentagon") {
                     const myThreeJSModel3DProps = {
-                        radius: 2,
+                        radius: 1,
                         position: myThreeJSPosition
                     }
                     myThreeJSObject = createPentagon(myThreeJSModel3DProps.radius, myThreeJSModel3DProps.position);
+                    myThreeJSObject.position.y += 3;
                 }
 
                 if (category == "Transformation" && unit == "1") {
