@@ -11,6 +11,7 @@ import { createMyThreeJSTrans06 } from '../tfl-libs/Trans06';
 import { createMyThreeJSTrans01 } from "../tfl-libs/Trans01";
 import { createUIButton } from "../tfl-libs/myButton";
 import { createMyThreeJSTrans07 } from "../tfl-libs/Trans07";
+import { drawBox } from "../tfl-libs/Geo01";
 
 
 function clicked(world: HubsWorld, eid: EntityID) {
@@ -85,6 +86,19 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                     [myThreeJSObject, outputSteps] = createMyThreeJSTrans06(myThreeJSProps);
                 } else if (category === "Transformation" && unit === "7") {
                     [myThreeJSObject, outputSteps] = createMyThreeJSTrans07(myThreeJSProps);
+                } else if (category === "Geometry") {
+                    // convert unit to number
+                    const unitNumber = parseInt(unit);
+                    const myThreeJSModel3DProps = {
+                        type: unitNumber,
+                        angle: 0,
+                        position: myThreeJSPosition,
+                        rotation: myThreeJSRotation,
+                        scale: myThreeJSScale
+                    }
+                    myThreeJSObject = drawBox(myThreeJSModel3DProps);
+                    myThreeJSObject.position.y += 2;
+                    currentSteps = 0;
                 }
 
                 if (category == "Transformation" && unit == "1") {
@@ -249,6 +263,8 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
         const networkedEid = anyEntityWith(world, TFCNetworkedContentData)!;
         if (networkedEid) {
             if (clicked(world, eid)) {
+                // disable camera rotation 
+
                 console.log("My ThreeJS Button clicked", eid);
                 const targetObjectRef = TFCMyThreeJSButton.targetObjectRef[eid];
                 const targetObject = world.eid2obj.get(targetObjectRef);
@@ -300,6 +316,18 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                             [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans06(myNewThreeJSProps);
                         } else if (category === "Transformation" && unit === "7") {
                             [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans07(myNewThreeJSProps);
+                        } else if (category === "Geometry") {
+                            const unitNumber = parseInt(unit);
+                            const myThreeJSModel3DProps = {
+                                type: unitNumber,
+                                angle: currentSteps,
+                                position: objectPosition,
+                                rotation: objectRotation,
+                                scale: objectScale
+                            }
+                            myNewThreeJSObject = drawBox(myThreeJSModel3DProps);
+                            myNewThreeJSObject.position.y += 2;
+                            outputSteps = currentSteps;
                         }
 
                         if (category === "Transformation" && unit === "1") {
@@ -365,8 +393,20 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                             [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans06(myNewThreeJSProps);
                         } else if (category === "Transformation" && unit === "7") {
                             [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans07(myNewThreeJSProps);
+                        } else if (category === "Geometry") {
+                            const unitNumber = parseInt(unit);
+                            const myThreeJSModel3DProps = {
+                                type: unitNumber,
+                                angle: currentSteps,
+                                position: objectPosition,
+                                rotation: objectRotation,
+                                scale: objectScale
+                            }
+                            myNewThreeJSObject = drawBox(myThreeJSModel3DProps);
+                            myNewThreeJSObject.position.y += 2;
+                            outputSteps = currentSteps;
                         }
-                        
+
                         if (category == "Transformation" && unit == "1") {
                             myNewThreeJSObject.position.x += 4;
                             myNewThreeJSObject.position.z -= 2;
