@@ -42,7 +42,7 @@ let myThreeJSSyncButton: THREE.Mesh;
 let contentObjectRef: number = 0;
 const objectsInScene: THREE.Object3D[] = [];
 let increaseSteps = 1;
-
+let myThreeJSObject = new THREE.Group();
 
 
 export function TFCMyThreeJSSystem(world: HubsWorld) {
@@ -82,7 +82,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                     scale: myThreeJSScale,
                     steps: currentSteps
                 }
-                let myThreeJSObject = new THREE.Group();
+
                 let outputSteps = 0;
                 if (category === "Transformation" && unit === "1") {
                     [myThreeJSObject, outputSteps] = createMyThreeJSTrans01(myThreeJSProps);
@@ -108,12 +108,13 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                     currentSteps = 0;
                     increaseSteps = 5;
                 } else if (category === "Pentagon") {
+                    currentSteps = 0;
                     const myThreeJSModel3DProps = {
                         radius: 1,
-                        position: myThreeJSPosition
-                    }
-                    myThreeJSObject = createPentagon(myThreeJSModel3DProps.radius, myThreeJSModel3DProps.position);
-                    myThreeJSObject.position.y += 3;
+                        position: myThreeJSPosition,
+                        steps: currentSteps
+                    };
+                    [myThreeJSObject, outputSteps] = createPentagon(myThreeJSModel3DProps.radius, myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
                 }
 
                 if (category == "Transformation" && unit == "1") {
@@ -241,7 +242,18 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
             console.log("Removing object from scene: " + objectsInScene[i].name);
             world.scene.remove(objectsInScene[i]);
         }
-
+        world.scene.remove(myThreeJSObject);
+        objectsInScene.length = 0;
+        const networkedEid = anyEntityWith(world, TFCNetworkedContentData)!;
+        if (networkedEid) {
+            if (APP.getString(TFCNetworkedContentData.type[networkedEid]) == "control") {
+                if (APP.getString(TFCNetworkedContentData.clientId[networkedEid]) == NAF.clientId) {
+                    TFCNetworkedContentData.type[networkedEid] = APP.getSid("control");
+                    TFCNetworkedContentData.control[networkedEid] = APP.getSid("");
+                    TFCNetworkedContentData.clientId[networkedEid] = APP.getSid("");
+                }
+            }
+        }
     }
 
     const query = TFCMyThreeJSQuery(world);
@@ -332,14 +344,14 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                         const myNewThreeJSContentEid = addEntity(world);
                         // let myNewThreeJSObject = new THREE.Group();
                         // let outputSteps = 0;
-                        let myNewThreeJSObject = new THREE.Group();
+                        // let myNewThreeJSObject = new THREE.Group();
                         let outputSteps = 0;
                         if (category === "Transformation" && unit === "1") {
-                            [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans01(myNewThreeJSProps);
+                            [myThreeJSObject, outputSteps] = createMyThreeJSTrans01(myNewThreeJSProps);
                         } else if (category === "Transformation" && unit === "6") {
-                            [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans06(myNewThreeJSProps);
+                            [myThreeJSObject, outputSteps] = createMyThreeJSTrans06(myNewThreeJSProps);
                         } else if (category === "Transformation" && unit === "7") {
-                            [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans07(myNewThreeJSProps);
+                            [myThreeJSObject, outputSteps] = createMyThreeJSTrans07(myNewThreeJSProps);
                         } else if (category === "Geometry") {
                             const unitNumber = parseInt(unit);
                             const myThreeJSModel3DProps = {
@@ -349,30 +361,44 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                                 rotation: objectRotation,
                                 scale: objectScale
                             }
-                            myNewThreeJSObject = drawBox(myThreeJSModel3DProps);
-                            myNewThreeJSObject.position.y += 2;
+                            myThreeJSObject = drawBox(myThreeJSModel3DProps);
+                            myThreeJSObject.position.y += 2;
                             outputSteps = currentSteps;
+                        } else if (category === "Pentagon") {
+                            if (currentSteps < 0) {
+                                currentSteps = 0;
+                            }
+                            if (currentSteps > 153) {
+                                currentSteps = 153;
+                            }
+                            const myThreeJSModel3DProps = {
+                                radius: 1,
+                                position: objectPosition,
+                                steps: currentSteps
+                            };
+                            
+                            [myThreeJSObject, outputSteps] = createPentagon(myThreeJSModel3DProps.radius, myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
                         }
 
                         if (category === "Transformation" && unit === "1") {
-                            myNewThreeJSObject.position.x += 4;
-                            myNewThreeJSObject.position.z -= 2;
-                            myNewThreeJSObject.rotation.z += 1.57;
-                            myNewThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                            myThreeJSObject.position.x += 4;
+                            myThreeJSObject.position.z -= 2;
+                            myThreeJSObject.rotation.z += 1.57;
+                            myThreeJSObject.scale.set(0.4, 0.4, 0.4);
                         }
 
                         if (category == "Transformation" && unit == "7") {
-                            myNewThreeJSObject.position.x += 3.5;
-                            myNewThreeJSObject.position.z -= 2;
-                            myNewThreeJSObject.position.y -= 1;
-                            myNewThreeJSObject.rotation.z += 1.57;
-                            myNewThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                            myThreeJSObject.position.x += 3.5;
+                            myThreeJSObject.position.z -= 2;
+                            myThreeJSObject.position.y -= 1;
+                            myThreeJSObject.rotation.z += 1.57;
+                            myThreeJSObject.scale.set(0.4, 0.4, 0.4);
                         }
 
-                        addObject3DComponent(world, myNewThreeJSContentEid, myNewThreeJSObject);
+                        addObject3DComponent(world, myNewThreeJSContentEid, myThreeJSObject);
                         contentObjectRef = myNewThreeJSContentEid;
-                        world.scene.add(myNewThreeJSObject);
-                        objectsInScene.push(myNewThreeJSObject);
+                        world.scene.add(myThreeJSObject);
+                        objectsInScene.push(myThreeJSObject);
                         currentSteps = outputSteps;
                         TFCMyThreeJSButton.targetObjectRef[myThreeJSNextButtonEid] = myNewThreeJSContentEid;
                         TFCMyThreeJSButton.targetObjectRef[myThreeJSBackButtonEid] = myNewThreeJSContentEid;
@@ -410,14 +436,14 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                             steps: steps
                         }
                         const myNewThreeJSContentEid = addEntity(world);
-                        let myNewThreeJSObject = new THREE.Group();
+                        // let myNewThreeJSObject = new THREE.Group();
                         let outputSteps = 0;
                         if (category === "Transformation" && unit === "1") {
-                            [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans01(myNewThreeJSProps);
+                            [myThreeJSObject, outputSteps] = createMyThreeJSTrans01(myNewThreeJSProps);
                         } else if (category === "Transformation" && unit === "6") {
-                            [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans06(myNewThreeJSProps);
+                            [myThreeJSObject, outputSteps] = createMyThreeJSTrans06(myNewThreeJSProps);
                         } else if (category === "Transformation" && unit === "7") {
-                            [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans07(myNewThreeJSProps);
+                            [myThreeJSObject, outputSteps] = createMyThreeJSTrans07(myNewThreeJSProps);
                         } else if (category === "Geometry") {
                             const unitNumber = parseInt(unit);
                             const myThreeJSModel3DProps = {
@@ -427,30 +453,37 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                                 rotation: objectRotation,
                                 scale: objectScale
                             }
-                            myNewThreeJSObject = drawBox(myThreeJSModel3DProps);
-                            myNewThreeJSObject.position.y += 2;
+                            myThreeJSObject = drawBox(myThreeJSModel3DProps);
+                            myThreeJSObject.position.y += 2;
                             outputSteps = currentSteps;
+                        } else if (category === "Pentagon") {
+                            const myThreeJSModel3DProps = {
+                                radius: 1,
+                                position: objectPosition,
+                                steps: currentSteps
+                            };
+                            [myThreeJSObject, outputSteps] = createPentagon(myThreeJSModel3DProps.radius, myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
                         }
 
                         if (category == "Transformation" && unit == "1") {
-                            myNewThreeJSObject.position.x += 4;
-                            myNewThreeJSObject.position.z -= 2;
-                            myNewThreeJSObject.rotation.z += 1.57;
-                            myNewThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                            myThreeJSObject.position.x += 4;
+                            myThreeJSObject.position.z -= 2;
+                            myThreeJSObject.rotation.z += 1.57;
+                            myThreeJSObject.scale.set(0.4, 0.4, 0.4);
                         }
 
                         if (category == "Transformation" && unit == "7") {
-                            myNewThreeJSObject.position.x += 3.5;
-                            myNewThreeJSObject.position.z -= 2;
-                            myNewThreeJSObject.position.y -= 1;
-                            myNewThreeJSObject.rotation.z += 1.57;
-                            myNewThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                            myThreeJSObject.position.x += 3.5;
+                            myThreeJSObject.position.z -= 2;
+                            myThreeJSObject.position.y -= 1;
+                            myThreeJSObject.rotation.z += 1.57;
+                            myThreeJSObject.scale.set(0.4, 0.4, 0.4);
                         }
 
-                        addObject3DComponent(world, myNewThreeJSContentEid, myNewThreeJSObject);
+                        addObject3DComponent(world, myNewThreeJSContentEid, myThreeJSObject);
                         contentObjectRef = myNewThreeJSContentEid;
-                        world.scene.add(myNewThreeJSObject);
-                        objectsInScene.push(myNewThreeJSObject);
+                        world.scene.add(myThreeJSObject);
+                        objectsInScene.push(myThreeJSObject);
                         currentSteps = outputSteps;
                         TFCMyThreeJSButton.targetObjectRef[myThreeJSNextButtonEid] = myNewThreeJSContentEid;
                         TFCMyThreeJSButton.targetObjectRef[myThreeJSBackButtonEid] = myNewThreeJSContentEid;
@@ -459,19 +492,4 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
             }
         }
     });
-
-    function createContent(myNewThreeJSObject: THREE.Group, outputSteps: number, myNewThreeJSProps: any) {
-        if (category === "Transformation" && unit === "1") {
-            [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans01(myNewThreeJSProps);
-        } else if (category === "Transformation" && unit === "6") {
-            [myNewThreeJSObject, outputSteps] = createMyThreeJSTrans06(myNewThreeJSProps);
-        }
-
-        if (category === "Transformation" && unit === "1") {
-            myNewThreeJSObject.position.x += 4;
-            myNewThreeJSObject.position.z -= 2;
-            myNewThreeJSObject.rotation.z += 1.57;
-            myNewThreeJSObject.scale.set(0.4, 0.4, 0.4);
-        }
-    }
 }
