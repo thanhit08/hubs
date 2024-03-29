@@ -14,6 +14,7 @@ import { createMyThreeJSTrans07 } from "../tfl-libs/Trans07";
 import { drawBox } from "../tfl-libs/Geo01";
 import { inc } from "semver";
 import { createPentagon } from "../tfl-libs/Pentagon";
+import { createTrigonometry } from "../tfl-libs/Trigonometry";
 
 
 function clicked(world: HubsWorld, eid: EntityID) {
@@ -115,6 +116,13 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                         steps: currentSteps
                     };
                     [myThreeJSObject, outputSteps] = createPentagon(myThreeJSModel3DProps.radius, myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
+                } else if (category === "Trigonometry") {
+                    currentSteps = 0;
+                    const myThreeJSModel3DProps = {
+                        position: myThreeJSPosition,
+                        steps: currentSteps
+                    };
+                    [myThreeJSObject, outputSteps] = createTrigonometry(myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
                 }
 
                 if (category == "Transformation" && unit == "1") {
@@ -376,8 +384,14 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                                 position: objectPosition,
                                 steps: currentSteps
                             };
-                            
+
                             [myThreeJSObject, outputSteps] = createPentagon(myThreeJSModel3DProps.radius, myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
+                        } else if (category === "Trigonometry") {
+                            const myThreeJSModel3DProps = {
+                                position: objectPosition,
+                                steps: currentSteps
+                            };
+                            [myThreeJSObject, outputSteps] = createTrigonometry(myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
                         }
 
                         if (category === "Transformation" && unit === "1") {
@@ -463,6 +477,13 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                                 steps: currentSteps
                             };
                             [myThreeJSObject, outputSteps] = createPentagon(myThreeJSModel3DProps.radius, myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
+                        }
+                        else if (category === "Trigonometry") {
+                            const myThreeJSModel3DProps = {
+                                position: objectPosition,
+                                steps: currentSteps
+                            };
+                            [myThreeJSObject, outputSteps] = createTrigonometry(myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
                         }
 
                         if (category == "Transformation" && unit == "1") {
