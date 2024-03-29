@@ -1,5 +1,5 @@
 import { HubsWorld } from "../app";
-import { TFCMyThreeJS, TFCMyThreeJSButton, TFCNetworkedContentData, TFCNetworkedSyncButton } from "../bit-components";
+import { TFCMyThreeJS, TFCMyThreeJSButton, TFCMYThreeJSSliderBar, TFCNetworkedContentData, TFCNetworkedSyncButton } from "../bit-components";
 import { Interacted, CursorRaycastable, RemoteHoverTarget, SingleActionButton, HoveredRemoteRight } from "../bit-components";
 import { defineQuery, enterQuery, exitQuery, hasComponent, addEntity, addComponent } from "bitecs";
 import { addObject3DComponent } from "../utils/jsx-entity";
@@ -10,6 +10,7 @@ import type { EntityID } from "../utils/networking-types";
 import { createMyThreeJSTrans06 } from '../tfl-libs/Trans06';
 import { createMyThreeJSTrans01 } from "../tfl-libs/Trans01";
 import { createUIButton } from "../tfl-libs/myButton";
+import { createUISlider } from "../tfl-libs/mySlider";
 import { createMyThreeJSTrans07 } from "../tfl-libs/Trans07";
 import { drawBox } from "../tfl-libs/Geo01";
 import { inc } from "semver";
@@ -26,6 +27,8 @@ const TFCMyThreeJSEnterQuery = enterQuery(TFCMyThreeJSQuery);
 const TFCMyThreeJSExitQuery = exitQuery(TFCMyThreeJSQuery);
 
 const TFCMyThreeJSButtonQuery = defineQuery([TFCMyThreeJSButton]);
+
+const TFCMYThreeJSSliderBarQuery = defineQuery([TFCMYThreeJSSliderBar]);
 
 const TFCNetworkedSyncButtonQuery = defineQuery([TFCNetworkedSyncButton]);
 
@@ -238,6 +241,28 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                 world.scene.add(myThreeJSBannerButton);
                 objectsInScene.push(myThreeJSBannerButton);
 
+
+                const myThreeJSProgressBarEid = addEntity(world);
+                const myThreeJSProgressBar = createUISlider({
+                    width: 5,
+                    height: 0.5,
+                    currentSteps: 50,
+                    minSteps: 0,
+                    maxSteps: 100,
+                });
+                myThreeJSProgressBar.position.copy(myThreeJSPosition);
+                myThreeJSProgressBar.position.x += 4.5;
+                // myThreeJSProgressBar.position.y += 4;
+                addObject3DComponent(world, myThreeJSProgressBarEid, myThreeJSProgressBar);
+                addComponent(world, TFCMYThreeJSSliderBar, myThreeJSProgressBarEid);
+                TFCMYThreeJSSliderBar.name[myThreeJSProgressBarEid] = APP.getSid("SliderBar");
+                TFCMYThreeJSSliderBar.targetObjectRef[myThreeJSProgressBarEid] = myThreeJSContentEid;
+                addComponent(world, RemoteHoverTarget, myThreeJSProgressBarEid);
+                addComponent(world, CursorRaycastable, myThreeJSProgressBarEid);
+                addComponent(world, SingleActionButton, myThreeJSProgressBarEid);
+                world.scene.add(myThreeJSProgressBar);
+                objectsInScene.push(myThreeJSProgressBar);
+
             }
         }
     }
@@ -298,6 +323,30 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                     TFCNetworkedContentData.control[networkedEid] = APP.getSid("");
                     TFCNetworkedContentData.steps[networkedEid] = currentSteps;
                     TFCNetworkedContentData.clientId[networkedEid] = APP.getSid(NAF.clientId);
+                }
+            }
+        }
+    });
+
+    TFCMYThreeJSSliderBarQuery(world).forEach(eid => {
+        const networkedEid = anyEntityWith(world, TFCNetworkedContentData)!;
+        if (networkedEid) {
+            if (clicked(world, eid)) {
+                console.log("My ThreeJS Slider Bar clicked", eid);
+                const targetObjectRef = TFCMyThreeJSButton.targetObjectRef[eid];
+                const targetObject = world.eid2obj.get(targetObjectRef);
+                const buttonName = APP.getString(TFCMyThreeJSButton.name[eid]);
+                let buttonClicked = false;
+                if (buttonName === "SliderBar") {
+                    console.log("Next button clicked");
+                    buttonClicked = true;
+                } else {
+
+                }
+                if (buttonClicked) {
+                    if (targetObject) {
+                        console.log("Target Object: ", targetObject);                        
+                    }
                 }
             }
         }

@@ -488,6 +488,12 @@ export const TFCMyThreeJSButton = defineComponent({
 });
 TFCMyThreeJSButton.name[$isStringType] = true;
 
+export const TFCMYThreeJSSliderBar = defineComponent({
+  name: Types.ui32,
+  targetObjectRef: Types.eid
+});
+TFCMYThreeJSSliderBar.name[$isStringType] = true;
+
 export const TFCNetworkedContentData = defineComponent({
   type: Types.ui32,
   steps: Types.ui32,

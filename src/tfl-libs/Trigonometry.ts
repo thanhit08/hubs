@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { cos, rotate, round, sin } from 'mathjs';
-import { TSX } from "./jsxgraph";
 
 
 function drawBoard(position: THREE.Vector3, size: THREE.Vector2, color: string) {
