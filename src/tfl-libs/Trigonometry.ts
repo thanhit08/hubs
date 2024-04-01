@@ -12,6 +12,8 @@ function drawBoard(position: THREE.Vector3, size: THREE.Vector2, color: string) 
 
 }
 
+const maxSteps = 90;
+
 function create2DShape(points: THREE.Vector2[], position: THREE.Vector3, color: string) {
     const shape = new THREE.Shape();
     for (let i = 0; i < points.length; i++) {
@@ -94,14 +96,21 @@ function updateCurrentAngleArray(steps: number) {
 
     if (steps > 0 && steps <= 18) {
         currentAngleArray[0] = -(steps * 5);
+        currentAngleArray[1] = 0;
+        currentAngleArray[2] = 0;
     }
     if (steps >= 18 && steps <= 36) {
+        currentAngleArray[0] = -(18 * 5);
         currentAngleArray[1] = (steps - 18) * 5;
+        currentAngleArray[2] = 0;
     }
     if (steps >= 36 && steps <= 90) {
+        currentAngleArray[0] = -(18 * 5);
+        currentAngleArray[1] = (18 * 5);
         currentAngleArray[2] = (steps - 36) * 5;
     }
     if (steps > 90) {
+
         currentAngleArray = [-(18 * 5), (18 * 5), (54 * 5)];
         steps = 90;
     }
@@ -109,7 +118,7 @@ function updateCurrentAngleArray(steps: number) {
 
 }
 
-export function createTrigonometry(position: THREE.Vector3, steps: number): [THREE.Group, number] {
+export function createTrigonometry(position: THREE.Vector3, steps: number): [THREE.Group, number, number] {
     steps = updateCurrentAngleArray(steps);
     const group = new THREE.Group();
     const size = new THREE.Vector2(6, 5);
@@ -222,7 +231,7 @@ export function createTrigonometry(position: THREE.Vector3, steps: number): [THR
 
     group.position.y += 1;
     group.position.x -= 2
-    return [group, steps];
+    return [group, steps, maxSteps];
 }
 
 function calculateOrthogonalProjection(pointP: THREE.Vector2, pointA: THREE.Vector2, pointB: THREE.Vector2) {

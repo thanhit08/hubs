@@ -61,7 +61,7 @@ const material = new THREE.MeshBasicMaterial({ color: colors[0], side: THREE.Dou
 // the angle of rotation of the pentagon faces in degrees
 const angleStepsArray = [116.57, 120, 125, 130, 135, 140, 145, 150, 155, 160, 165, 170, 175, 180];
 let currentAngleArray = [116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57];
-
+const maxSteps = 153;
 function updateCurrentAngleArray(steps: number) {
     let rotationFace = (11 - Math.floor(steps / 14));
     let rotationSteps = steps % 14;
@@ -69,7 +69,7 @@ function updateCurrentAngleArray(steps: number) {
     return [rotationFace, rotationSteps];
 }
 
-export function createPentagon(radius: number, position: THREE.Vector3, steps: number): [THREE.Group, number] {
+export function createPentagon(radius: number, position: THREE.Vector3, steps: number): [THREE.Group, number, number] {
     const [rotationFace, rotationSteps] = updateCurrentAngleArray(steps);
     const myThreeJSGroup = new THREE.Group();
 
@@ -223,7 +223,7 @@ export function createPentagon(radius: number, position: THREE.Vector3, steps: n
     myThreeJSGroup.position.copy(position);
     myThreeJSGroup.rotateX(Math.PI / 2);
     myThreeJSGroup.position.y -= 1.5;
-    return [myThreeJSGroup, steps];
+    return [myThreeJSGroup, steps, maxSteps];
 }
 
 function drawSphere(point: THREE.Vector3, color: string) {
