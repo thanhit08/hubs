@@ -107,10 +107,13 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                 let outputSteps = 0;
                 if (category === "Transformation" && unit === "1") {
                     [myThreeJSObject, outputSteps] = createMyThreeJSTrans01(myThreeJSProps);
+                    maxSteps = 37;
                 } else if (category === "Transformation" && unit === "6") {
                     [myThreeJSObject, outputSteps] = createMyThreeJSTrans06(myThreeJSProps);
+                    maxSteps = 37;
                 } else if (category === "Transformation" && unit === "7") {
                     [myThreeJSObject, outputSteps] = createMyThreeJSTrans07(myThreeJSProps);
+                    maxSteps = 37;
                 } else if (category === "Geometry") {
                     // convert unit to number
                     const unitNumber = parseInt(unit);
@@ -403,7 +406,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                                 sliderPercent = (intersectionPoint.x - 4) / 5
                             }
 
-                            if (category === "Pentagon") {
+                            if (category === "Pentagon" || category === "Transformation") {
                                 sliderPercent = (intersectionPoint.x - 5) / 5
                             }
 
@@ -513,7 +516,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                             position: objectPosition,
                             rotation: objectRotation,
                             scale: objectScale,
-                            steps: steps
+                            steps: currentSteps
                         }
                         const myNewThreeJSContentEid = addEntity(world);
                         // let myNewThreeJSObject = new THREE.Group();
