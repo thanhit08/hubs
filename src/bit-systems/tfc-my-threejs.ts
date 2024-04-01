@@ -13,7 +13,7 @@ import { createMyThreeJSTrans01 } from "../tfl-libs/Trans01";
 import { createUIButton } from "../tfl-libs/myButton";
 import { createUISlider } from "../tfl-libs/mySlider";
 import { createMyThreeJSTrans07 } from "../tfl-libs/Trans07";
-import { drawBox } from "../tfl-libs/Geo01";
+import { drawBox as create3DBox } from "../tfl-libs/Geo01";
 import { inc } from "semver";
 import { createPentagon } from "../tfl-libs/Pentagon";
 import { createTrigonometry } from "../tfl-libs/Trigonometry";
@@ -120,8 +120,8 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                         position: myThreeJSPosition,
                         rotation: myThreeJSRotation,
                         scale: myThreeJSScale
-                    }
-                    myThreeJSObject = drawBox(myThreeJSModel3DProps);
+                    };
+                    [myThreeJSObject, maxSteps] = create3DBox(myThreeJSModel3DProps);
                     myThreeJSObject.position.y += 2;
                     if (unit === "8") {
                         myThreeJSObject.position.y += 2;
@@ -386,17 +386,29 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                             console.log("Clicked Point: ", intersectionPoint);
 
                             // create a 3D point at the intersection point
-                            const geometry = new THREE.SphereGeometry(0.1, 32, 32);
-                            const material2 = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide });
-                            const sphere2 = new THREE.Mesh(geometry, material2);
-                            sphere2.position.copy(intersectionPoint);
-                            world.scene.add(sphere2);
-                            objectsInScene.push(sphere2);
+                            // const geometry = new THREE.SphereGeometry(0.1, 32, 32);
+                            // const material2 = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide });
+                            // const sphere2 = new THREE.Mesh(geometry, material2);
+                            // sphere2.position.copy(intersectionPoint);
+                            // world.scene.add(sphere2);
+                            // objectsInScene.push(sphere2);
 
                             // !!!! Calculate the slider percent (need to fix)
                             let sliderPercent = 0;
                             if (progressBar) {
+                                sliderPercent = (intersectionPoint.x - (progressBar.position.x - objectPosition.x)) / 5
+                            }
+
+                            if (category === "Trigonometry") {
                                 sliderPercent = (intersectionPoint.x - 4) / 5
+                            }
+
+                            if (category === "Pentagon") {
+                                sliderPercent = (intersectionPoint.x - 5) / 5
+                            }
+
+                            if (category === "Geometry") {
+                                sliderPercent = (intersectionPoint.x - 4.5) / 5
                             }
                             // round the slider percent to 2 decimal places
                             const roundedSliderPercent = Math.round(sliderPercent * maxSteps);
@@ -514,14 +526,20 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                             [myThreeJSObject, outputSteps] = createMyThreeJSTrans07(myNewThreeJSProps);
                         } else if (category === "Geometry") {
                             const unitNumber = parseInt(unit);
+                            if (currentSteps > 90) {
+                                currentSteps = 90;
+                            }
+                            if (currentSteps % 5 != 0) {
+                                currentSteps = Math.round(currentSteps / 5) * 5;
+                            }
                             const myThreeJSModel3DProps = {
                                 type: unitNumber,
                                 angle: currentSteps,
                                 position: objectPosition,
                                 rotation: objectRotation,
                                 scale: objectScale
-                            }
-                            myThreeJSObject = drawBox(myThreeJSModel3DProps);
+                            };
+                            [myThreeJSObject, maxSteps] = create3DBox(myThreeJSModel3DProps);
                             myThreeJSObject.position.y += 2;
                             outputSteps = currentSteps;
                         } else if (category === "Pentagon") {
@@ -600,8 +618,8 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                 position: objectPosition,
                 rotation: objectRotation,
                 scale: objectScale
-            }
-            myThreeJSObject = drawBox(myThreeJSModel3DProps);
+            };
+            [myThreeJSObject, maxSteps] = create3DBox(myThreeJSModel3DProps);
             myThreeJSObject.position.y += 2;
             outputSteps = currentSteps;
         } else if (category === "Pentagon") {

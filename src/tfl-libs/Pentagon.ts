@@ -64,7 +64,13 @@ let currentAngleArray = [116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57,
 const maxSteps = 153;
 function updateCurrentAngleArray(steps: number) {
     let rotationFace = (11 - Math.floor(steps / 14));
-    let rotationSteps = steps % 14;
+    for (let i = currentAngleArray.length - 1; i > rotationFace; i--) {
+        currentAngleArray[i] = 180;
+    }
+    for (let i = 0; i < rotationFace; i++) {
+        currentAngleArray[i] = 116.57;
+    }
+    let rotationSteps = steps % 14;    
     currentAngleArray[rotationFace] = angleStepsArray[rotationSteps];
     return [rotationFace, rotationSteps];
 }

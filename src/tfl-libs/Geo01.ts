@@ -7,7 +7,7 @@ let len = 1.0;
 let out_x: number[] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 let out_y: number[] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 let out_z: number[] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
-
+const maxSteps = 90;
 export function setLength(length: number) {
     if (length <= 0.0) {
         len = 0.0;
@@ -2412,7 +2412,7 @@ export function get_z(idx: number): number {
     return out_z[idx];
 }
 
-export function drawBox(props: any): THREE.Group {
+export function drawBox(props: any): [THREE.Group, number] {
     const baseProps = {
         type: 0,
         angle: 0,
@@ -2601,5 +2601,5 @@ export function drawBox(props: any): THREE.Group {
         const mesh = new THREE.Mesh(geometry, material);
         myThreeJSGroup.add(mesh);
     }
-    return myThreeJSGroup;
+    return [myThreeJSGroup, maxSteps];
 }
