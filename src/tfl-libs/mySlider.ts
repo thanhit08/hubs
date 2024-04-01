@@ -54,6 +54,7 @@ export function createUISlider(options: CreateUISliderOptions): THREE.Mesh {
 
     // Create a mesh using the geometry and material
     const mesh = new THREE.Mesh(geometry, material);
+    mesh.name = 'slider';
     // Create mesh
     return mesh;
 }

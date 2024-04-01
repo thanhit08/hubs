@@ -331,7 +331,7 @@ export function mainTick(xrFrame: XRFrame, renderer: WebGLRenderer, scene: Scene
   }
   helloSystem(world);
   TFCTicTacToeSystem(world);
-  TFCMyThreeJSSystem(world);
+  TFCMyThreeJSSystem(world, aframeSystems.userinput);
 
   // tock()s on components and system will fire here. (As well as any other time render() is called without unbinding onAfterRender)
   // TODO inline invoking tocks instead of using onAfterRender registered in a-scene

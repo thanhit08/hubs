@@ -2,6 +2,7 @@ import { HubsWorld } from "../app";
 import { TFCMyThreeJS, TFCMyThreeJSButton, TFCMYThreeJSSliderBar, TFCNetworkedContentData, TFCNetworkedSyncButton } from "../bit-components";
 import { Interacted, CursorRaycastable, RemoteHoverTarget, SingleActionButton, HoveredRemoteRight } from "../bit-components";
 import { defineQuery, enterQuery, exitQuery, hasComponent, addEntity, addComponent } from "bitecs";
+import { paths } from "../systems/userinput/paths";
 import { addObject3DComponent } from "../utils/jsx-entity";
 import { anyEntityWith } from "../utils/bit-utils";
 import { createNetworkedEntity } from "../utils/create-networked-entity";
@@ -16,6 +17,8 @@ import { drawBox } from "../tfl-libs/Geo01";
 import { inc } from "semver";
 import { createPentagon } from "../tfl-libs/Pentagon";
 import { createTrigonometry } from "../tfl-libs/Trigonometry";
+import { MathUtils, Object3D, Plane, Ray, Vector3 } from "three";
+
 
 
 function clicked(world: HubsWorld, eid: EntityID) {
@@ -47,9 +50,21 @@ let contentObjectRef: number = 0;
 const objectsInScene: THREE.Object3D[] = [];
 let increaseSteps = 1;
 let myThreeJSObject = new THREE.Group();
-
-
-export function TFCMyThreeJSSystem(world: HubsWorld) {
+let myThreeJSContentEid = -1;
+let intersectionPoint = new THREE.Vector3();
+const intersectInThePlaneOf = (() => {
+    const plane = new Plane();
+    const ray = new Ray();
+    type Pose = { position: Vector3; direction: Vector3 };
+    return function intersectInThePlaneOf(obj: Object3D, { position, direction }: Pose, intersection: Vector3) {
+        ray.set(position, direction);
+        plane.normal.set(0, 0, 1);
+        plane.constant = 0;
+        plane.applyMatrix4(obj.matrixWorld);
+        ray.intersectPlane(plane, intersection);
+    };
+})();
+export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
     const myThreeJSEid = anyEntityWith(world, TFCMyThreeJS);
     if (myThreeJSEid !== null) {
 
@@ -77,7 +92,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                 objectScale = myThreeJSScale;
                 myThreeJS.visible = false;
 
-                const myThreeJSContentEid = addEntity(world);
+                myThreeJSContentEid = addEntity(world);
                 const myThreeJSProps = {
                     category: category,
                     unit: 6,
@@ -246,12 +261,13 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                 const myThreeJSProgressBar = createUISlider({
                     width: 5,
                     height: 0.5,
-                    currentSteps: 50,
+                    currentSteps: 0,
                     minSteps: 0,
                     maxSteps: 100,
                 });
                 myThreeJSProgressBar.position.copy(myThreeJSPosition);
                 myThreeJSProgressBar.position.x += 4.5;
+                console.log(myThreeJSPosition);
                 // myThreeJSProgressBar.position.y += 4;
                 addObject3DComponent(world, myThreeJSProgressBarEid, myThreeJSProgressBar);
                 addComponent(world, TFCMYThreeJSSliderBar, myThreeJSProgressBarEid);
@@ -333,9 +349,9 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
         if (networkedEid) {
             if (clicked(world, eid)) {
                 console.log("My ThreeJS Slider Bar clicked", eid);
-                const targetObjectRef = TFCMyThreeJSButton.targetObjectRef[eid];
+                const targetObjectRef = TFCMYThreeJSSliderBar.targetObjectRef[eid];
                 const targetObject = world.eid2obj.get(targetObjectRef);
-                const buttonName = APP.getString(TFCMyThreeJSButton.name[eid]);
+                const buttonName = APP.getString(TFCMYThreeJSSliderBar.name[eid]);
                 let buttonClicked = false;
                 if (buttonName === "SliderBar") {
                     console.log("Next button clicked");
@@ -345,7 +361,64 @@ export function TFCMyThreeJSSystem(world: HubsWorld) {
                 }
                 if (buttonClicked) {
                     if (targetObject) {
-                        console.log("Target Object: ", targetObject);                        
+                        console.log("Target Object: ", targetObject);
+                        const { position, direction } = userinput.get(paths.actions.cursor.right.pose);
+                        const plane = new Plane();
+                        const ray = new Ray();
+                        ray.set(position, direction);
+                        plane.normal.set(0, 0, 1);
+                        plane.constant = 0;
+                        plane.applyMatrix4(targetObject.matrixWorld);
+                        const rootPosition = new THREE.Vector3(0, 0, objectPosition.z);
+                        plane.translate(rootPosition);
+
+                        let intersectionPoint = new Vector3();
+                        ray.intersectPlane(plane, intersectionPoint);
+
+                        if (intersectionPoint) {
+                            console.log("Clicked Point: ", intersectionPoint);
+
+                            // create a 3D point at the intersection point
+                            // const geometry = new THREE.SphereGeometry(0.1, 32, 32);
+                            // const material2 = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide });
+                            // const sphere2 = new THREE.Mesh(geometry, material2);
+                            // sphere2.position.copy(intersectionPoint);
+                            // world.scene.add(sphere2);
+                            // objectsInScene.push(sphere2);
+
+                            const sliderPercent = (intersectionPoint.x - 4) / 5;
+                            // round the slider percent to 2 decimal places
+                            const roundedSliderPercent = Math.round(sliderPercent * 100);
+                            console.log("Slider Percent: ", roundedSliderPercent);
+                            // world.scene.remove(targetObject);
+
+                            const progressBar = world.eid2obj.get(eid);
+                            if (progressBar) {
+                                world.scene.remove(progressBar);
+                            }
+
+                            const myThreeJSProgressBarEid = addEntity(world);
+                            const myThreeJSProgressBar = createUISlider({
+                                width: 5,
+                                height: 0.5,
+                                currentSteps: roundedSliderPercent,
+                                minSteps: 0,
+                                maxSteps: 100,
+                            });
+                            myThreeJSProgressBar.position.copy(objectPosition);
+                            myThreeJSProgressBar.position.x += 4.5;
+                            // myThreeJSProgressBar.position.y += 4;
+                            addObject3DComponent(world, myThreeJSProgressBarEid, myThreeJSProgressBar);
+                            addComponent(world, TFCMYThreeJSSliderBar, myThreeJSProgressBarEid);
+                            TFCMYThreeJSSliderBar.name[myThreeJSProgressBarEid] = APP.getSid("SliderBar");
+                            TFCMYThreeJSSliderBar.targetObjectRef[myThreeJSProgressBarEid] = myThreeJSContentEid;
+
+                            addComponent(world, RemoteHoverTarget, myThreeJSProgressBarEid);
+                            addComponent(world, CursorRaycastable, myThreeJSProgressBarEid);
+                            addComponent(world, SingleActionButton, myThreeJSProgressBarEid);
+                            world.scene.add(myThreeJSProgressBar);
+                            objectsInScene.push(myThreeJSProgressBar);
+                        }
                     }
                 }
             }
