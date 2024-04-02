@@ -33,6 +33,10 @@ const TFCMyThreeJSExitQuery = exitQuery(TFCMyThreeJSQuery);
 const TFCMyThreeJSButtonQuery = defineQuery([TFCMyThreeJSButton]);
 
 const TFCMYThreeJSSliderBarQuery = defineQuery([TFCMYThreeJSSliderBar]);
+const TFCMyThreeJSSliderBarHoveredQuery = defineQuery([HoveredRemoteRight, TFCMYThreeJSSliderBar]);
+const TFCMyThreeJSSliderBarHoveredEnterQuery = enterQuery(TFCMyThreeJSSliderBarHoveredQuery);
+const TFCMyThreeJSSliderBarHoveredExitQuery = exitQuery(TFCMyThreeJSSliderBarHoveredQuery);
+
 
 const TFCNetworkedSyncButtonQuery = defineQuery([TFCNetworkedSyncButton]);
 
@@ -74,6 +78,9 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
 
         const entered = TFCMyThreeJSEnterQuery(world);
         for (let i = 0; i < entered.length; i++) {
+            if (clickedOnSlider) {
+                clickedOnSlider = false;
+            }
             const eid = entered[i];
             console.log("My ThreeJS entered", eid);
             category = APP.getString(TFCMyThreeJS.category[eid])!;
@@ -292,6 +299,9 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
 
     const exited = TFCMyThreeJSExitQuery(world);
     for (let i = 0; i < exited.length; i++) {
+        if (clickedOnSlider) {
+            clickedOnSlider = false;
+        }
         const eid = exited[i];
         console.log("My ThreeJS exited", eid);
         for (let i = 0; i < objectsInScene.length; i++) {
@@ -316,12 +326,18 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
     for (let i = 0; i < query.length; i++) {
         const eid = query[i];
         if (clicked(world, eid)) {
+            if (clickedOnSlider) {
+                clickedOnSlider = false;
+            }
             console.log("My ThreeJS clicked", eid);
         }
     }
 
     TFCNetworkedSyncButtonQuery(world).forEach(eid => {
         if (clicked(world, eid)) {
+            if (clickedOnSlider) {
+                clickedOnSlider = false;
+            }
             let networkedEid = anyEntityWith(world, TFCNetworkedContentData)!;
 
             const type = APP.getString(TFCNetworkedSyncButton.type[eid])!;
@@ -355,6 +371,10 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
         const networkedEid = anyEntityWith(world, TFCNetworkedContentData)!;
         if (networkedEid) {
             if (clicked(world, eid)) {
+                if (clickedOnSlider) {
+                    clickedOnSlider = false;
+                    return;
+                }
                 console.log("My ThreeJS Slider Bar clicked", eid);
                 const targetObjectRef = TFCMYThreeJSSliderBar.targetObjectRef[eid];
                 const targetObject = world.eid2obj.get(targetObjectRef);
@@ -468,12 +488,126 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
         }
     });
 
+    TFCMyThreeJSSliderBarHoveredQuery(world).forEach((eid: number) => {
+        const networkedEid = anyEntityWith(world, TFCNetworkedContentData)!;
+        if (networkedEid) {
+            if (clickedOnSlider) {
+                const progressBar = world.eid2obj.get(eid);
+
+                const { position, direction } = userinput.get(paths.actions.cursor.right.pose);
+                const plane = new Plane();
+                const ray = new Ray();
+                ray.set(position, direction);
+                plane.normal.set(0, 0, 1);
+                plane.constant = 0;
+                if (progressBar) {
+                    plane.applyMatrix4(progressBar.matrixWorld);
+                }
+                // const rootPosition = new THREE.Vector3(0, 0, objectPosition.z);
+                // plane.translate(rootPosition);
+
+                let intersectionPoint = new Vector3();
+                ray.intersectPlane(plane, intersectionPoint);
+                console.log("Hovered Point: ", intersectionPoint);
+                if (intersectionPoint) {
+                    console.log("Clicked Point: ", intersectionPoint);
+                    clickedOnSlider = true;
+                    // create a 3D point at the intersection point
+                    // const geometry = new THREE.SphereGeometry(0.1, 32, 32);
+                    // const material2 = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide });
+                    // const sphere2 = new THREE.Mesh(geometry, material2);
+                    // sphere2.position.copy(intersectionPoint);
+                    // world.scene.add(sphere2);
+                    // objectsInScene.push(sphere2);
+
+                    // !!!! Calculate the slider percent (need to fix)
+                    let sliderPercent = 0;
+                    if (progressBar) {
+                        sliderPercent = (intersectionPoint.x - (progressBar.position.x - objectPosition.x)) / 5
+                    }
+
+                    if (category === "Trigonometry") {
+                        sliderPercent = (intersectionPoint.x - 4) / 5
+                    }
+
+                    if (category === "Pentagon" || category === "Transformation") {
+                        sliderPercent = (intersectionPoint.x - 5) / 5
+                    }
+
+                    if (category === "Geometry") {
+                        sliderPercent = (intersectionPoint.x - 4.5) / 5
+                    }
+                    // round the slider percent to 2 decimal places
+                    const roundedSliderPercent = Math.round(sliderPercent * maxSteps);
+                    console.log("Slider Percent: ", roundedSliderPercent);
+
+                    if (roundedSliderPercent == currentSteps) {
+                        return;
+                    }
+
+                    if (progressBar) {
+                        world.scene.remove(progressBar);
+                    }
+
+                    const myThreeJSProgressBarEid = addEntity(world);
+                    const myThreeJSProgressBar = createUISlider({
+                        width: 5,
+                        height: 0.5,
+                        currentSteps: roundedSliderPercent,
+                        minSteps: 0,
+                        maxSteps: maxSteps,
+                    });
+                    myThreeJSProgressBar.position.copy(objectPosition);
+                    myThreeJSProgressBar.position.x += 4.5;
+                    // myThreeJSProgressBar.position.y += 4;
+                    addObject3DComponent(world, myThreeJSProgressBarEid, myThreeJSProgressBar);
+                    addComponent(world, TFCMYThreeJSSliderBar, myThreeJSProgressBarEid);
+                    TFCMYThreeJSSliderBar.name[myThreeJSProgressBarEid] = APP.getSid("SliderBar");
+                    TFCMYThreeJSSliderBar.targetObjectRef[myThreeJSProgressBarEid] = myThreeJSContentEid;
+
+                    addComponent(world, RemoteHoverTarget, myThreeJSProgressBarEid);
+                    addComponent(world, CursorRaycastable, myThreeJSProgressBarEid);
+                    addComponent(world, SingleActionButton, myThreeJSProgressBarEid);
+                    world.scene.add(myThreeJSProgressBar);
+                    objectsInScene.push(myThreeJSProgressBar);
+
+                    if (roundedSliderPercent > currentSteps) {
+                        arraySteps = [];
+                        for (let i = (currentSteps + 1); i <= roundedSliderPercent; i++) {
+                            arraySteps.push(i);
+                        }
+                    } else {
+                        arraySteps = [];
+                        for (let i = (currentSteps - 1); i >= roundedSliderPercent; i--) {
+                            arraySteps.push(i);
+                        }
+                    }
+
+                    currentSteps = roundedSliderPercent;
+                    // world.scene.remove(targetObject);                            
+                    update(myThreeJSObject, networkedEid);
+
+                }
+            }
+        }
+    });
+
+    TFCMyThreeJSSliderBarHoveredEnterQuery(world).forEach((eid: number) => {
+        // clickedOnSlider = true;
+    });
+
+    TFCMyThreeJSSliderBarHoveredExitQuery(world).forEach((eid: number) => {
+        // clickedOnSlider = false;
+    });
+
     TFCMyThreeJSButtonQuery(world).forEach(eid => {
         const networkedEid = anyEntityWith(world, TFCNetworkedContentData)!;
         if (networkedEid) {
             if (clicked(world, eid)) {
                 // disable camera rotation 
-
+                if (clickedOnSlider) {
+                    clickedOnSlider = false;
+                }
                 console.log("My ThreeJS Button clicked", eid);
                 const targetObjectRef = TFCMyThreeJSButton.targetObjectRef[eid];
                 const targetObject = world.eid2obj.get(targetObjectRef);
