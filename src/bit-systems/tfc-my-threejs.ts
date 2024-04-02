@@ -119,14 +119,27 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
 
                 // create content object based on category and unit
                 let outputSteps = 0;
-                if (category === "Transformation" && unit === "1") {
-                    [myThreeJSObject, outputSteps] = createMyThreeJSTrans01(myThreeJSProps); // Create a transformation 01 object
-                    maxSteps = 37;
-                } else if (category === "Transformation" && unit === "6") {
-                    [myThreeJSObject, outputSteps] = createMyThreeJSTrans06(myThreeJSProps); // Create a transformation 06 object
-                    maxSteps = 37;
-                } else if (category === "Transformation" && unit === "7") {
-                    [myThreeJSObject, outputSteps] = createMyThreeJSTrans07(myThreeJSProps); // Create a transformation 07 object
+                if (category === "Transformation") {
+                    switch (unit) {
+                        case "1":
+                            [myThreeJSObject, outputSteps] = createMyThreeJSTrans01(myThreeJSProps);
+                            myThreeJSObject.position.x += 4;
+                            myThreeJSObject.position.z -= 2;
+                            myThreeJSObject.rotation.z += 1.57;
+                            myThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                            break;
+                        case "6":
+                            [myThreeJSObject, outputSteps] = createMyThreeJSTrans06(myThreeJSProps);
+                            break;
+                        case "7":
+                            [myThreeJSObject, outputSteps] = createMyThreeJSTrans07(myThreeJSProps);
+                            myThreeJSObject.position.x += 3.5;
+                            myThreeJSObject.position.z -= 2;
+                            myThreeJSObject.position.y -= 1;
+                            myThreeJSObject.rotation.z += 1.57;
+                            myThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                            break;
+                    }
                     maxSteps = 37;
                 } else if (category === "Geometry") {
                     // convert unit to number
@@ -162,23 +175,6 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                     };
                     // Create a trigonometry object
                     [myThreeJSObject, outputSteps, maxSteps] = createTrigonometry(myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
-                }
-
-                // Set the position of the content object
-                if (category == "Transformation" && unit == "1") {
-                    myThreeJSObject.position.x += 4;
-                    myThreeJSObject.position.z -= 2;
-                    myThreeJSObject.rotation.z += 1.57;
-                    myThreeJSObject.scale.set(0.4, 0.4, 0.4);
-                }
-
-                // Set the position of the content object
-                if (category == "Transformation" && unit == "7") {
-                    myThreeJSObject.position.x += 3.5;
-                    myThreeJSObject.position.z -= 2;
-                    myThreeJSObject.position.y -= 1;
-                    myThreeJSObject.rotation.z += 1.57;
-                    myThreeJSObject.scale.set(0.4, 0.4, 0.4);
                 }
 
                 // Add the content object to the world
@@ -677,12 +673,27 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
         // Create a new ThreeJS object based on the category and unit values
         let outputSteps = 0;
         // Create a new ThreeJS object based on the category and unit values
-        if (category === "Transformation" && unit === "1") {
-            [myThreeJSObject, outputSteps] = createMyThreeJSTrans01(myNewThreeJSProps);
-        } else if (category === "Transformation" && unit === "6") {
-            [myThreeJSObject, outputSteps] = createMyThreeJSTrans06(myNewThreeJSProps);
-        } else if (category === "Transformation" && unit === "7") {
-            [myThreeJSObject, outputSteps] = createMyThreeJSTrans07(myNewThreeJSProps);
+        if (category === "Transformation") {
+            switch (unit) {
+                case "1":
+                    [myThreeJSObject, outputSteps] = createMyThreeJSTrans01(myNewThreeJSProps);
+                    myThreeJSObject.position.x += 4;
+                    myThreeJSObject.position.z -= 2;
+                    myThreeJSObject.rotation.z += 1.57;
+                    myThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                    break;
+                case "6":
+                    [myThreeJSObject, outputSteps] = createMyThreeJSTrans06(myNewThreeJSProps);
+                    break;
+                case "7":
+                    [myThreeJSObject, outputSteps] = createMyThreeJSTrans07(myNewThreeJSProps);
+                    myThreeJSObject.position.x += 3.5;
+                    myThreeJSObject.position.z -= 2;
+                    myThreeJSObject.position.y -= 1;
+                    myThreeJSObject.rotation.z += 1.57;
+                    myThreeJSObject.scale.set(0.4, 0.4, 0.4);
+                    break;
+            }
         } else if (category === "Geometry") {
             const unitNumber = parseInt(unit); // Convert the 'unit' variable to an integer
             if (currentSteps > 90) { // Check if 'currentSteps' is greater than 90
@@ -727,27 +738,6 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
             // Call the createTrigonometry function with the myThreeJSModel3DProps as arguments
             // Assign the returned values to myThreeJSObject, outputSteps, and maxSteps variables
             [myThreeJSObject, outputSteps, maxSteps] = createTrigonometry(myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
-        }
-
-        if (category === "Transformation" && unit === "1") {
-            // Adjust the position of the myThreeJSObject
-            myThreeJSObject.position.x += 4;
-            myThreeJSObject.position.z -= 2;
-            // Rotate the myThreeJSObject
-            myThreeJSObject.rotation.z += 1.57;
-            // Scale the myThreeJSObject
-            myThreeJSObject.scale.set(0.4, 0.4, 0.4);
-        }
-
-        if (category == "Transformation" && unit == "7") {
-            // Adjust the position of the myThreeJSObject
-            myThreeJSObject.position.x += 3.5;
-            myThreeJSObject.position.z -= 2;
-            myThreeJSObject.position.y -= 1;
-            // Rotate the myThreeJSObject
-            myThreeJSObject.rotation.z += 1.57;
-            // Scale the myThreeJSObject
-            myThreeJSObject.scale.set(0.4, 0.4, 0.4);
         }
 
         // Add the myThreeJSObject to the world as an Object3D component
