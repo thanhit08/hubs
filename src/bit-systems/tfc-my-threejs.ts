@@ -281,7 +281,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                 });
                 myThreeJSProgressBar.position.copy(myThreeJSPosition);
                 myThreeJSProgressBar.position.x += 4.5;
-                console.log(myThreeJSPosition);
+                // console.log(myThreeJSPosition);
                 // myThreeJSProgressBar.position.y += 4;
                 addObject3DComponent(world, myThreeJSProgressBarEid, myThreeJSProgressBar);
                 addComponent(world, TFCMYThreeJSSliderBar, myThreeJSProgressBarEid);
@@ -508,9 +508,9 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
 
                 let intersectionPoint = new Vector3();
                 ray.intersectPlane(plane, intersectionPoint);
-                console.log("Hovered Point: ", intersectionPoint);
+                // console.log("Hovered Point: ", intersectionPoint);
                 if (intersectionPoint) {
-                    console.log("Clicked Point: ", intersectionPoint);
+                    // console.log("Clicked Point: ", intersectionPoint);
                     clickedOnSlider = true;
                     // create a 3D point at the intersection point
                     // const geometry = new THREE.SphereGeometry(0.1, 32, 32);
@@ -539,7 +539,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                     }
                     // round the slider percent to 2 decimal places
                     const roundedSliderPercent = Math.round(sliderPercent * maxSteps);
-                    console.log("Slider Percent: ", roundedSliderPercent);
+                    // console.log("Slider Percent: ", roundedSliderPercent);
 
                     if (roundedSliderPercent == currentSteps) {
                         return;
@@ -666,7 +666,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
     });
 
     function update(targetObject: THREE.Object3D, networkedEid: number) {
-        console.log("After click -> Steps: ", currentSteps);
+        // console.log("After click -> Steps: ", currentSteps);
 
         world.scene.remove(targetObject);
         // create a new object
