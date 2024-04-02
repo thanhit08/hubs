@@ -411,31 +411,10 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                         if (intersectionPoint) {
                             console.log("Clicked Point: ", intersectionPoint);
                             clickedOnSlider = true;
-                            // create a 3D point at the intersection point
-                            // const geometry = new THREE.SphereGeometry(0.1, 32, 32);
-                            // const material2 = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide });
-                            // const sphere2 = new THREE.Mesh(geometry, material2);
-                            // sphere2.position.copy(intersectionPoint);
-                            // world.scene.add(sphere2);
-                            // objectsInScene.push(sphere2);
-
-                            // !!!! Calculate the slider percent (need to fix)
                             let sliderPercent = 0;
                             if (progressBar) {
                                 sliderPercent = (intersectionPoint.x - (progressBar.position.x - progressBarWidth/2)) / 5
                             }
-
-                            // if (category === "Trigonometry") {
-                            //     sliderPercent = (intersectionPoint.x - 4) / 5
-                            // }
-
-                            // if (category === "Pentagon" || category === "Transformation") {
-                            //     sliderPercent = (intersectionPoint.x - 5) / 5
-                            // }
-
-                            // if (category === "Geometry") {
-                            //     sliderPercent = (intersectionPoint.x - 4.5) / 5
-                            // }
                             // round the slider percent to 2 decimal places
                             const roundedSliderPercent = Math.round(sliderPercent * maxSteps);
                             console.log("Slider Percent: ", roundedSliderPercent);
@@ -454,7 +433,6 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                             });
                             myThreeJSProgressBar.position.copy(objectPosition);
                             myThreeJSProgressBar.position.x += 4.5;
-                            // myThreeJSProgressBar.position.y += 4;
                             addObject3DComponent(world, myThreeJSProgressBarEid, myThreeJSProgressBar);
                             addComponent(world, TFCMYThreeJSSliderBar, myThreeJSProgressBarEid);
                             TFCMYThreeJSSliderBar.name[myThreeJSProgressBarEid] = APP.getSid("SliderBar");
@@ -478,8 +456,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                                 }
                             }
 
-                            currentSteps = roundedSliderPercent;
-                            // world.scene.remove(targetObject);                            
+                            currentSteps = roundedSliderPercent;                        
                             update(myThreeJSObject, networkedEid);
 
                         }
@@ -504,43 +481,18 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                 if (progressBar) {
                     plane.applyMatrix4(progressBar.matrixWorld);
                 }
-                // const rootPosition = new THREE.Vector3(0, 0, objectPosition.z);
-                // plane.translate(rootPosition);
 
                 let intersectionPoint = new Vector3();
                 ray.intersectPlane(plane, intersectionPoint);
-                // console.log("Hovered Point: ", intersectionPoint);
                 if (intersectionPoint) {
-                    // console.log("Clicked Point: ", intersectionPoint);
                     clickedOnSlider = true;
-                    // create a 3D point at the intersection point
-                    // const geometry = new THREE.SphereGeometry(0.1, 32, 32);
-                    // const material2 = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide });
-                    // const sphere2 = new THREE.Mesh(geometry, material2);
-                    // sphere2.position.copy(intersectionPoint);
-                    // world.scene.add(sphere2);
-                    // objectsInScene.push(sphere2);
 
-                    // !!!! Calculate the slider percent (need to fix)
                     let sliderPercent = 0;
                     if (progressBar) {
                         sliderPercent = (intersectionPoint.x - (progressBar.position.x - progressBarWidth/2)) / 5
                     }
-
-                    // if (category === "Trigonometry") {
-                    //     sliderPercent = (intersectionPoint.x - 4) / 5
-                    // }
-
-                    // if (category === "Pentagon" || category === "Transformation") {
-                    //     sliderPercent = (intersectionPoint.x - 5) / 5
-                    // }
-
-                    // if (category === "Geometry") {
-                    //     sliderPercent = (intersectionPoint.x - 4.5) / 5
-                    // }
                     // round the slider percent to 2 decimal places
                     const roundedSliderPercent = Math.round(sliderPercent * maxSteps);
-                    // console.log("Slider Percent: ", roundedSliderPercent);
 
                     if (roundedSliderPercent == currentSteps) {
                         return;
@@ -560,7 +512,6 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                     });
                     myThreeJSProgressBar.position.copy(objectPosition);
                     myThreeJSProgressBar.position.x += 4.5;
-                    // myThreeJSProgressBar.position.y += 4;
                     addObject3DComponent(world, myThreeJSProgressBarEid, myThreeJSProgressBar);
                     addComponent(world, TFCMYThreeJSSliderBar, myThreeJSProgressBarEid);
                     TFCMYThreeJSSliderBar.name[myThreeJSProgressBarEid] = APP.getSid("SliderBar");
@@ -585,7 +536,6 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                     }
 
                     currentSteps = roundedSliderPercent;
-                    // world.scene.remove(targetObject);                            
                     update(myThreeJSObject, networkedEid);
 
                 }
@@ -627,7 +577,6 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
 
                 if (buttonClicked) {
                     if (targetObject) {
-                        // console.log("Target Object: ", targetObject);
                         console.log("Current Steps: ", currentSteps);
                         if (nextStep) {
                             console.log("Next Step");
@@ -667,7 +616,6 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
     });
 
     function update(targetObject: THREE.Object3D, networkedEid: number) {
-        // console.log("After click -> Steps: ", currentSteps);
 
         world.scene.remove(targetObject);
         // create a new object
@@ -680,9 +628,6 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
             steps: currentSteps
         }
         const myNewThreeJSContentEid = addEntity(world);
-        // let myNewThreeJSObject = new THREE.Group();
-        // let outputSteps = 0;
-        // let myNewThreeJSObject = new THREE.Group();
         let outputSteps = 0;
         if (category === "Transformation" && unit === "1") {
             [myThreeJSObject, outputSteps] = createMyThreeJSTrans01(myNewThreeJSProps);
@@ -764,7 +709,6 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
         });
         myThreeJSProgressBar.position.copy(objectPosition);
         myThreeJSProgressBar.position.x += 4.5;
-        // myThreeJSProgressBar.position.y += 4;
         addObject3DComponent(world, myThreeJSProgressBarEid, myThreeJSProgressBar);
         addComponent(world, TFCMYThreeJSSliderBar, myThreeJSProgressBarEid);
         TFCMYThreeJSSliderBar.name[myThreeJSProgressBarEid] = APP.getSid("SliderBar");
