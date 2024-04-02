@@ -54,6 +54,8 @@ let myThreeJSObject = new THREE.Group();
 let myThreeJSContentEid = -1;
 let intersectionPoint = new THREE.Vector3();
 let maxSteps = 100;
+let clickedOnSlider = false;
+let arraySteps = [];
 const intersectInThePlaneOf = (() => {
     const plane = new Plane();
     const ray = new Ray();
@@ -359,7 +361,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                 const buttonName = APP.getString(TFCMYThreeJSSliderBar.name[eid]);
                 let buttonClicked = false;
                 if (buttonName === "SliderBar") {
-                    console.log("Next button clicked");
+                    console.log("SliderBar clicked");
                     buttonClicked = true;
                 } else {
 
@@ -387,7 +389,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
 
                         if (intersectionPoint) {
                             console.log("Clicked Point: ", intersectionPoint);
-
+                            clickedOnSlider = true;
                             // create a 3D point at the intersection point
                             // const geometry = new THREE.SphereGeometry(0.1, 32, 32);
                             // const material2 = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide });
@@ -443,8 +445,22 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                             world.scene.add(myThreeJSProgressBar);
                             objectsInScene.push(myThreeJSProgressBar);
 
+                            if (roundedSliderPercent > currentSteps) {
+                                arraySteps = [];
+                                for (let i = (currentSteps + 1); i <= roundedSliderPercent; i++) {
+                                    arraySteps.push(i);
+                                }
+                            } else {
+                                arraySteps = [];
+                                for (let i = (currentSteps - 1); i >= roundedSliderPercent; i--) {
+                                    arraySteps.push(i);
+                                }
+                            }
+
                             currentSteps = roundedSliderPercent;
-                            // update(targetObject, networkedEid);
+                            // world.scene.remove(targetObject);                            
+                            update(myThreeJSObject, networkedEid);
+
                         }
                     }
                 }
@@ -506,83 +522,9 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                 APP.getString(TFCNetworkedContentData.steps[networkedEid]) != "") {
                 if (TFCNetworkedContentData.steps[networkedEid] != currentSteps) {
                     const contentObject = world.eid2obj.get(contentObjectRef);
+                    currentSteps = TFCNetworkedContentData.steps[networkedEid];
                     if (contentObject) {
-                        const steps = TFCNetworkedContentData.steps[networkedEid]!;
-                        world.scene.remove(contentObject);
-                        // create a new object
-                        const myNewThreeJSProps = {
-                            category: category,
-                            unit: unit,
-                            position: objectPosition,
-                            rotation: objectRotation,
-                            scale: objectScale,
-                            steps: currentSteps
-                        }
-                        const myNewThreeJSContentEid = addEntity(world);
-                        // let myNewThreeJSObject = new THREE.Group();
-                        let outputSteps = 0;
-                        if (category === "Transformation" && unit === "1") {
-                            [myThreeJSObject, outputSteps] = createMyThreeJSTrans01(myNewThreeJSProps);
-                        } else if (category === "Transformation" && unit === "6") {
-                            [myThreeJSObject, outputSteps] = createMyThreeJSTrans06(myNewThreeJSProps);
-                        } else if (category === "Transformation" && unit === "7") {
-                            [myThreeJSObject, outputSteps] = createMyThreeJSTrans07(myNewThreeJSProps);
-                        } else if (category === "Geometry") {
-                            const unitNumber = parseInt(unit);
-                            if (currentSteps > 90) {
-                                currentSteps = 90;
-                            }
-                            if (currentSteps % 5 != 0) {
-                                currentSteps = Math.round(currentSteps / 5) * 5;
-                            }
-                            const myThreeJSModel3DProps = {
-                                type: unitNumber,
-                                angle: currentSteps,
-                                position: objectPosition,
-                                rotation: objectRotation,
-                                scale: objectScale
-                            };
-                            [myThreeJSObject, maxSteps] = create3DBox(myThreeJSModel3DProps);
-                            myThreeJSObject.position.y += 2;
-                            outputSteps = currentSteps;
-                        } else if (category === "Pentagon") {
-                            const myThreeJSModel3DProps = {
-                                radius: 1,
-                                position: objectPosition,
-                                steps: currentSteps
-                            };
-                            [myThreeJSObject, outputSteps, maxSteps] = createPentagon(myThreeJSModel3DProps.radius, myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
-                        }
-                        else if (category === "Trigonometry") {
-                            const myThreeJSModel3DProps = {
-                                position: objectPosition,
-                                steps: currentSteps
-                            };
-                            [myThreeJSObject, outputSteps, maxSteps] = createTrigonometry(myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
-                        }
-
-                        if (category == "Transformation" && unit == "1") {
-                            myThreeJSObject.position.x += 4;
-                            myThreeJSObject.position.z -= 2;
-                            myThreeJSObject.rotation.z += 1.57;
-                            myThreeJSObject.scale.set(0.4, 0.4, 0.4);
-                        }
-
-                        if (category == "Transformation" && unit == "7") {
-                            myThreeJSObject.position.x += 3.5;
-                            myThreeJSObject.position.z -= 2;
-                            myThreeJSObject.position.y -= 1;
-                            myThreeJSObject.rotation.z += 1.57;
-                            myThreeJSObject.scale.set(0.4, 0.4, 0.4);
-                        }
-
-                        addObject3DComponent(world, myNewThreeJSContentEid, myThreeJSObject);
-                        contentObjectRef = myNewThreeJSContentEid;
-                        world.scene.add(myThreeJSObject);
-                        objectsInScene.push(myThreeJSObject);
-                        currentSteps = outputSteps;
-                        TFCMyThreeJSButton.targetObjectRef[myThreeJSNextButtonEid] = myNewThreeJSContentEid;
-                        TFCMyThreeJSButton.targetObjectRef[myThreeJSBackButtonEid] = myNewThreeJSContentEid;
+                        update(contentObject, networkedEid);
                     }
                 }
             }
@@ -615,6 +557,12 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
             [myThreeJSObject, outputSteps] = createMyThreeJSTrans07(myNewThreeJSProps);
         } else if (category === "Geometry") {
             const unitNumber = parseInt(unit);
+            if (currentSteps > 90) {
+                currentSteps = 90;
+            }
+            if (currentSteps % 5 != 0) {
+                currentSteps = Math.round(currentSteps / 5) * 5;
+            }
             const myThreeJSModel3DProps = {
                 type: unitNumber,
                 angle: currentSteps,
