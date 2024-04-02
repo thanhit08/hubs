@@ -60,6 +60,7 @@ let intersectionPoint = new THREE.Vector3();
 let maxSteps = 100;
 let clickedOnSlider = false;
 let arraySteps = [];
+const progressBarWidth = 5;
 const intersectInThePlaneOf = (() => {
     const plane = new Plane();
     const ray = new Ray();
@@ -273,7 +274,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
 
                 const myThreeJSProgressBarEid = addEntity(world);
                 const myThreeJSProgressBar = createUISlider({
-                    width: 5,
+                    width: progressBarWidth,
                     height: 0.5,
                     currentSteps: currentSteps,
                     minSteps: 0,
@@ -388,8 +389,8 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                 }
                 if (buttonClicked) {
                     if (targetObject) {
-                        console.log("Target Object: ", targetObject);
-                        console.log('Target Position: ', objectPosition);
+                        // console.log("Target Object: ", targetObject);
+                        // console.log('Target Position: ', objectPosition);
                         const progressBar = world.eid2obj.get(eid);
 
                         const { position, direction } = userinput.get(paths.actions.cursor.right.pose);
@@ -421,20 +422,20 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                             // !!!! Calculate the slider percent (need to fix)
                             let sliderPercent = 0;
                             if (progressBar) {
-                                sliderPercent = (intersectionPoint.x - (progressBar.position.x - objectPosition.x)) / 5
+                                sliderPercent = (intersectionPoint.x - (progressBar.position.x - progressBarWidth/2)) / 5
                             }
 
-                            if (category === "Trigonometry") {
-                                sliderPercent = (intersectionPoint.x - 4) / 5
-                            }
+                            // if (category === "Trigonometry") {
+                            //     sliderPercent = (intersectionPoint.x - 4) / 5
+                            // }
 
-                            if (category === "Pentagon" || category === "Transformation") {
-                                sliderPercent = (intersectionPoint.x - 5) / 5
-                            }
+                            // if (category === "Pentagon" || category === "Transformation") {
+                            //     sliderPercent = (intersectionPoint.x - 5) / 5
+                            // }
 
-                            if (category === "Geometry") {
-                                sliderPercent = (intersectionPoint.x - 4.5) / 5
-                            }
+                            // if (category === "Geometry") {
+                            //     sliderPercent = (intersectionPoint.x - 4.5) / 5
+                            // }
                             // round the slider percent to 2 decimal places
                             const roundedSliderPercent = Math.round(sliderPercent * maxSteps);
                             console.log("Slider Percent: ", roundedSliderPercent);
@@ -445,7 +446,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
 
                             const myThreeJSProgressBarEid = addEntity(world);
                             const myThreeJSProgressBar = createUISlider({
-                                width: 5,
+                                width: progressBarWidth,
                                 height: 0.5,
                                 currentSteps: roundedSliderPercent,
                                 minSteps: 0,
@@ -523,20 +524,20 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                     // !!!! Calculate the slider percent (need to fix)
                     let sliderPercent = 0;
                     if (progressBar) {
-                        sliderPercent = (intersectionPoint.x - (progressBar.position.x - objectPosition.x)) / 5
+                        sliderPercent = (intersectionPoint.x - (progressBar.position.x - progressBarWidth/2)) / 5
                     }
 
-                    if (category === "Trigonometry") {
-                        sliderPercent = (intersectionPoint.x - 4) / 5
-                    }
+                    // if (category === "Trigonometry") {
+                    //     sliderPercent = (intersectionPoint.x - 4) / 5
+                    // }
 
-                    if (category === "Pentagon" || category === "Transformation") {
-                        sliderPercent = (intersectionPoint.x - 5) / 5
-                    }
+                    // if (category === "Pentagon" || category === "Transformation") {
+                    //     sliderPercent = (intersectionPoint.x - 5) / 5
+                    // }
 
-                    if (category === "Geometry") {
-                        sliderPercent = (intersectionPoint.x - 4.5) / 5
-                    }
+                    // if (category === "Geometry") {
+                    //     sliderPercent = (intersectionPoint.x - 4.5) / 5
+                    // }
                     // round the slider percent to 2 decimal places
                     const roundedSliderPercent = Math.round(sliderPercent * maxSteps);
                     // console.log("Slider Percent: ", roundedSliderPercent);
@@ -551,7 +552,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
 
                     const myThreeJSProgressBarEid = addEntity(world);
                     const myThreeJSProgressBar = createUISlider({
-                        width: 5,
+                        width: progressBarWidth,
                         height: 0.5,
                         currentSteps: roundedSliderPercent,
                         minSteps: 0,
@@ -626,7 +627,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
 
                 if (buttonClicked) {
                     if (targetObject) {
-                        console.log("Target Object: ", targetObject);
+                        // console.log("Target Object: ", targetObject);
                         console.log("Current Steps: ", currentSteps);
                         if (nextStep) {
                             console.log("Next Step");
@@ -755,7 +756,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
 
         const myThreeJSProgressBarEid = addEntity(world);
         const myThreeJSProgressBar = createUISlider({
-            width: 5,
+            width: progressBarWidth,
             height: 0.5,
             currentSteps: currentSteps,
             minSteps: 0,
