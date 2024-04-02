@@ -504,32 +504,6 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                                 world.scene.remove(progressBar);
                             }
 
-                            // // Create a new entity for the progress bar
-                            // const myThreeJSProgressBarEid = addEntity(world);
-                            // // Create a UI slider for the progress bar
-                            // const myThreeJSProgressBar = createUISlider({
-                            //     width: progressBarWidth,
-                            //     height: 0.5,
-                            //     currentSteps: roundedSliderPercent,
-                            //     minSteps: 0,
-                            //     maxSteps: maxSteps,
-                            // });
-                            // // Set the position of the progress bar
-                            // myThreeJSProgressBar.position.copy(objectPosition);
-                            // myThreeJSProgressBar.position.x += 4.5;
-                            // // Add the necessary components to the progress bar entity
-                            // addObject3DComponent(world, myThreeJSProgressBarEid, myThreeJSProgressBar);
-                            // addComponent(world, TFCMYThreeJSSliderBar, myThreeJSProgressBarEid);
-                            // TFCMYThreeJSSliderBar.name[myThreeJSProgressBarEid] = APP.getSid("SliderBar");
-                            // TFCMYThreeJSSliderBar.targetObjectRef[myThreeJSProgressBarEid] = myThreeJSContentEid;
-
-                            // addComponent(world, RemoteHoverTarget, myThreeJSProgressBarEid);
-                            // addComponent(world, CursorRaycastable, myThreeJSProgressBarEid);
-                            // addComponent(world, SingleActionButton, myThreeJSProgressBarEid);
-                            // // Add the progress bar to the scene and objectsInScene array
-                            // world.scene.add(myThreeJSProgressBar);
-                            // objectsInScene.push(myThreeJSProgressBar);
-
                             // Update the current steps value
                             currentSteps = roundedSliderPercent;
                             // Update the target object
@@ -594,37 +568,6 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                     if (progressBar) {
                         world.scene.remove(progressBar); // Remove the old progress bar from the scene
                     }
-
-                    // // Create a new entity for the progress bar
-                    // const myThreeJSProgressBarEid = addEntity(world);
-                    // // Create the progress bar object with specified properties
-                    // const myThreeJSProgressBar = createUISlider({
-                    //     width: progressBarWidth,
-                    //     height: 0.5,
-                    //     currentSteps: roundedSliderPercent,
-                    //     minSteps: 0,
-                    //     maxSteps: maxSteps,
-                    // });
-                    // // Set the position of the progress bar object
-                    // myThreeJSProgressBar.position.copy(objectPosition);
-                    // myThreeJSProgressBar.position.x += 4.5;
-                    // // Add the progress bar object to the world
-                    // addObject3DComponent(world, myThreeJSProgressBarEid, myThreeJSProgressBar);
-                    // // Add the TFCMYThreeJSSliderBar component to the progress bar entity
-                    // addComponent(world, TFCMYThreeJSSliderBar, myThreeJSProgressBarEid);
-                    // // Set the name of the progress bar entity
-                    // TFCMYThreeJSSliderBar.name[myThreeJSProgressBarEid] = APP.getSid("SliderBar");
-                    // // Set the target object reference of the progress bar entity
-                    // TFCMYThreeJSSliderBar.targetObjectRef[myThreeJSProgressBarEid] = myThreeJSContentEid;
-
-                    // // Add additional components to the progress bar entity
-                    // addComponent(world, RemoteHoverTarget, myThreeJSProgressBarEid);
-                    // addComponent(world, CursorRaycastable, myThreeJSProgressBarEid);
-                    // addComponent(world, SingleActionButton, myThreeJSProgressBarEid);
-                    // // Add the progress bar object to the scene
-                    // world.scene.add(myThreeJSProgressBar);
-                    // // Add the progress bar object to the objectsInScene array
-                    // objectsInScene.push(myThreeJSProgressBar);
 
                     // Update the currentSteps variable with the roundedSliderPercent value
                     currentSteps = roundedSliderPercent;
