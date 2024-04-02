@@ -63,6 +63,7 @@ let maxSteps = 100;
 let clickedOnSlider = false;
 let arraySteps = [];
 const progressBarWidth = 5;
+const sliderPadding = 4;
 /**
  * Executes the TFCMyThreeJSSystem.
  * 
@@ -333,8 +334,8 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                     width: progressBarWidth,
                     height: 0.5,
                     currentSteps: currentSteps,
-                    minSteps: 0,
-                    maxSteps: maxSteps,
+                    minSteps: -(sliderPadding / 2),
+                    maxSteps: (maxSteps + sliderPadding / 2),
                 });
                 // Set the position of the progress bar
                 myThreeJSProgressBar.position.copy(myThreeJSPosition);
@@ -493,7 +494,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                                 sliderPercent = (intersectionPoint.x - (progressBar.position.x - progressBarWidth / 2)) / 5;
                             }
                             // Round the slider percent to 2 decimal places
-                            const roundedSliderPercent = Math.round(sliderPercent * maxSteps);
+                            const roundedSliderPercent = Math.round(sliderPercent * (maxSteps + sliderPadding)) - sliderPadding / 2;
 
                             // Remove the progress bar from the scene if it exists
                             if (progressBar) {
@@ -554,7 +555,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                         sliderPercent = (intersectionPoint.x - (progressBar.position.x - progressBarWidth / 2)) / 5
                     }
                     // Round the slider percentage to 2 decimal places
-                    const roundedSliderPercent = Math.round(sliderPercent * maxSteps);
+                    const roundedSliderPercent = Math.round(sliderPercent * (maxSteps + sliderPadding)) - sliderPadding / 2;
 
                     // Check if the rounded slider percentage is equal to the current steps
                     if (roundedSliderPercent == currentSteps) {
@@ -657,6 +658,12 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
     });
 
     function update(targetObject: THREE.Object3D, networkedEid: number) {
+        if (currentSteps < 0) {
+            currentSteps = 0; // Ensure currentSteps is not negative
+        }
+        if (currentSteps > maxSteps) {
+            currentSteps = maxSteps; // Ensure currentSteps is not greater than maxSteps
+        }
         // Check if the target object exists
         world.scene.remove(targetObject);
         // create a new object
@@ -765,8 +772,8 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
             width: progressBarWidth,
             height: 0.5,
             currentSteps: currentSteps,
-            minSteps: 0,
-            maxSteps: maxSteps,
+            minSteps: -(sliderPadding / 2),
+            maxSteps: (maxSteps + sliderPadding / 2),
         });
 
         // Set the position of the progress bar
