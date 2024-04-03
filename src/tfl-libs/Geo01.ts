@@ -1,7 +1,5 @@
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { cos, sin } from 'mathjs';
-import { FacemeshApi } from '@react-three/drei';
 
 let len = 1.0;
 let out_x: number[] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
@@ -2425,24 +2423,6 @@ export function drawBox(props: any): [THREE.Group, number] {
 
     const [out_x, out_y, out_z] = getAngle(baseProps.type, baseProps.angle);
 
-    const geometry = new THREE.BufferGeometry();
-    const vertices = new Float32Array([
-        out_x[0], out_y[0], out_z[0],
-        out_x[1], out_y[1], out_z[1],
-        out_x[2], out_y[2], out_z[2],
-        out_x[3], out_y[3], out_z[3],
-        out_x[4], out_y[4], out_z[4],
-        out_x[5], out_y[5], out_z[5],
-        out_x[6], out_y[6], out_z[6],
-        out_x[7], out_y[7], out_z[7],
-        out_x[8], out_y[8], out_z[8],
-        out_x[9], out_y[9], out_z[9],
-        out_x[10], out_y[10], out_z[10],
-        out_x[11], out_y[11], out_z[11],
-        out_x[12], out_y[12], out_z[12],
-        out_x[13], out_y[13], out_z[13],
-    ]);
-
     const colors = [
         '#ff0000', // red // 00
         '#00ff00', // green // 01
@@ -2572,16 +2552,7 @@ export function drawBox(props: any): [THREE.Group, number] {
             ]
             break;
     }
-
-    // draw points
-    for (let i = 0; i < 14; i++) {
-        const geometry = new THREE.SphereGeometry(0.1, 32, 32);
-        const material = new THREE.MeshBasicMaterial({ color: colors[i] });
-        const sphere = new THREE.Mesh(geometry, material);
-        sphere.position.set(out_x[i], out_y[i], out_z[i]);
-        myThreeJSGroup.add(sphere);
-    }
-
+    
     for (let i = 0; i < faces.length; i++) {
         // Draw faces
         const geometry = new THREE.BufferGeometry();
@@ -2597,9 +2568,25 @@ export function drawBox(props: any): [THREE.Group, number] {
         ]);
         geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3))
         geometry.setIndex(new THREE.BufferAttribute(indices, 1));
-        const material = new THREE.MeshBasicMaterial({ color: colors[i], side: THREE.DoubleSide });
+
+        const material = new THREE.MeshBasicMaterial({
+            color: colors[i], side: THREE.DoubleSide, transparent: true,
+            opacity: 0.5
+        });
         const mesh = new THREE.Mesh(geometry, material);
+
+        // Create material for the lines
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+
+        // Create edges geometry
+        const edges = new THREE.EdgesGeometry(geometry);
+
+        // Create line segments
+        const lines = new THREE.LineSegments(edges, lineMaterial);
+
         myThreeJSGroup.add(mesh);
+        myThreeJSGroup.add(lines);
+
     }
     return [myThreeJSGroup, maxSteps];
 }
