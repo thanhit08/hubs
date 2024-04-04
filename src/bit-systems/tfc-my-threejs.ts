@@ -17,9 +17,11 @@ import { drawBox as create3DBox } from "../tfl-libs/Geo01";
 import { inc } from "semver";
 import { createPentagon } from "../tfl-libs/Pentagon";
 import { createTrigonometry } from "../tfl-libs/Trigonometry";
+import { createConstruction01 } from "../tfl-libs/Construction01";
 import { MathUtils, Object3D, Plane, Ray, Vector3 } from "three";
 import { max } from "lodash";
 import { ThreeMFLoader } from "three-stdlib";
+import { createRoundedButton } from "../tfl-libs/UI";
 
 
 
@@ -63,7 +65,7 @@ let maxSteps = 100;
 let clickedOnSlider = false;
 let arraySteps = [];
 const progressBarWidth = 5;
-const sliderPadding = 4;
+let sliderPadding = 4;
 /**
  * Executes the TFCMyThreeJSSystem.
  * 
@@ -176,6 +178,15 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                     };
                     // Create a trigonometry object
                     [myThreeJSObject, outputSteps, maxSteps] = createTrigonometry(myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
+                } else if (category === "Construction") {
+                    sliderPadding = 0;
+                    currentSteps = 0;
+                    const myThreeJSModel3DProps = {
+                        position: myThreeJSPosition,
+                        steps: currentSteps
+                    };
+                    // Create a construction object
+                    [myThreeJSObject, outputSteps, maxSteps] = createConstruction01(myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
                 }
 
                 // Add the content object to the world
@@ -359,6 +370,25 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                 world.scene.add(myThreeJSProgressBar);
                 // Add the progress bar to the objects in scene array
                 objectsInScene.push(myThreeJSProgressBar);
+
+                // const baseRoundedButtonInfo = {
+                //     text: "Button",
+                //     fontSize: 20,
+                //     fontWeight: "bolder",
+                //     width: 2,
+                //     height: 1,
+                //     radius: 0.2,
+                //     backgroundColor: "#D3D3D4",
+                //     backgroundTransparent: false,
+                // }
+
+                // const roundedButton = createRoundedButton(baseRoundedButtonInfo);
+                // roundedButton.position.copy(myThreeJSPosition);
+                // roundedButton.position.x += 4.5;
+                // roundedButton.position.y += 4;
+                // world.scene.add(roundedButton);
+                // objectsInScene.push(roundedButton);
+
 
             }
         }
@@ -745,6 +775,13 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
             // Call the createTrigonometry function with the myThreeJSModel3DProps as arguments
             // Assign the returned values to myThreeJSObject, outputSteps, and maxSteps variables
             [myThreeJSObject, outputSteps, maxSteps] = createTrigonometry(myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
+        } else if (category === "Construction") {
+            const myThreeJSModel3DProps = {
+                position: objectPosition,
+                steps: currentSteps
+            };
+            // Create a construction object
+            [myThreeJSObject, outputSteps, maxSteps] = createConstruction01(myThreeJSModel3DProps.position, myThreeJSModel3DProps.steps);
         }
 
         // Add the myThreeJSObject to the world as an Object3D component

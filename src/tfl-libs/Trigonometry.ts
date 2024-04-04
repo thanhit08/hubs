@@ -62,7 +62,7 @@ function draw2DCircle(position: THREE.Vector3, boardPosition: THREE.Vector3, rad
     const circle = new THREE.Mesh(geometry, material);
     // change position circle to (position + shapePosition)
 
-    circle.position.copy(new THREE.Vector3(position.x + boardPosition.x, position.y + boardPosition.y, boardPosition.z + 0.08));
+    circle.position.copy(new THREE.Vector3(position.x + boardPosition.x, position.y + boardPosition.y, boardPosition.z ));
 
     // Create material for the lines
     const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
@@ -72,7 +72,7 @@ function draw2DCircle(position: THREE.Vector3, boardPosition: THREE.Vector3, rad
 
     // Create line segments
     const lines = new THREE.LineSegments(edges, lineMaterial);
-    lines.position.copy(new THREE.Vector3(position.x + boardPosition.x, position.y + boardPosition.y, boardPosition.z + 0.08));
+    lines.position.copy(new THREE.Vector3(position.x + boardPosition.x, position.y + boardPosition.y, boardPosition.z ));
 
     const meshGroup = new THREE.Group();
     meshGroup.add(circle);
@@ -141,8 +141,8 @@ export function createTrigonometry(position: THREE.Vector3, steps: number): [THR
 
     // group.add(drawBoard(position, size, boardColor));
 
-    const shapePosition = new THREE.Vector3(position.x, position.y, position.z + 0.08);
-    // const circlePosition = new THREE.Vector3(position.x - 1, position.y, position.z + 0.08);
+    const shapePosition = new THREE.Vector3(position.x, position.y, position.z );
+    // const circlePosition = new THREE.Vector3(position.x - 1, position.y, position.z );
 
     // rotatePointArroundPoint(circlePosition, shapePosition, rotateAngle);
     // // const shape2D = create2DShape(points, shapePosition , 'blue');
@@ -163,44 +163,44 @@ export function createTrigonometry(position: THREE.Vector3, steps: number): [THR
     const pointF = { x: -2, y: -0.6 };
 
     const circleSize = 0.05;
-    // const pointACircle = draw2DCircle(new THREE.Vector3(pointA.x, pointA.y, position.z + 0.08), shapePosition, circleSize, 'red');
+    // const pointACircle = draw2DCircle(new THREE.Vector3(pointA.x, pointA.y, position.z ), shapePosition, circleSize, 'red');
     // group.add(pointACircle);
 
-    // const pointBCircle = draw2DCircle(new THREE.Vector3(pointB.x, pointB.y, position.z + 0.08), shapePosition, circleSize, 'green');
+    // const pointBCircle = draw2DCircle(new THREE.Vector3(pointB.x, pointB.y, position.z ), shapePosition, circleSize, 'green');
     // group.add(pointBCircle);
 
     // rotate point C around point B
-    const rotatedPointC = rotatePointArroundPoint(new THREE.Vector3(pointB.x, pointB.y, position.z + 0.08), new THREE.Vector3(pointC.x, pointC.y, position.z + 0.08), currentAngleArray[0]);
+    const rotatedPointC = rotatePointArroundPoint(new THREE.Vector3(pointB.x, pointB.y, position.z ), new THREE.Vector3(pointC.x, pointC.y, position.z ), currentAngleArray[0]);
 
-    // const pointCCircle = draw2DCircle(new THREE.Vector3(pointC.x, pointC.y, position.z + 0.08), shapePosition, circleSize, 'blue');
+    // const pointCCircle = draw2DCircle(new THREE.Vector3(pointC.x, pointC.y, position.z ), shapePosition, circleSize, 'blue');
     // group.add(pointCCircle);
 
-    // const pointDCircle = draw2DCircle(new THREE.Vector3(pointD.x, pointD.y, position.z + 0.08), shapePosition, circleSize, 'yellow');
+    // const pointDCircle = draw2DCircle(new THREE.Vector3(pointD.x, pointD.y, position.z ), shapePosition, circleSize, 'yellow');
     // group.add(pointDCircle);
 
-    // const pointECircle = draw2DCircle(new THREE.Vector3(pointE.x, pointE.y, position.z + 0.08), shapePosition, circleSize, 'cyan');
+    // const pointECircle = draw2DCircle(new THREE.Vector3(pointE.x, pointE.y, position.z ), shapePosition, circleSize, 'cyan');
     // group.add(pointECircle);
 
-    // const pointFCircle = draw2DCircle(new THREE.Vector3(pointF.x, pointF.y, position.z + 0.08), shapePosition, circleSize, 'purple');
+    // const pointFCircle = draw2DCircle(new THREE.Vector3(pointF.x, pointF.y, position.z ), shapePosition, circleSize, 'purple');
     // group.add(pointFCircle);
 
 
 
     // Calculate orthogonal projection of point D on line CE
     const pointG = calculateOrthogonalProjection(new THREE.Vector2(pointD.x, pointD.y), new THREE.Vector2(pointC.x, pointC.y), new THREE.Vector2(pointE.x, pointE.y));
-    // const pointGCircle = draw2DCircle(new THREE.Vector3(pointG.x, pointG.y, position.z + 0.08), shapePosition, circleSize, 'olive');
+    // const pointGCircle = draw2DCircle(new THREE.Vector3(pointG.x, pointG.y, position.z ), shapePosition, circleSize, 'olive');
     // group.add(pointGCircle);
 
     // Calculate orthogonal projection of point F on line CE
     const pointJ = calculateOrthogonalProjection(new THREE.Vector2(pointF.x, pointF.y), new THREE.Vector2(pointC.x, pointC.y), new THREE.Vector2(pointE.x, pointE.y));
-    // const pointJCircle = draw2DCircle(new THREE.Vector3(pointJ.x, pointJ.y, position.z + 0.08), shapePosition, circleSize, 'navy');
+    // const pointJCircle = draw2DCircle(new THREE.Vector3(pointJ.x, pointJ.y, position.z ), shapePosition, circleSize, 'navy');
     // group.add(pointJCircle);
 
     // Caclulate orthogonal projection of point B on line CE
     const pointH = calculateOrthogonalProjection(new THREE.Vector2(pointB.x, pointB.y), new THREE.Vector2(pointC.x, pointC.y), new THREE.Vector2(pointE.x, pointE.y));
     // rotate H around B
-    const rotatedPointH = rotatePointArroundPoint(new THREE.Vector3(pointB.x, pointB.y, position.z + 0.08), new THREE.Vector3(pointH.x, pointH.y, position.z + 0.08), currentAngleArray[0]);
-    const pointHCircle = draw2DCircle(new THREE.Vector3(pointH.x, pointH.y, position.z + 0.08), shapePosition, circleSize, 'black');
+    const rotatedPointH = rotatePointArroundPoint(new THREE.Vector3(pointB.x, pointB.y, position.z ), new THREE.Vector3(pointH.x, pointH.y, position.z ), currentAngleArray[0]);
+    const pointHCircle = draw2DCircle(new THREE.Vector3(pointH.x, pointH.y, position.z ), shapePosition, circleSize, 'black');
     group.add(pointHCircle);
 
     const shapeBCHPoints = [pointB, rotatedPointC, rotatedPointH];
@@ -212,9 +212,9 @@ export function createTrigonometry(position: THREE.Vector3, steps: number): [THR
     group.add(shapeABHE);
 
 
-    const rotatedPointJ = rotatePointArroundPoint(new THREE.Vector3(pointD.x, pointD.y, position.z + 0.08), new THREE.Vector3(pointJ.x, pointJ.y, position.z + 0.08), currentAngleArray[1]);
-    const rotatedPointC2 = rotatePointArroundPoint(new THREE.Vector3(pointD.x, pointD.y, position.z + 0.08), new THREE.Vector3(pointC.x, pointC.y, position.z + 0.08), currentAngleArray[1]);
-    const rotatedPointF = rotatePointArroundPoint(new THREE.Vector3(pointD.x, pointD.y, position.z + 0.08), new THREE.Vector3(pointF.x, pointF.y, position.z + 0.08), currentAngleArray[1]);
+    const rotatedPointJ = rotatePointArroundPoint(new THREE.Vector3(pointD.x, pointD.y, position.z ), new THREE.Vector3(pointJ.x, pointJ.y, position.z ), currentAngleArray[1]);
+    const rotatedPointC2 = rotatePointArroundPoint(new THREE.Vector3(pointD.x, pointD.y, position.z ), new THREE.Vector3(pointC.x, pointC.y, position.z ), currentAngleArray[1]);
+    const rotatedPointF = rotatePointArroundPoint(new THREE.Vector3(pointD.x, pointD.y, position.z ), new THREE.Vector3(pointF.x, pointF.y, position.z ), currentAngleArray[1]);
     let shapeJCFPoints = [rotatedPointJ, rotatedPointC2, rotatedPointF];
     const shapeJCF = create2DShape(shapeJCFPoints.map(point => new THREE.Vector2(point.x, point.y)), shapePosition, 'cyan');
     group.add(shapeJCF);
@@ -223,8 +223,8 @@ export function createTrigonometry(position: THREE.Vector3, steps: number): [THR
     const shapeJFDG = create2DShape(shapeJFDGPoints.map(point => new THREE.Vector2(point.x, point.y)), shapePosition, 'purple');
     group.add(shapeJFDG);
 
-    const rotatedPointG = rotatePointArroundPoint(new THREE.Vector3(pointD.x, pointD.y, position.z + 0.08), new THREE.Vector3(pointG.x, pointG.y, position.z + 0.08), currentAngleArray[2]);
-    const rotatedPointE = rotatePointArroundPoint(new THREE.Vector3(pointD.x, pointD.y, position.z + 0.08), new THREE.Vector3(pointE.x, pointE.y, position.z + 0.08), currentAngleArray[2]);
+    const rotatedPointG = rotatePointArroundPoint(new THREE.Vector3(pointD.x, pointD.y, position.z ), new THREE.Vector3(pointG.x, pointG.y, position.z ), currentAngleArray[2]);
+    const rotatedPointE = rotatePointArroundPoint(new THREE.Vector3(pointD.x, pointD.y, position.z ), new THREE.Vector3(pointE.x, pointE.y, position.z ), currentAngleArray[2]);
     const shapeGDEPoints = [rotatedPointG, pointD, rotatedPointE];
     const shapeGDE = create2DShape(shapeGDEPoints.map(point => new THREE.Vector2(point.x, point.y)), shapePosition, 'yellow');
     group.add(shapeGDE);

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { cos, sin } from 'mathjs';
+// import { cos, sin } from 'mathjs';
 
 let len = 1.0;
 let out_x: number[] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
@@ -25,10 +25,10 @@ export function getAngle(type: number, angle: number): [number[], number[], numb
         return [out_x, out_y, out_z];
     }
     let ang = 3.14159265358979323846 * angle / 180.0;
-    let c = cos(ang);
-    let s = sin(ang);
-    let c2 = cos(2.0 * ang);
-    let s2 = sin(2.0 * ang);
+    let c = Math.cos(ang);
+    let s = Math.sin(ang);
+    let c2 = Math.cos(2.0 * ang);
+    let s2 = Math.sin(2.0 * ang);
     let t = 1.0 - c;
     let ax = 0.0;
     let ay = 0.0;
