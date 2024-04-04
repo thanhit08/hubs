@@ -21,7 +21,6 @@ import { createConstruction01 } from "../tfl-libs/Construction01";
 import { MathUtils, Object3D, Plane, Ray, Vector3 } from "three";
 import { max } from "lodash";
 import { ThreeMFLoader } from "three-stdlib";
-import { createRoundedButton } from "../tfl-libs/UI";
 
 
 
@@ -370,26 +369,6 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                 world.scene.add(myThreeJSProgressBar);
                 // Add the progress bar to the objects in scene array
                 objectsInScene.push(myThreeJSProgressBar);
-
-                // const baseRoundedButtonInfo = {
-                //     text: "Button",
-                //     fontSize: 20,
-                //     fontWeight: "bolder",
-                //     width: 2,
-                //     height: 1,
-                //     radius: 0.2,
-                //     backgroundColor: "#D3D3D4",
-                //     backgroundTransparent: false,
-                // }
-
-                // const roundedButton = createRoundedButton(baseRoundedButtonInfo);
-                // roundedButton.position.copy(myThreeJSPosition);
-                // roundedButton.position.x += 4.5;
-                // roundedButton.position.y += 4;
-                // world.scene.add(roundedButton);
-                // objectsInScene.push(roundedButton);
-
-
             }
         }
     }
