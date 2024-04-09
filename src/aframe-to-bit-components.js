@@ -9,7 +9,8 @@ import {
   RemoveNetworkedEntityButton,
   DestroyAtExtremeDistance,
   Billboard,
-  AvatarPOVNode
+  AvatarPOVNode,
+  AvatarHeadCollider
 } from "./bit-components";
 
 [
@@ -22,7 +23,8 @@ import {
   ["remove-networked-object-button", RemoveNetworkedEntityButton],
   ["destroy-at-extreme-distances", DestroyAtExtremeDistance],
   ["billboard", Billboard],
-  ["avatar-pov-node", AvatarPOVNode]
+  ["avatar-pov-node", AvatarPOVNode],
+  ["avatar-head-collider", AvatarHeadCollider]
 ].forEach(([aframeComponentName, bitecsComponent]) => {
   AFRAME.registerComponent(aframeComponentName, {
     init: function () {

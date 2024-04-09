@@ -46,7 +46,8 @@ import {
   Inspectable,
   ObjectMenu,
   HoverableVisuals,
-  MirrorMenu
+  MirrorMenu,
+  TFCMyTeleport
 } from "../bit-components";
 import { inflateMediaLoader } from "../inflators/media-loader";
 import { inflateMediaFrame } from "../inflators/media-frame";
@@ -113,7 +114,9 @@ import { FollowInFovParams, inflateFollowInFov } from "../inflators/follow-in-fo
 import { HelloParams, inflateHello } from "../inflators/hello";
 import { TFCTicTacToeParams, inflateTFCTicTacToe } from "../inflators/tfc-tic-tac-toe";
 import { TFCMyThreeJSParams, inflateTFCMyThreeJS } from "../inflators/tfc-my-threejs";
+import { TFCMyTeleportParams, inflateTFCMyTeleport } from "../inflators/tfc-my-teleport";
 import { TFCNetworkedContentDataParams, inflateTFCNetworkedContentData } from "../inflators/tfc-networked-content-data";
+import { create } from "mathjs";
 
 preload(
   new Promise(resolve => {
@@ -391,6 +394,7 @@ export interface JSXComponentData extends ComponentData {
   tictactoe?: TFCTicTacToeParams;
   tfcMyThreeJS?: TFCMyThreeJSParams;
   tfcNetworkedContentData?: TFCNetworkedContentDataParams;
+  tfcMyTeleport?: TFCMyTeleportParams;
 }
 
 export interface GLTFComponentData extends ComponentData {
@@ -428,6 +432,7 @@ export interface GLTFComponentData extends ComponentData {
   tictactoe?: TFCTicTacToeParams;
   tfcMyThreeJS?: TFCMyThreeJSParams;
   tfcNetworkedContentData?: TFCNetworkedContentDataParams;
+  tfcMyTeleport?: TFCMyTeleportParams;
 }
 
 declare global {
@@ -518,7 +523,8 @@ const jsxInflators: Required<{ [K in keyof JSXComponentData]: InflatorFn }> = {
   hello: inflateHello,
   tictactoe: inflateTFCTicTacToe,
   tfcMyThreeJS: inflateTFCMyThreeJS,
-  tfcNetworkedContentData: inflateTFCNetworkedContentData
+  tfcNetworkedContentData: inflateTFCNetworkedContentData,
+  tfcMyTeleport: inflateTFCMyTeleport,
 };
 
 export const gltfInflators: Required<{ [K in keyof GLTFComponentData]: InflatorFn }> = {
@@ -558,7 +564,8 @@ export const gltfInflators: Required<{ [K in keyof GLTFComponentData]: InflatorF
   hello: inflateHello,
   tictactoe: inflateTFCTicTacToe,
   tfcMyThreeJS: inflateTFCMyThreeJS,
-  tfcNetworkedContentData: inflateTFCNetworkedContentData
+  tfcNetworkedContentData: inflateTFCNetworkedContentData,
+  tfcMyTeleport: inflateTFCMyTeleport,
 };
 
 function jsxInflatorExists(name: string): name is keyof JSXComponentData {

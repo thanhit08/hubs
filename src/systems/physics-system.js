@@ -300,7 +300,11 @@ export class PhysicsSystem {
       scale.setFromMatrixScale(mesh.matrixWorld);
     }
     this.workerHelpers.addShapes(bodyUuid, this.nextShapeUuid, mesh, options);
-    this.bodyUuidToData.get(bodyUuid).shapes.push(this.nextShapeUuid);
+    if (this.bodyUuidToData.has(bodyUuid)) {
+      this.bodyUuidToData.get(bodyUuid).shapes.push(this.nextShapeUuid);
+    } else {
+      console.warn(`Shape initialized on worker but body is missing.`);
+    }
     return this.nextShapeUuid++;
   }
 

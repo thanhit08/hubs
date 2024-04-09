@@ -516,3 +516,9 @@ TFCNetworkedSyncButton.control[$isStringType] = true;
 TFCNetworkedSyncButton.steps[$isStringType] = true;
 TFCNetworkedSyncButton.clientId[$isStringType] = true;
 
+export const TFCMyTeleport = defineComponent({
+  roomID: Types.ui32,
+});
+TFCMyTeleport.roomID[$isStringType] = true;
+
+export const AvatarHeadCollider = defineComponent();

@@ -143,6 +143,7 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
                             break;
                     }
                     maxSteps = 37;
+                    sliderPadding = 2
                 } else if (category === "Geometry") {
                     // convert unit to number
                     const unitNumber = parseInt(unit);
@@ -714,6 +715,9 @@ export function TFCMyThreeJSSystem(world: HubsWorld, userinput: any) {
             const unitNumber = parseInt(unit); // Convert the 'unit' variable to an integer
             if (currentSteps > 90) { // Check if 'currentSteps' is greater than 90
                 currentSteps = 90; // Set 'currentSteps' to 90
+            }
+            if (currentSteps < 0) {
+                currentSteps = 0;
             }
             if (currentSteps % 5 != 0) { // Check if 'currentSteps' is not divisible by 5
                 currentSteps = Math.round(currentSteps / 5) * 5; // Round 'currentSteps' to the nearest multiple of 5
