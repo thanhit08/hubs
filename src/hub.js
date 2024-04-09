@@ -139,6 +139,7 @@ import "./components/avatar-audio-source";
 import "./components/avatar-inspect-collider";
 import "./components/video-texture-target";
 import "./components/mirror";
+import "./components/page-thumbnail";
 
 import React from "react";
 import { createRoot } from "react-dom/client";

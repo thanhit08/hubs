@@ -623,6 +623,16 @@
                     </a-entity>
                 </a-entity>
             </template>
+            <template id="interactable-iframe-media">
+                <a-entity
+                    class="interactable" is-remote-hover-target hoverable-visuals
+                    tags="isHandCollisionTarget: true; isHoldable: true; offersRemoteConstraint: true; offersHandConstraint: true;"
+                    body-helper="type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 31;"
+                    shape-helper="type: box; fit: manual;" set-unowned-body-kinematic
+                    floaty-object="modifyGravityOnRelease: true; autoLockOnLoad: true; gravitySpeedLimit: 0; reduceAngularFloat: true;"
+                    set-yxz-order destroy-at-extreme-distances matrix-auto-update
+                    loader="loadedEvent: page-thumbnail-loaded"></a-entity>
+            </template>
 
             <a-mixin id="rounded-text-button" slice9="
             width: 0.45;

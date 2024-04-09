@@ -15,6 +15,7 @@ import configs from "../../utils/configs";
 import { FormattedMessage } from "react-intl";
 import { anyEntityWith } from "../../utils/bit-utils";
 import { MyCameraTool } from "../../bit-components";
+import { WebPageUrlModalContainer } from "./WebPageUrlModalContainer";
 
 export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistoriedDialog, hubChannel }) {
   const [items, setItems] = useState([]);
@@ -84,6 +85,13 @@ export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistorie
             color: "accent3",
             label: <FormattedMessage id="place-popover.item-type.upload" defaultMessage="Upload" />,
             onSelect: () => showNonHistoriedDialog(ObjectUrlModalContainer, { scene })
+          },
+          {
+            id: "iframe",
+            icon: AvatarIcon,
+            color: 'accent2',
+            label: <FormattedMessage id="place-popover.item-type.iframe" defaultMessage="Web Page" />,
+            onSelect: () => showNonHistoriedDialog(WebPageUrlModalContainer, { scene })
           }
         ];
       }
