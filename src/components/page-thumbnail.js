@@ -38,9 +38,11 @@ AFRAME.registerComponent("page-thumbnail", {
 
         const texture = await createImageTexture(corsProxiedThumbnailUrl);
 
-        const geometry = new THREE.PlaneBufferGeometry(1.6, 0.9, 1, 1, texture.flipY);
+        const geometry = new THREE.PlaneBufferGeometry(1.6, 0.9, 1, 1);
         const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
         const mesh = new THREE.Mesh(geometry, material);
+        // rotate mesh arround x axis
+        mesh.rotation.x = Math.PI;
         this.el.setObject3D("mesh", mesh);
         this.el.emit("page-thumbnail-loaded");
     }
