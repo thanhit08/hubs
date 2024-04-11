@@ -27,7 +27,8 @@ export function JoinRoomButton() {
       <Button
         thick={breakpoint === "sm" || breakpoint === "md"}
         xl={breakpoint !== "sm" && breakpoint !== "md"}
-        preset="accent3"
+        style={{ width: "300px" }}
+        preset="landing"
         onClick={(e) => {
           e.preventDefault();
           if (roomID.trim() === "") {
