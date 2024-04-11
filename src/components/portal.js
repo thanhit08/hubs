@@ -101,7 +101,7 @@ AFRAME.registerComponent('portal', {
 
         var targetPlane = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(this.data.width - 0.1, this.data.height - 0.1),
-            new THREE.MeshBasicMaterial({ color: this.data.portalFaceColor, side: THREE.DoubleSide, transparent: true, opacity: 0.5})
+      new THREE.MeshBasicMaterial({ color: this.data.portalFaceColor })
         );
         targetPlane.position.set(0, 0, 0);
         targetPlane.name = this.el.id + "-" + "face";
