@@ -9,6 +9,7 @@ import { ReactComponent as ObjectIcon } from "../icons/Object.svg";
 import { ReactComponent as AvatarIcon } from "../icons/Avatar.svg";
 import { ReactComponent as SceneIcon } from "../icons/Scene.svg";
 import { ReactComponent as UploadIcon } from "../icons/Upload.svg";
+import { ReactComponent as ImageIcon } from "../icons/Image.svg";
 import { PlacePopoverButton } from "./PlacePopover";
 import { ObjectUrlModalContainer } from "./ObjectUrlModalContainer";
 import configs from "../../utils/configs";
@@ -16,6 +17,7 @@ import { FormattedMessage } from "react-intl";
 import { anyEntityWith } from "../../utils/bit-utils";
 import { MyCameraTool } from "../../bit-components";
 import { WebPageUrlModalContainer } from "./WebPageUrlModalContainer";
+import { PortalIDModalContainer } from "./PortalIDModalContainer";
 
 export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistoriedDialog, hubChannel }) {
   const [items, setItems] = useState([]);
@@ -88,10 +90,17 @@ export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistorie
           },
           {
             id: "iframe",
-            icon: AvatarIcon,
+            icon: ImageIcon,
             color: 'accent2',
             label: <FormattedMessage id="place-popover.item-type.iframe" defaultMessage="Web Page" />,
             onSelect: () => showNonHistoriedDialog(WebPageUrlModalContainer, { scene })
+          },
+          {
+            id: "portal",
+            icon: ImageIcon,
+            color: 'accent2',
+            label: <FormattedMessage id="place-popover.item-type.portal" defaultMessage="Portal" />,
+            onSelect: () => showNonHistoriedDialog(PortalIDModalContainer, { scene})            
           }
         ];
       }

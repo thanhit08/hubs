@@ -1,10 +1,10 @@
 import { resolveUrl, createImageTexture } from "../utils/media-utils";
 import { proxiedUrlFor } from "../utils/media-url-utils";
-import { waitForDOMContentLoaded } from "../utils/async-utils";
-import loadingObjectSrc from "../assets/models/LoadingObject_Atom.glb";
-import { cloneObject3D } from "../utils/three-utils";
+// import { waitForDOMContentLoaded } from "../utils/async-utils";
+// import loadingObjectSrc from "../assets/models/LoadingObject_Atom.glb";
+// import { cloneObject3D } from "../utils/three-utils";
 
-let loadingObject;
+// let loadingObject;
 
 AFRAME.registerComponent("page-thumbnail", {
     schema: {
@@ -14,11 +14,11 @@ AFRAME.registerComponent("page-thumbnail", {
     init: function () {
         console.log("Init Page");
         this.updateThumbnail = this.updateThumbnail.bind(this);
-        waitForDOMContentLoaded().then(() => {
-            loadModel(loadingObjectSrc).then(gltf => {
-                loadingObject = gltf;
-            });
-        });
+        // waitForDOMContentLoaded().then(() => {
+        //     loadModel(loadingObjectSrc).then(gltf => {
+        //         loadingObject = gltf;
+        //     });
+        // });
     },
 
     update(prevData) {

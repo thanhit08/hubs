@@ -98,6 +98,7 @@ import { TFCTicTacToeSystem } from "../bit-systems/tfc-tic-tac-toe";
 import { TFCMyThreeJSSystem } from "../bit-systems/tfc-my-threejs";
 import { TFCMyTeleportSystem } from "../bit-systems/tfc-my-teleport";
 import { IframeSystem } from "./iframe-system";
+import { PortalSystem } from "./portal-system";
 
 
 declare global {
@@ -156,6 +157,7 @@ AFRAME.registerSystem("hubs-systems", {
     this.environmentSystem = new EnvironmentSystem(this.el);
     this.nameTagSystem = new NameTagVisibilitySystem(this.el);
     this.iframeSystem = new IframeSystem(this.el);
+    this.portalSystem = new PortalSystem(this.el);
 
 
     window.$S = this;
