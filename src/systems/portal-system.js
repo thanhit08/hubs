@@ -8,7 +8,8 @@ export class PortalSystem {
 
     onSpawnPortal = event => {
         // console.log(event.detail);
-        const entity = document.createElement("a-entity");        
+        const entity = document.createElement("a-entity");   
+        entity.setAttribute("id", event.detail.portalId);     
         entity.setAttribute("portal", { destinationPortalId: event.detail.destinationPortalId });
         entity.setAttribute("offset-relative-to", { target: "#avatar-pov-node", offset: { x: 0, y: 0, z: -1.5 } });
         entity.setAttribute("networked", { template: "#interactable-portal" });

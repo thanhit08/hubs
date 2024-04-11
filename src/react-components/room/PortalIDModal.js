@@ -12,31 +12,43 @@ import { Column } from "../layout/Column";
 export function PortalIDModal({ onSubmit, onClose }) {
     const { isSubmitting, handleSubmit, register, errors } = useForm({
         defaultValues: {
-            destinationPortalId: ""
+            destinationPortalId: "",
+            portalId: ""
           }
     });
     const [destinationPortalIdState, setDestinationPortalIdState] = useState("");
+    const [portalIdState, setportalIdState] = useState("");
 
     const onSubmitForm = (data) => {
-        onSubmit(data.destinationPortalId);
+        onSubmit(data.destinationPortalId, data.portalId);
     }
 
     return (
         <Modal
-            title={<FormattedMessage id="portal-url-modal.title" defaultMessage="Portal ID" />}
+            title={<FormattedMessage id="portal-id-modal.title" defaultMessage="Portal ID" />}
             beforeTitle={<CloseButton onClick={onClose} />}
         >
             <Column as="form" padding center onSubmit={handleSubmit(onSubmitForm)}>
                 <p>
                     <FormattedMessage
-                        id="portal-url-modal.message"
-                        defaultMessage="Paste a portal ID to the portal you want to embed in the scene."
+                        id="portal-id-modal.message"
+                        defaultMessage="Enter this portal's ID and a destination portal's ID to the portal you want to embed in the scene."
                     />
                 </p>
                 <TextInputField
+                    id="portalId"
+                    name="portalId"
+                    label={<FormattedMessage id="portal-id-modal.port-id" defaultMessage="Your Portal ID" />}
+                    placeholder="portal1"
+                    type="text"
+                    onChange={(e) => setportalIdState(e.target.value)}
+                    required
+                    {...register("portalId")}
+                />
+                <TextInputField
                     id="destinationPortalId"
                     name="destinationPortalId"
-                    label={<FormattedMessage id="portal-url-modal.url-input" defaultMessage="Portal ID" />}
+                    label={<FormattedMessage id="portal-id-modal.destination-id" defaultMessage="Destination Portal ID" />}
                     placeholder="portal2"
                     type="text"
                     onChange={(e) => setDestinationPortalIdState(e.target.value)}
@@ -44,7 +56,7 @@ export function PortalIDModal({ onSubmit, onClose }) {
                     {...register("destinationPortalId")}
                 />
                 <Button type="submit" preset="accept" disabled={isSubmitting}>
-                    <FormattedMessage id="portal-url-modal.spawn-portal-button" defaultMessage="Spawn Portal" />
+                    <FormattedMessage id="portal-id-modal.spawn-portal-button" defaultMessage="Spawn Portal" />
                 </Button>
             </Column>
         </Modal>

@@ -68,7 +68,8 @@ AFRAME.registerComponent('portal', {
         cameraColor: { default: "#9CE3F9" },
         portalFaceColor: { default: "blue" },
         portalFrameColor: { default: "blue" },
-        destinationPortalId: { type: 'string' }
+        destinationPortalId: { type: 'string' },
+        portalId: { type: 'string' }
     },
     createPortalElements: function () {
         //This function creates a frame for the portal (sort of like a door frame). 
@@ -78,6 +79,7 @@ AFRAME.registerComponent('portal', {
         // Sadly, that would have been the ideal way of setting up the portal. It would have given me the feeling of actually having a non-euclidean space.
         // In hindsight I should have only enabled teleportation if the player is looking at the portal or approaching it from the front. 
         console.log("Creating Portal Elements");
+        console.log(this.el.id);
         var portalFrame = document.createElement("a-box");
         portalFrame.setAttribute("position", {x: 0, y: 0, z: -this.data.depth});
         portalFrame.setAttribute("height", this.data.height);
@@ -86,7 +88,7 @@ AFRAME.registerComponent('portal', {
         portalFrame.setAttribute("color", this.data.portalFrameColor);
         portalFrame.setAttribute("id", this.el.id + "-" + "frame");
         portalFrame.setAttribute("class", "portal-frame");
-        portalFrame.setAttribute("aabb-collider", { objects: "#player-body" });
+        portalFrame.setAttribute("aabb-collider", { objects: "#avatar-pov-node" });
         this.el.appendChild(portalFrame);
 
         var portalFace = document.createElement("a-plane");
@@ -99,7 +101,7 @@ AFRAME.registerComponent('portal', {
 
         var targetPlane = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(this.data.width - 0.1, this.data.height - 0.1),
-            new THREE.MeshBasicMaterial({ color: this.data.portalFaceColor })
+            new THREE.MeshBasicMaterial({ color: this.data.portalFaceColor, side: THREE.DoubleSide, transparent: true, opacity: 0.5})
         );
         targetPlane.position.set(0, 0, 0);
         targetPlane.name = this.el.id + "-" + "face";
@@ -122,6 +124,7 @@ AFRAME.registerComponent('portal', {
     },
     init: function () {
         this.createPortalElements();
+        setCollisionEvents();
     },
     tick: function () {
 
@@ -140,43 +143,39 @@ function setLayers() {
     document.getElementById("home").querySelectorAll("a-entity[light]").forEach(light => light.object3D.children[0].layers.enableAll());
 }
 
-// function setCollisionEvents() {
-//     //Function to "teleport the user to the destination portal while orienting the user to whatever view they had on the source portal. 
-//     //If you were looking at an object on the soucre portal, you should be looking at the object when you pass through the portal (or atleast the same direction)"
-//     var playerEl = document.getElementById('player-body');
+function setCollisionEvents() {
+    //Function to "teleport the user to the destination portal while orienting the user to whatever view they had on the source portal. 
+    //If you were looking at an object on the soucre portal, you should be looking at the object when you pass through the portal (or atleast the same direction)"
+    var playerEl = document.getElementById('avatar-pov-node');
 
-//     //Add a collider to portal frames. aabb-collider allows you to check the src and target of the collision. 
-//     //donmccurdy's physics-collider does provide a collision type event but both source and target of the collision are reported to be the same for some wierd reason.
-//     playerEl.setAttribute("aabb-collider", { objects: ".portal-frame" });
-//     document.querySelectorAll("[aabb-collider]").forEach(function (entity) {
-//         entity.addEventListener("hitstart", function (event) {
-//             var sourceId = event.target.id;
-//             var targetIds = event.target.components["aabb-collider"]["intersectedEls"].map(x => x.id);
-//             console.log(sourceId, targetIds);
-//             var playerEl = document.getElementById('player');
-//             if (sourceId.localeCompare("player-body") == 0 && targetIds.length == 1) {
-//                 var portalId = targetIds[0].split("-")[0];
-//                 var portalProxy = document.getElementById(portalId + "-" + "player-camera");
-//                 var portalProxyOrientation = portalProxy.object3D.rotation.clone();
-//                 console.log("Before rotation", playerEl.object3D.rotation, portalProxyOrientation)
+    //Add a collider to portal frames. aabb-collider allows you to check the src and target of the collision. 
+    //donmccurdy's physics-collider does provide a collision type event but both source and target of the collision are reported to be the same for some wierd reason.
+    playerEl.setAttribute("aabb-collider", { objects: ".portal-frame" });
+    document.querySelectorAll("[aabb-collider]").forEach(function (entity) {
+        entity.addEventListener("hitstart", function (event) {
+            var sourceId = event.target.id;
+            var targetIds = event.target.components["aabb-collider"]["intersectedEls"].map(x => x.id);
+            console.log(sourceId, targetIds);
+            var playerEl = document.getElementById('player');
+            if (sourceId.localeCompare("avatar-pov-node") == 0 && targetIds.length == 1) {
+                var portalId = targetIds[0].split("-")[0];
+                var portalProxy = document.getElementById(portalId + "-" + "player-camera");
+                var portalProxyOrientation = portalProxy.object3D.rotation.clone();
+                console.log("Before rotation", playerEl.object3D.rotation, portalProxyOrientation)
 
-//                 var destinationPortalId = document.getElementById(portalId).components["portal"].data.destinationPortalId;
-//                 var portalLocation = document.getElementById(destinationPortalId + "-" + "face").object3D.getWorldPosition();
+                var destinationPortalId = document.getElementById(portalId).components["portal"].data.destinationPortalId;
+                var portalLocation = document.getElementById(destinationPortalId + "-" + "face").object3D.getWorldPosition();
 
-//                 //Update camera rotation and position to "teleport" to the localtion of the destination portal face
-//                 //You can set camera position by using its object3D. But setting orientation requires that you access the look-controls component. 
-//                 //Just editing the rotation variable of the camera's object3D doesn't affect your view orientation on passing the portal due to the look-control component. 
-//                 playerEl.components['look-controls'].yawObject.rotation.y = portalProxyOrientation.y + playerEl.object3D.rotation.y;
-//                 console.log("After rotation", playerEl.object3D.rotation, portalProxyOrientation)
-//                 playerEl.object3D.position.copy(portalLocation);
-//             }
-//         });
-//     });
-// }
-// window.onload = function () {
-//     //setLayers();
-//     setCollisionEvents();
-// }
+                //Update camera rotation and position to "teleport" to the localtion of the destination portal face
+                //You can set camera position by using its object3D. But setting orientation requires that you access the look-controls component. 
+                //Just editing the rotation variable of the camera's object3D doesn't affect your view orientation on passing the portal due to the look-control component. 
+                playerEl.components['look-controls'].yawObject.rotation.y = portalProxyOrientation.y + playerEl.object3D.rotation.y;
+                console.log("After rotation", playerEl.object3D.rotation, portalProxyOrientation)
+                playerEl.object3D.position.copy(portalLocation);
+            }
+        });
+    });
+}
 
 
 

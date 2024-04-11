@@ -307,6 +307,10 @@ function registerNetworkSchemas() {
         component: "portal",
         property: "destinationPortalId" // Synchronize the portal component's  property
       },
+      {
+        component: "portal",
+        property: "portalId" // Synchronize the portal component's  property
+      }
     ]
   });
 

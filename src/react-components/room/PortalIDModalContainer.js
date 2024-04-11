@@ -4,10 +4,11 @@ import { PortalIDModal } from "./PortalIDModal";
 
 export function PortalIDModalContainer({ scene, onClose }) {
     const onSubmit = useCallback(
-        (destinationPortalId) => {
+        (destinationPortalId, portalId) => {
             // console.log(src);
             if (!destinationPortalId) return;
-            scene.emit("spawn-portal", { destinationPortalId });
+            if (!portalId) return;
+            scene.emit("spawn-portal", { destinationPortalId, portalId });
             onClose();
         },
         [scene, onClose]
