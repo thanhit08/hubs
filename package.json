@@ -84,7 +84,6 @@
     "@react-three/fiber": "^8.15.19",
     "@react-three/xr": "^5.7.1",
     "aframe": "github:mozillareality/aframe#hubs/master",
-    "aframe-aabb-collider-component": "^3.2.2",
     "ammo-debug-drawer": "github:infinitelee/ammo-debug-drawer",
     "ammo.js": "github:mozillareality/ammo.js#hubs/master",
     "animejs": "github:mozillareality/anime#hubs/master",
