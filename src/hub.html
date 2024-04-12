@@ -627,8 +627,7 @@
                 </a-entity>
             </template>
             <template id="interactable-iframe-media">
-                <a-entity
-                    class="interactable" is-remote-hover-target hoverable-visuals
+                <a-entity class="interactable" is-remote-hover-target hoverable-visuals
                     tags="isHandCollisionTarget: true; isHoldable: true; offersRemoteConstraint: true; offersHandConstraint: true;"
                     body-helper="type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 31;"
                     shape-helper="type: box; fit: manual;" set-unowned-body-kinematic
@@ -638,7 +637,11 @@
             </template>
 
             <template id="interactable-portal">
-                <a-entity
+                <a-entity class="interactable" 
+                    body-helper="type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 31;"
+                    shape-helper="type: box; fit: manual;" set-unowned-body-kinematic
+                    floaty-object="modifyGravityOnRelease: true; autoLockOnLoad: true; gravitySpeedLimit: 0; reduceAngularFloat: true;"
+                    set-yxz-order destroy-at-extreme-distances matrix-auto-update
                     portal="cameraColor:red; portalFaceColor:orange; portalFrameColor:red; destinationPortalId:portal2"></a-entity>
             </template>
 
@@ -745,6 +748,8 @@
             tags="inspectable: true; preventAudioBoost: true" inspect-pivot-child-selector="selector:.inspect-pivot">
             <a-entity id="avatar-pov-node" class="camera" personal-space-bubble="radius: 0.4;" rotation
                 pitch-yaw-rotator set-yxz-order position="0 1.6 0" avatar-pov-node>
+                <a-cylinder id="player-body" radius="0.2" height="1.7">
+                </a-cylinder>
                 <a-entity avatar-head-collider
                     body-helper="type: kinematic; collisionFilterGroup: 4; collisionFilterMask: 32;"
                     shape-helper="type: cylinder; fit: manual; halfExtents: 0.11 0.10 0.11; offset: 0 0.06 0.04;">

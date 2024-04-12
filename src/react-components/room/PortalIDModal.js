@@ -25,21 +25,21 @@ export function PortalIDModal({ onSubmit, onClose }) {
 
     return (
         <Modal
-            title={<FormattedMessage id="portal-id-modal.title" defaultMessage="Portal ID" />}
+            title={<FormattedMessage id="portal-id-modal.title" defaultMessage="Create 3D object using AI" />}
             beforeTitle={<CloseButton onClick={onClose} />}
         >
             <Column as="form" padding center onSubmit={handleSubmit(onSubmitForm)}>
                 <p>
                     <FormattedMessage
                         id="portal-id-modal.message"
-                        defaultMessage="Enter this portal's ID and a destination portal's ID to the portal you want to embed in the scene."
+                        defaultMessage="Enter object type and properties of the 3D model you want to embed in the scene."
                     />
                 </p>
                 <TextInputField
                     id="portalId"
                     name="portalId"
-                    label={<FormattedMessage id="portal-id-modal.port-id" defaultMessage="Your Portal ID" />}
-                    placeholder="portal1"
+                    label={<FormattedMessage id="portal-id-modal.port-id" defaultMessage="Object type:" />}
+                    placeholder="Box, Plane, Sphere, etc."
                     type="text"
                     onChange={(e) => setportalIdState(e.target.value)}
                     required
@@ -48,15 +48,15 @@ export function PortalIDModal({ onSubmit, onClose }) {
                 <TextInputField
                     id="destinationPortalId"
                     name="destinationPortalId"
-                    label={<FormattedMessage id="portal-id-modal.destination-id" defaultMessage="Destination Portal ID" />}
-                    placeholder="portal2"
+                    label={<FormattedMessage id="portal-id-modal.destination-id" defaultMessage="Properties: " />}
+                    placeholder="position, rotation, scale, material, etc."
                     type="text"
                     onChange={(e) => setDestinationPortalIdState(e.target.value)}
                     required
                     {...register("destinationPortalId")}
                 />
                 <Button type="submit" preset="accept" disabled={isSubmitting}>
-                    <FormattedMessage id="portal-id-modal.spawn-portal-button" defaultMessage="Spawn Portal" />
+                    <FormattedMessage id="portal-id-modal.spawn-portal-button" defaultMessage="Spawn Object" />
                 </Button>
             </Column>
         </Modal>

@@ -26,6 +26,7 @@ import "./assets/stylesheets/hub.scss";
 import loadingEnvironment from "./assets/models/LoadingEnvironment.glb";
 
 import "aframe";
+import "aframe-aabb-collider-component";
 import "./utils/aframe-overrides";
 
 // A-Frame hardcodes THREE.Cache.enabled = true

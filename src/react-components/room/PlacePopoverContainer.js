@@ -99,7 +99,7 @@ export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistorie
             id: "portal",
             icon: ImageIcon,
             color: 'accent2',
-            label: <FormattedMessage id="place-popover.item-type.portal" defaultMessage="Portal" />,
+            label: <FormattedMessage id="place-popover.item-type.portal" defaultMessage="Model" />,
             onSelect: () => showNonHistoriedDialog(PortalIDModalContainer, { scene})            
           }
         ];
