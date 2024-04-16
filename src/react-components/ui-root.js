@@ -105,6 +105,8 @@ import { ChatContextProvider } from "./room/contexts/ChatContext";
 import ChatToolbarButton from "./room/components/ChatToolbarButton/ChatToolbarButton";
 import SeePlansCTA from "./room/components/SeePlansCTA/SeePlansCTA";
 import ChatGPTToolbarButton from "./room/components/ChatToolbarButton/ChatGPTToolbarButton";
+import { ExportRoomModalContainer } from "./room/ExportRoomModalContainer";
+
 
 const avatarEditorDebug = qsTruthy("avatarEditorDebug");
 
@@ -1185,6 +1187,16 @@ class UIRoot extends Component {
                 reason: LeaveReason.createRoom
               })
           },
+          this.state.signedIn
+            ? {
+              id: "export-room",
+              label: <FormattedMessage id="more-menu.export-room" defaultMessage="Export Room" />,
+              icon: AddIcon,
+              onClick: () => this.showNonHistoriedDialog(ExportRoomModalContainer, {scene: this.props.scene})   
+            }
+            : {
+
+            },
           !isLockedDownDemo && {
             id: "user-profile",
             label: <FormattedMessage id="more-menu.profile" defaultMessage="Change Name & Avatar" />,
