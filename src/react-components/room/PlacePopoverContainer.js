@@ -18,6 +18,8 @@ import { anyEntityWith } from "../../utils/bit-utils";
 import { MyCameraTool } from "../../bit-components";
 import { WebPageUrlModalContainer } from "./WebPageUrlModalContainer";
 import { PortalIDModalContainer } from "./PortalIDModalContainer";
+import { AskAIModalContainer } from "./AskAIModalContainer";
+import { WebGLContentModalContainer } from "./WebGLContentModalContainer";
 
 export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistoriedDialog, hubChannel }) {
   const [items, setItems] = useState([]);
@@ -101,6 +103,20 @@ export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistorie
             color: 'accent2',
             label: <FormattedMessage id="place-popover.item-type.portal" defaultMessage="Model" />,
             onSelect: () => showNonHistoriedDialog(PortalIDModalContainer, { scene})            
+          },
+          {
+            id: "ai",
+            icon: ImageIcon,
+            color: 'accent2',
+            label: <FormattedMessage id="place-popover.item-type.ai" defaultMessage="AI" />,
+            onSelect: () => showNonHistoriedDialog(AskAIModalContainer, { scene })
+          },
+          {
+            id: "webgl",
+            icon: ImageIcon,
+            color: 'accent2',
+            label: <FormattedMessage id="place-popover.item-type.webgl" defaultMessage="WebGL" />,
+            onSelect: () => showNonHistoriedDialog(WebGLContentModalContainer, { scene })
           }
         ];
       }
