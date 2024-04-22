@@ -19,6 +19,7 @@ import { inflateHello } from "./inflators/hello";
 import { inflateTFCTicTacToe } from "./inflators/tfc-tic-tac-toe";
 import { inflateTFCMyThreeJS } from "./inflators/tfc-my-threejs";
 import { inflateTFCMyTeleport } from "./inflators/tfc-my-teleport";
+import { inflateTFCMyButton } from "./inflators/tfc-my-button";
 
 const inflatorWrapper = inflator => (el, _componentName, componentData) =>
   inflator(APP.world, el.object3D.eid, componentData);
@@ -613,3 +614,4 @@ AFRAME.GLTFModelPlus.registerComponent("hello", "hello", inflatorWrapper(inflate
 AFRAME.GLTFModelPlus.registerComponent("tfc-tic-tac-toe", "tfc-tic-tac-toe", inflatorWrapper(inflateTFCTicTacToe));
 AFRAME.GLTFModelPlus.registerComponent("tfc-my-threejs", "tfc-my-threejs", inflatorWrapper(inflateTFCMyThreeJS));
 AFRAME.GLTFModelPlus.registerComponent("tfc-my-teleport", "tfc-my-teleport", inflatorWrapper(inflateTFCMyTeleport));
+AFRAME.GLTFModelPlus.registerComponent("tfc-my-button", "tfc-my-button", inflatorWrapper(inflateTFCMyButton));

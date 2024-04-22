@@ -99,6 +99,7 @@ import { TFCMyThreeJSSystem } from "../bit-systems/tfc-my-threejs";
 import { TFCMyTeleportSystem } from "../bit-systems/tfc-my-teleport";
 import { IframeSystem } from "./iframe-system";
 import { PortalSystem } from "./portal-system";
+import { TFCMyButtonSystem } from "../bit-systems/tfc-my-button";
 
 
 declare global {
@@ -340,6 +341,7 @@ export function mainTick(xrFrame: XRFrame, renderer: WebGLRenderer, scene: Scene
   TFCTicTacToeSystem(world);
   TFCMyThreeJSSystem(world, aframeSystems.userinput);
   TFCMyTeleportSystem(world, hubsSystems.physicsSystem);
+  TFCMyButtonSystem(world);
 
   // tock()s on components and system will fire here. (As well as any other time render() is called without unbinding onAfterRender)
   // TODO inline invoking tocks instead of using onAfterRender registered in a-scene

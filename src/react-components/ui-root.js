@@ -106,6 +106,7 @@ import ChatToolbarButton from "./room/components/ChatToolbarButton/ChatToolbarBu
 import SeePlansCTA from "./room/components/SeePlansCTA/SeePlansCTA";
 import ChatGPTToolbarButton from "./room/components/ChatToolbarButton/ChatGPTToolbarButton";
 import { ExportRoomModalContainer } from "./room/ExportRoomModalContainer";
+import {WebGLContentModalContainer} from "./room/WebGLContentModalContainer";
 
 
 const avatarEditorDebug = qsTruthy("avatarEditorDebug");
@@ -340,6 +341,9 @@ class UIRoot extends Component {
     });
     this.props.scene.addEventListener("action_toggle_ui", () =>
       this.setState({ hide: !this.state.hide, hideUITip: false })
+    );
+    this.props.scene.addEventListener("action_toggle_wegbl", (action, content) =>
+      this.showNonHistoriedDialog(WebGLContentModalContainer,  { scene })
     );
     this.props.scene.addEventListener("action_toggle_record", () => {
       const cursor = document.querySelector("#right-cursor");

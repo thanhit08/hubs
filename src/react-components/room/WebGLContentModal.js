@@ -18,7 +18,7 @@ import { ReactComponent as LeaveIcon } from "../icons/Leave.svg";
 export function WebGLContentModal({ onClose }) {
     const { isSubmitting, handleSubmit, register, errors } = useForm({
         defaultValues: {
-            contentURL: "https://webglmulti.web.app/s15Reflex",
+            contentURL: "https://webglmulti.web.app/Milling1/",
         }
     });
 
@@ -35,7 +35,7 @@ export function WebGLContentModal({ onClose }) {
                 title="반응과 반사의 구조"
                 width="100%"
                 height="100%"
-                src="https://webglmulti.web.app/M1" scrolling="no" style={{ frameBorder: 0 }} frameBorder="0" allow="xr-spatial-tracking">
+                src="https://webglmulti.web.app/Milling1/" scrolling="no" style={{ frameBorder: 0 }} frameBorder="0" allow="xr-spatial-tracking">
             </iframe>
 
         </div>

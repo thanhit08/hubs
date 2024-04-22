@@ -47,7 +47,8 @@ import {
   ObjectMenu,
   HoverableVisuals,
   MirrorMenu,
-  TFCMyTeleport
+  TFCMyTeleport,
+  TFCMyButton
 } from "../bit-components";
 import { inflateMediaLoader } from "../inflators/media-loader";
 import { inflateMediaFrame } from "../inflators/media-frame";
@@ -115,6 +116,7 @@ import { HelloParams, inflateHello } from "../inflators/hello";
 import { TFCTicTacToeParams, inflateTFCTicTacToe } from "../inflators/tfc-tic-tac-toe";
 import { TFCMyThreeJSParams, inflateTFCMyThreeJS } from "../inflators/tfc-my-threejs";
 import { TFCMyTeleportParams, inflateTFCMyTeleport } from "../inflators/tfc-my-teleport";
+import { TFCMyButtonParams, inflateTFCMyButton } from "../inflators/tfc-my-button";
 import { TFCNetworkedContentDataParams, inflateTFCNetworkedContentData } from "../inflators/tfc-networked-content-data";
 import { create } from "mathjs";
 
@@ -395,6 +397,7 @@ export interface JSXComponentData extends ComponentData {
   tfcMyThreeJS?: TFCMyThreeJSParams;
   tfcNetworkedContentData?: TFCNetworkedContentDataParams;
   tfcMyTeleport?: TFCMyTeleportParams;
+  tfcMyButton?: TFCMyButtonParams;
 }
 
 export interface GLTFComponentData extends ComponentData {
@@ -433,6 +436,7 @@ export interface GLTFComponentData extends ComponentData {
   tfcMyThreeJS?: TFCMyThreeJSParams;
   tfcNetworkedContentData?: TFCNetworkedContentDataParams;
   tfcMyTeleport?: TFCMyTeleportParams;
+  tfcMyButton?: TFCMyButtonParams;
 }
 
 declare global {
@@ -525,6 +529,7 @@ const jsxInflators: Required<{ [K in keyof JSXComponentData]: InflatorFn }> = {
   tfcMyThreeJS: inflateTFCMyThreeJS,
   tfcNetworkedContentData: inflateTFCNetworkedContentData,
   tfcMyTeleport: inflateTFCMyTeleport,
+  tfcMyButton: inflateTFCMyButton
 };
 
 export const gltfInflators: Required<{ [K in keyof GLTFComponentData]: InflatorFn }> = {
@@ -566,6 +571,7 @@ export const gltfInflators: Required<{ [K in keyof GLTFComponentData]: InflatorF
   tfcMyThreeJS: inflateTFCMyThreeJS,
   tfcNetworkedContentData: inflateTFCNetworkedContentData,
   tfcMyTeleport: inflateTFCMyTeleport,
+  tfcMyButton: inflateTFCMyButton
 };
 
 function jsxInflatorExists(name: string): name is keyof JSXComponentData {

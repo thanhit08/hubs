@@ -522,3 +522,11 @@ export const TFCMyTeleport = defineComponent({
 TFCMyTeleport.roomID[$isStringType] = true;
 
 export const AvatarHeadCollider = defineComponent();
+
+export const TFCMyButton = defineComponent({
+  action: Types.ui32,
+  content: Types.ui32,
+});
+TFCMyButton.action[$isStringType] = true;
+TFCMyButton.content[$isStringType] = true;
+
