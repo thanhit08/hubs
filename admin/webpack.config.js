@@ -73,21 +73,21 @@ module.exports = (env, argv) => {
   if (env.local) {
     Object.assign(process.env, {
       HOST: "localhost",
-      RETICULUM_SOCKET_SERVER: "157.230.41.69",
-      CORS_PROXY_SERVER: "157.230.41.69:4000",
-      NON_CORS_PROXY_DOMAINS: "157.230.41.69,dev.reticulum.io",
-      BASE_ASSETS_PATH: "https://157.230.41.69:8989/",
-      RETICULUM_SERVER: "157.230.41.69:4000",
+      RETICULUM_SOCKET_SERVER: "localhost",
+      CORS_PROXY_SERVER: "localhost:4000",
+      NON_CORS_PROXY_DOMAINS: "localhost,dev.reticulum.io",
+      BASE_ASSETS_PATH: "https://localhost:8989/",
+      RETICULUM_SERVER: "localhost:4000",
       POSTGREST_SERVER: "",
       ITA_SERVER: "turkey",
       TIER: "p1"
     });
   }
 
-  const defaultHostName = "157.230.41.69";
+  const defaultHostName = "localhost";
   const host = process.env.HOST_IP || defaultHostName;
 
-  const internalHostname = process.env.INTERNAL_HOSTNAME || "157.230.41.69";
+  const internalHostname = process.env.INTERNAL_HOSTNAME || "localhost";
   return {
     cache: {
       type: "filesystem"

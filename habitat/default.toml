@@ -1,10 +1,10 @@
 [general]
-shortlink_domain = "157.230.41.69"
+shortlink_domain = "localhost"
 reticulum_server = "dev.reticulum.io"
 cors_proxy_server = "cors-proxy-dev.reticulum.io"
 thumbnail_server = "nearspark-dev.reticulum.io"
-non_cors_proxy_domains = "157.230.41.69,dev.reticulum.io"
-postgrest_server = "https://157.230.41.69:3000"
+non_cors_proxy_domains = "localhost,dev.reticulum.io"
+postgrest_server = "https://localhost:3000"
 ita_server = ""
 base_assets_path = "/"
 sentry_dsn = ""
