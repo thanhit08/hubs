@@ -18,7 +18,7 @@ import { caesarCipher } from "../thanhutility";
 
 function comparePasswords(roomPassword, enteredPassword, joinRoomFunction) {
   enteredPassword = enteredPassword.trim();
-  if (roomPassword === null) {
+  if (!roomPassword || roomPassword === null) {
     joinRoomFunction();
   } else if (roomPassword === caesarCipher(enteredPassword, 3)) {
     joinRoomFunction();
@@ -56,7 +56,7 @@ export function RoomEntryModal({
         <Column center className={styles.buttons}>
           {showJoinRoom && (
             <>
-              {roomPassword !== null && roomPassword.trim() !== '' && (
+              {roomPassword && roomPassword !== null && roomPassword.trim() !== '' && (
                 <TextInputField
                   type="password"
                   label="Room Password"

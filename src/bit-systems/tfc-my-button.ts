@@ -46,11 +46,14 @@ export function TFCMyButtonSystem(world: HubsWorld) {
                 myButton.getWorldScale(myButtonScale);
 
                 const myMilling01ButtonEid = addEntity(world);
+                // Change the material of the button
+                const newMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide, transparent: true, opacity: 0.0});
+                (myButton.children[0] as THREE.Mesh).material = newMaterial;
 
                 const myMilling01Button = createUIButton({
-                    width: 0.72,
-                    height: 0.36,
-                    backgroundColor: '#007bff',
+                    width: 1.6,
+                    height: 0.4,
+                    backgroundColor: 'https://localhost:4000/files/75083328-5e62-4bad-b82a-eb15fea05e82.jpg',
                     textColor: '#ffffff',
                     text: "Milling 01",
                     fontSize: 16,
