@@ -14,7 +14,7 @@ const DEFAULTS: Required<TFCMyButtonParams> = {
 
 export function inflateTFCMyButton(world: HubsWorld, eid: number, params: TFCMyButtonParams) {
     console.log("inflating a MyButton Component ", { eid, params });
-    const requiredParams = Object.assign({}, params, DEFAULTS) as Required<TFCMyButtonParams>;
+    const requiredParams = Object.assign({}, DEFAULTS, params) as Required<TFCMyButtonParams>;
     addComponent(world, TFCMyButton, eid);
     TFCMyButton.action[eid] = APP.getSid(requiredParams.action);
     TFCMyButton.content[eid] = APP.getSid(requiredParams.content);

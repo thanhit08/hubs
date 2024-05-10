@@ -15,7 +15,7 @@ import { ReactComponent as LeaveIcon } from "../icons/Leave.svg";
 
 
 
-export function WebGLContentModal({ onClose }) {
+export function WebGLContentModal({ onClose, url }) {
     const { isSubmitting, handleSubmit, register, errors } = useForm({
         defaultValues: {
             contentURL: "https://visualinfinity.asia/m1",
@@ -35,7 +35,7 @@ export function WebGLContentModal({ onClose }) {
                 title="반응과 반사의 구조"
                 width="100%"
                 height="100%"
-                src="https://visualinfinity.asia/m1" scrolling="no" style={{ frameBorder: 0 }} frameBorder="0" allow="xr-spatial-tracking">
+                src={url} scrolling="no" style={{ frameBorder: 0 }} frameBorder="0" allow="xr-spatial-tracking">
             </iframe>
 
         </div>

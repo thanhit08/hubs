@@ -2,8 +2,8 @@ import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { WebGLContentModal } from "./WebGLContentModal";
 
-export function WebGLContentModalContainer({ scene, onClose }) {
-    return <WebGLContentModal onClose={onClose} />;
+export function WebGLContentModalContainer({ scene, url, onClose }) {
+    return <WebGLContentModal onClose={onClose} url={url} />;
 }
 
 WebGLContentModalContainer.propTypes = {
