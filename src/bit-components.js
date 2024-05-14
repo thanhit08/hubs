@@ -526,7 +526,13 @@ export const AvatarHeadCollider = defineComponent();
 export const TFCMyButton = defineComponent({
   action: Types.ui32,
   content: Types.ui32,
+  buttonImage: Types.ui32,
+  buttonLink: Types.ui32,
+  buttonText: Types.ui32,
 });
 TFCMyButton.action[$isStringType] = true;
 TFCMyButton.content[$isStringType] = true;
+TFCMyButton.buttonImage[$isStringType] = true;
+TFCMyButton.buttonLink[$isStringType] = true;
+TFCMyButton.buttonText[$isStringType] = true;
 

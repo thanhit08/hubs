@@ -56,6 +56,8 @@ import { setMatrixWorld } from "../utils/three-utils";
 import { computeObjectAABB, getScaleCoefficient } from "../utils/auto-box-collider";
 import { updateHoverableVisuals } from "./hoverable-visuals-system";
 import { VIDEO_FLAGS } from "../inflators/video";
+import rotateButtonURL from "../assets/models/RotateCncBtn.glb";
+console.warn("rotateButtonURL", rotateButtonURL);
 
 export function* waitForMediaLoaded(world: HubsWorld, eid: EntityID) {
   while (hasComponent(world, MediaLoader, eid)) {

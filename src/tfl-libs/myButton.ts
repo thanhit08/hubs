@@ -64,12 +64,12 @@ export function createUIButton(options: CreateUIButtonOptions): THREE.Mesh {
         const btn_image = document.getElementById("circle_btn_img");
         if (btn_image instanceof HTMLImageElement) {
           context.drawImage(btn_image, 0, 0, canvas.width, canvas.height);
-          var blackImage = new Image();
-          blackImage.src = "https://localhost:4000/files/5eaec76e-cc7d-4876-9ef7-14384b6337ba.gif";
-          blackImage.onload = function () {
-            context.globalCompositeOperation = "screen";
-            context.drawImage(blackImage, 0, 0, canvas.width, canvas.height);
-          }
+          // var blackImage = new Image();
+          // blackImage.src = "https://localhost:4000/files/5eaec76e-cc7d-4876-9ef7-14384b6337ba.gif";
+          // blackImage.onload = function () {
+          //   context.globalCompositeOperation = "screen";
+          //   context.drawImage(blackImage, 0, 0, canvas.width, canvas.height);
+          // }
         }
         console.log("btn_image")
 
