@@ -218,14 +218,8 @@ export function TFCMyButtonSystem(world: HubsWorld) {
                 if (nextStepNumber === listCNCButton.length) {
                     console.log("All steps are completed");
                     const object = world.eid2obj.get(entity);
-                    const animationData = object?.parent?.parent?.children[0].userData!;
-                    const animationSource = animationData.gltfExtensions.MOZ_hubs_components;
-                    console.log('animationSource', animationSource);
                     const mixerEl = findAncestorWithComponent(object?.parent?.parent?.el, "animation-mixer");
-                    console.log('mixerEl', mixerEl);
                     const { mixer, animations } = mixerEl.components["animation-mixer"];
-                    console.log('mixer', mixer);
-                    console.log('animations', animations);
                     if (animations.length > 0) {
                         for (let i = 0; i < animations.length; i++) {
                             const clips = [animations[i]];
