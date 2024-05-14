@@ -1,15 +1,10 @@
 import { HubsWorld } from "../app";
 import { defineQuery, enterQuery, exitQuery, hasComponent, Not, entityExists, addComponent, addEntity } from "bitecs";
-import { Interacted, TFCMyButton, MixerAnimatableData, MixerAnimatable, LoopAnimationInitializeData, LoopAnimationData, LoopAnimationInitialize, LoopAnimation } from "../bit-components";
+import { Interacted, TFCMyButton } from "../bit-components";
 import { createUIButton } from "../tfl-libs/myButton";
 import { addObject3DComponent } from "../utils/jsx-entity";
-import { anyEntityWith, findAncestorEntity } from "../utils/bit-utils";
-import { AnimationAction, AnimationClip, AnimationMixer, LoopRepeat } from "three";
-import { WebGLContentModalContainer } from "../react-components/room/WebGLContentModalContainer";
-import UIRoot from "../react-components/ui-root";
-import { button } from "leva";
-import { e } from "mathjs";
-import { findAncestor } from "typescript";
+import { anyEntityWith } from "../utils/bit-utils";
+import { AnimationClip } from "three";
 import { findAncestorWithComponent } from "../utils/scene-graph";
 
 const TFCMyButtonQuery = defineQuery([TFCMyButton]);
@@ -46,6 +41,39 @@ function clicked(world: HubsWorld, entity: number) {
     return hasComponent(world, Interacted, entity);
 }
 
+function startStopAllAnimation(world: HubsWorld, entity: number, startOrStop: boolean) {
+    const object = world.eid2obj.get(entity);
+    const mixerEl = findAncestorWithComponent(object?.parent?.parent?.el, "animation-mixer");
+    const { mixer, animations } = mixerEl.components["animation-mixer"];
+    if (animations.length > 0) {
+        for (let i = 0; i < animations.length; i++) {
+            const clips = [animations[i]];
+            console.log('clips', clips);
+            for (let j = 0; j < clips.length; j++) {
+                const clip = clips[j];
+                if (!clip) {
+                } else {
+                    const action = mixer.clipAction(clip);
+                    if (action) {
+                        if (startOrStop) {
+                            action.enabled = true;
+                            action.play();
+                            console.log("Starting action", action);
+                        } else {
+                            action.enabled = false;
+                            action.stop();
+                            console.log("Stopping action", action);
+                            if (mixer !== null) {
+                                mixer.uncacheAction(action);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 export function TFCMyButtonSystem(world: HubsWorld) {
     const myButtonEid = anyEntityWith(world, TFCMyButton);
     if (myButtonEid !== null) {
@@ -54,6 +82,7 @@ export function TFCMyButtonSystem(world: HubsWorld) {
         for (let i = 0; i < entered.length; i++) {
             console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
             const entity = entered[i];
+            startStopAllAnimation(world, entity, false);
             // Get the entity's TFCMyButton component
             const action = APP.getString(TFCMyButton.action[entity]);
             console.log('TFCMyButton action', action);
@@ -217,28 +246,7 @@ export function TFCMyButtonSystem(world: HubsWorld) {
                 const nextStepNumber = currentStepNumber + 1;
                 if (nextStepNumber === listCNCButton.length) {
                     console.log("All steps are completed");
-                    const object = world.eid2obj.get(entity);
-                    const mixerEl = findAncestorWithComponent(object?.parent?.parent?.el, "animation-mixer");
-                    const { mixer, animations } = mixerEl.components["animation-mixer"];
-                    if (animations.length > 0) {
-                        for (let i = 0; i < animations.length; i++) {
-                            const clips = [animations[i]];
-                            console.log('clips', clips);
-                            for (let j = 0; j < clips.length; j++) {
-                                const clip = clips[j];
-                                if (!clip) {
-                                } else {
-                                    const action = mixer.clipAction(clip);
-                                    action.enabled = false;
-                                    action.stop();
-                                    console.log("Stopping action", action);
-                                    if (mixer !== null) {
-                                        mixer.uncacheAction(action);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    startStopAllAnimation(world, entity, true);
                 } else {
                     const nextButtonEid = addEntity(world);
                     const nextButton = listCNCButton[nextStepNumber];
