@@ -64,15 +64,17 @@ export function createUIButton(options: CreateUIButtonOptions): THREE.Mesh {
         const btn_image = document.getElementById("circle_btn_img");
         if (btn_image instanceof HTMLImageElement) {
           context.drawImage(btn_image, 0, 0, canvas.width, canvas.height);
-          // var blackImage = new Image();
-          // blackImage.src = "https://localhost:4000/files/5eaec76e-cc7d-4876-9ef7-14384b6337ba.gif";
-          // blackImage.onload = function () {
-          //   context.globalCompositeOperation = "screen";
-          //   context.drawImage(blackImage, 0, 0, canvas.width, canvas.height);
-          // }
         }
         console.log("btn_image")
-
+        break;
+      case "screen":
+        canvas.width = 560; // Texture width (power of 2)
+        canvas.height = 420; // Texture height (power of 2)
+        const screen_image = document.getElementById("screen_btn_img");
+        if (screen_image instanceof HTMLImageElement) {
+          context.drawImage(screen_image, 0, 0, canvas.width, canvas.height);
+        }
+        console.log("screen_image")
         break;
     }
     // const image_from_img = new Image(60, 45);
@@ -94,7 +96,10 @@ export function createUIButton(options: CreateUIButtonOptions): THREE.Mesh {
   texture.needsUpdate = true;
 
   // Create material with texture
-  const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, transparent: true});
+  let material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, transparent: true });
+  if (text === "screen") {
+    material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+  }
 
   // Create geometry
   const geometry = new THREE.PlaneGeometry(width, height);

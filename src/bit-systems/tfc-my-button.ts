@@ -4,7 +4,7 @@ import { Interacted, TFCMyButton } from "../bit-components";
 import { createUIButton } from "../tfl-libs/myButton";
 import { addObject3DComponent } from "../utils/jsx-entity";
 import { anyEntityWith } from "../utils/bit-utils";
-import { AnimationClip } from "three";
+import { AnimationClip, Object3D } from "three";
 import { findAncestorWithComponent } from "../utils/scene-graph";
 import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
 
@@ -46,6 +46,7 @@ const endTime = 240 / 30;
 let isPlaying = false;
 let currentTime = 0;
 let nextStepNumber = -1;
+let screenObject = new THREE.Object3D();
 function startStopAllAnimation(world: HubsWorld, entity: number, startOrStop: boolean) {
     const object = world.eid2obj.get(entity);
     const mixerEl = findAncestorWithComponent(object?.parent?.parent?.el, "animation-mixer");
@@ -115,6 +116,12 @@ export function TFCMyButtonSystem(world: HubsWorld) {
                 }
             }
         }
+        if (nextStepNumber === 2) {
+            console.log("Enable screen");
+            const screenObjectEid = addEntity(world);
+            addObject3DComponent(world, screenObjectEid, screenObject);
+            world.scene.add(screenObject);
+        }
         const entered = TFCMyButtonEnterQuery(world);
         for (let i = 0; i < entered.length; i++) {
             console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
@@ -181,7 +188,7 @@ export function TFCMyButtonSystem(world: HubsWorld) {
 
 
                 // Change the material of the button
-                const newMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide, transparent: true, opacity: 0.0 });
+                let newMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide, transparent: true, opacity: 0.0 });
                 (myButton.children[0] as THREE.Mesh).material = newMaterial;
 
                 let content_type = content.split("_")[0];
@@ -189,9 +196,14 @@ export function TFCMyButtonSystem(world: HubsWorld) {
                 let btn_width = 1.6;
                 let btn_height = 0.4;
                 if (action === '1') {
-                    content_type = "btn";
+                    content_type = "btn";                    
                     btn_width = 0.09;
                     btn_height = 0.09;
+                    if (buttonText === '20') {
+                        content_type = "screen";
+                        btn_width = 0.186;
+                        btn_height = 0.14;
+                    }
                 }
 
                 const myMilling01Button = createUIButton({
@@ -225,8 +237,12 @@ export function TFCMyButtonSystem(world: HubsWorld) {
 
 
 
-                if (action === '1') {
-                    listCNCButton.push(myMilling01Button);
+                if (action === '1') {                    
+                    if (buttonText === '20') {
+                        screenObject = myMilling01Button;
+                    } else {
+                        listCNCButton.push(myMilling01Button);
+                    }
                 } else {
                     objectsInScene.push(myMilling01Button);
                 }
@@ -285,7 +301,7 @@ export function TFCMyButtonSystem(world: HubsWorld) {
                     console.log("All steps are completed");
                     startStopAllAnimation(world, entity, true);
                 } else
-                    if (nextStepNumber === listCNCButton.length) {
+                    if (nextStepNumber === 20) {
                         console.log("All steps are completed");
                         startStopAllAnimation(world, entity, true);
                     } else {
