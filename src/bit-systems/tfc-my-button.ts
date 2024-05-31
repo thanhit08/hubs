@@ -126,7 +126,7 @@ export function TFCMyButtonSystem(world: HubsWorld) {
         for (let i = 0; i < entered.length; i++) {
             console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
             const entity = entered[i];
-            startStopAllAnimation(world, entity, false);
+            // startStopAllAnimation(world, entity, false);
             // Get the entity's TFCMyButton component
             const action = APP.getString(TFCMyButton.action[entity]);
             console.log('TFCMyButton action', action);
