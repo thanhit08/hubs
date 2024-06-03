@@ -1,19 +1,25 @@
 import { HubsWorld } from "../app";
 import { defineQuery, enterQuery, exitQuery, hasComponent, Not, entityExists, addComponent, addEntity } from "bitecs";
-import { Interacted, TFCMyButton } from "../bit-components";
+import { Interacted, TFCMyButton, TFCNetworkedContentData } from "../bit-components";
 import { createUIButton } from "../tfl-libs/myButton";
 import { addObject3DComponent } from "../utils/jsx-entity";
 import { anyEntityWith } from "../utils/bit-utils";
 import { AnimationClip, Object3D } from "three";
 import { findAncestorWithComponent } from "../utils/scene-graph";
 import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
+import { createNetworkedEntity } from "../utils/create-networked-entity";
+import { takeOwnership } from "../utils/take-ownership";
+
 
 const TFCMyButtonQuery = defineQuery([TFCMyButton]);
 const TFCMyButtonEnterQuery = enterQuery(TFCMyButtonQuery);
 const TFCMyButtonExitQuery = exitQuery(TFCMyButtonQuery);
 
+let currentSteps = 0;
 const objectsInScene: THREE.Object3D[] = [];
 const listCNCButton: THREE.Object3D[] = [];
+const listCNCEid: number[] = [];
+
 const getActiveClips = (
     animations: Array<AnimationClip>,
     activeClipIndices: number[],
@@ -64,7 +70,7 @@ function startStopAllAnimation(world: HubsWorld, entity: number, startOrStop: bo
                         if (startOrStop) {
                             if (nextStepNumber > 11) {
                                 action.time = 6.6666666;
-                                action.paused = false;                                
+                                action.paused = false;
                                 console.log("Paused action", action);
                             } else {
                                 action.enabled = true;
@@ -75,7 +81,7 @@ function startStopAllAnimation(world: HubsWorld, entity: number, startOrStop: bo
                                 isPlaying = true;
                                 console.log("Starting action", action);
                             }
-                            
+
                         } else {
                             if (nextStepNumber === 11) {
                                 action.paused = true;
@@ -196,7 +202,7 @@ export function TFCMyButtonSystem(world: HubsWorld) {
                 let btn_width = 1.6;
                 let btn_height = 0.4;
                 if (action === '1') {
-                    content_type = "btn";                    
+                    content_type = "btn";
                     btn_width = 0.09;
                     btn_height = 0.09;
                     if (buttonText === '20') {
@@ -237,7 +243,7 @@ export function TFCMyButtonSystem(world: HubsWorld) {
 
 
 
-                if (action === '1') {                    
+                if (action === '1') {
                     if (buttonText === '20') {
                         screenObject = myMilling01Button;
                     } else {
@@ -273,6 +279,7 @@ export function TFCMyButtonSystem(world: HubsWorld) {
     const entities = TFCMyButtonQuery(world);
     for (let i = 0; i < entities.length; i++) {
         const entity = entities[i];
+        let networkedEid = anyEntityWith(world, TFCNetworkedContentData)!;
         if (clicked(world, entity)) {
             const scene = AFRAME.scenes[0];
             console.log("My Button clicked", entity);
@@ -295,7 +302,11 @@ export function TFCMyButtonSystem(world: HubsWorld) {
                 const currentStepNumber = parseInt(currentStep);
                 world.scene.remove(listCNCButton[currentStepNumber]);
                 myButton.visible = false;
+                world.scene.remove(myButton);
                 // listCNCButton.splice(currentStepNumber, 1);
+                if (nextStepNumber !== -1 && nextStepNumber !== currentStepNumber) {
+                    return;
+                }
                 nextStepNumber = currentStepNumber + 1;
                 if (nextStepNumber === 11) {
                     console.log("All steps are completed");
@@ -310,6 +321,22 @@ export function TFCMyButtonSystem(world: HubsWorld) {
                         addObject3DComponent(world, nextButtonEid, nextButton);
                         world.scene.add(nextButton);
                     }
+                currentSteps = nextStepNumber;
+                const type = "control"!;
+                const steps = currentSteps.toString();
+                if (networkedEid) {
+                    takeOwnership(world, networkedEid);
+                    TFCNetworkedContentData.type[networkedEid] = APP.getSid("control");
+                    TFCNetworkedContentData.control[networkedEid] = APP.getSid("");
+                    TFCNetworkedContentData.steps[networkedEid] = currentSteps;
+                    TFCNetworkedContentData.clientId[networkedEid] = APP.getSid(NAF.clientId);
+                } else {
+                    const nid = createNetworkedEntity(world, "tfc-networked-content-data", { type: type, steps: steps, control: "", clientId: NAF.clientId });
+                    networkedEid = anyEntityWith(world, TFCNetworkedContentData)!;
+                    TFCNetworkedContentData.type[networkedEid] = APP.getSid("control");
+                    TFCNetworkedContentData.control[networkedEid] = APP.getSid("");
+                    TFCNetworkedContentData.steps[networkedEid] = currentSteps;
+                }
             }
             if (action === '0') {
                 const content_type = content.split("_")[0];
@@ -317,6 +344,39 @@ export function TFCMyButtonSystem(world: HubsWorld) {
                 const action_string = "action_toggle_" + content_type + "_" + content_number;
                 scene.emit(action_string);
                 // scene.emit("action_toggle_wegbl");
+            }
+        }
+
+        if (networkedEid) {
+            if (APP.getString(TFCNetworkedContentData.type[networkedEid]) != "" &&
+                TFCNetworkedContentData.steps[networkedEid] !== -1) {
+                if (TFCNetworkedContentData.steps[networkedEid] !== currentSteps) {
+                    currentSteps = TFCNetworkedContentData.steps[networkedEid];
+                    console.log("Syncing button", currentSteps);
+                    // convert currentStep to integer
+                    const currentStepNumber = currentSteps;
+                    for (let i = 0; i < listCNCButton.length; i++) {
+                        world.scene.remove(listCNCButton[i]);
+                        const cncButton = world.eid2obj.get(entity)!;
+                        cncButton.visible = false;
+                        world.scene.remove(cncButton);
+                    }
+                    nextStepNumber = currentStepNumber;
+                    if (nextStepNumber === 11) {
+                        console.log("All steps are completed");
+                        startStopAllAnimation(world, entity, true);
+                    } else
+                        if (nextStepNumber === 20) {
+                            console.log("All steps are completed");
+                            startStopAllAnimation(world, entity, true);
+                        } else {
+                            const nextButtonEid = addEntity(world);
+                            const nextButton = listCNCButton[nextStepNumber];
+                            addObject3DComponent(world, nextButtonEid, nextButton);
+                            world.scene.add(nextButton);
+                        }
+                } else {
+                }
             }
         }
     }
