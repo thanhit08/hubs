@@ -536,3 +536,16 @@ TFCMyButton.buttonImage[$isStringType] = true;
 TFCMyButton.buttonLink[$isStringType] = true;
 TFCMyButton.buttonText[$isStringType] = true;
 
+export const TFCKeyboardButton = defineComponent({
+  action: Types.ui32,
+  value: Types.ui32,
+  buttonImage: Types.ui32,
+  buttonLink: Types.ui32,
+  buttonText: Types.ui32,
+});
+TFCKeyboardButton.action[$isStringType] = true;
+TFCKeyboardButton.value[$isStringType] = true;
+TFCKeyboardButton.buttonImage[$isStringType] = true;
+TFCKeyboardButton.buttonLink[$isStringType] = true;
+TFCKeyboardButton.buttonText[$isStringType] = true;
+

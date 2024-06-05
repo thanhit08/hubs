@@ -46,12 +46,13 @@ export function createUIButton(options: CreateUIButtonOptions): THREE.Mesh {
         console.log("No matching image for the text provided.");
     }
   } else {
-    canvas.width = 128 * width; // Texture width (power of 2)
-    canvas.height = 128 * height; // Texture height (power of 2)
+    canvas.width = 1028 * width; // Texture width (power of 2)
+    canvas.height = 1028 * height; // Texture height (power of 2)
+    
     context.fillStyle = backgroundColor;
     context.fillRect(0, 0, canvas.width, canvas.height);
     // Draw text
-    context.font = `${fontSize}px ${font}`;
+    context.font = `${fontSize * 10}px ${font}`;
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.fillStyle = textColor;
@@ -62,8 +63,15 @@ export function createUIButton(options: CreateUIButtonOptions): THREE.Mesh {
   const texture = new THREE.Texture(canvas);
   texture.needsUpdate = true;
 
+  let transparent = true;
+  if (backgroundColor[0] === '#') {
+    transparent = false;
+  } else if (text !== "screen") {
+    transparent = true;
+  }
+  
   // Create material with texture
-  const materialParams = { map: texture, side: THREE.DoubleSide, transparent: text !== "screen" };
+  const materialParams = { map: texture, side: THREE.DoubleSide, transparent: transparent };
   const material = new THREE.MeshBasicMaterial(materialParams);
 
   // Create geometry

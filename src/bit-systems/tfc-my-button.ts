@@ -67,6 +67,7 @@ function startStopAllAnimation(world: HubsWorld, entity: number, startOrStop: bo
 
 export function TFCMyButtonSystem(world: HubsWorld) {
     const myButtonEid = anyEntityWith(world, TFCMyButton);
+
     if (myButtonEid !== null) {
         if (isPlaying) {
             currentTime += 1;
@@ -83,65 +84,57 @@ export function TFCMyButtonSystem(world: HubsWorld) {
                 }
             }
         }
+
+        // if the next step is 2, enable the screen
         if (nextStepNumber === 2) {
             console.log("Enable screen");
             const screenObjectEid = addEntity(world);
             addObject3DComponent(world, screenObjectEid, screenObject);
             world.scene.add(screenObject);
         }
+
         const entered = TFCMyButtonEnterQuery(world);
+
         for (let i = 0; i < entered.length; i++) {
             console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
             const entity = entered[i];
             // startStopAllAnimation(world, entity, false);
             // Get the entity's TFCMyButton component
             const action = APP.getString(TFCMyButton.action[entity]);
-            console.log('TFCMyButton action', action);
             const content = APP.getString(TFCMyButton.content[entity])!;
-            console.log('TFCMyButton content', content);
             const myButton = world.eid2obj.get(entity);
             const buttonChildrent = myButton?.parent?.parent?.children!;
+
             let buttonImage = '';
             let buttonLink = '';
             let buttonText = '';
+
+            // Check if the button has more than 2 children
             if (buttonChildrent.length > 2) {
                 for (let i = 0; i < buttonChildrent.length; i++) {
                     const buttonChild = buttonChildrent[i];
-                    console.log(buttonChild.name);
+                    if (buttonChild.children[0] === undefined) {
+                        continue;
+                    }
+                    
+                    const buttonData = buttonChild.children[0].userData;
                     // check buttonChild name contains "image", "link", "text" text
-
-
                     if (buttonChild.name.includes('image')) {
-                        const buttonData = buttonChild.children[0].userData;
-                        // Query the data inside the buttondata 
-                        // buttonData -> gltfExtension -> MOZ_hubs_components -> image
                         buttonImage = buttonData.gltfExtensions.MOZ_hubs_components.image.src;
-                        // console.log('buttonImage', buttonImage);
                         TFCMyButton.buttonImage[entity] = APP.getSid(buttonImage);
                     }
                     if (buttonChild.name.includes('link')) {
-                        const buttonData = buttonChild.children[0].userData;
-                        // Query the data inside the buttondata
-                        // buttonData -> gltfExtension -> MOZ_hubs_components -> link
                         buttonLink = buttonData.gltfExtensions.MOZ_hubs_components.link.href;
-                        // console.log('buttonLink', buttonLink);
                         TFCMyButton.buttonLink[entity] = APP.getSid(buttonLink);
                     }
                     if (buttonChild.name.includes('text')) {
-                        const buttonData = buttonChild.children[0].userData;
-                        // Query the data inside the buttondata
-                        // buttonData -> gltfExtension -> MOZ_hubs_components -> text
-                        console.log(buttonData);
                         buttonText = buttonData.gltfExtensions.MOZ_hubs_components.text.value;
-                        // console.log('buttonText', buttonText);
                         TFCMyButton.buttonText[entity] = APP.getSid(buttonText);
                     }
                 }
             }
 
-
             if (myButton) {
-                // myButton.visible = false;
                 const myButtonPosition = new THREE.Vector3();
                 myButton.getWorldPosition(myButtonPosition);
 
@@ -155,8 +148,7 @@ export function TFCMyButtonSystem(world: HubsWorld) {
 
 
                 // Change the material of the button
-                let newMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide, transparent: true, opacity: 0.0 });
-                (myButton.children[0] as THREE.Mesh).material = newMaterial;
+                (myButton.children[0] as THREE.Mesh).material = new MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide, transparent: true, opacity: 0.0 });
 
                 let content_type = content.split("_")[0];
                 let background_img_src = 'https://localhost:4000/files/3c0d1ba0-d65f-4e87-a157-045bd4a40116.png'
@@ -184,11 +176,9 @@ export function TFCMyButtonSystem(world: HubsWorld) {
                 });
 
                 myMilling01Button.position.copy(myButtonPosition);
-                if (action === '1') {
-                    myMilling01Button.position.z += 0.001;
-                } else {
-                    myMilling01Button.position.z += 0.01;
-                }
+
+                myMilling01Button.position.z += action === '1' ? 0.001 : 0.01;
+
                 if (action === '1') {
                     if (buttonText === '0') {
                         const myMilling01ButtonEid = addEntity(world);
@@ -200,9 +190,6 @@ export function TFCMyButtonSystem(world: HubsWorld) {
                     addObject3DComponent(world, myMilling01ButtonEid, myMilling01Button);
                     world.scene.add(myMilling01Button);
                 }
-
-
-
 
                 if (action === '1') {
                     if (buttonText === '20') {
@@ -218,24 +205,13 @@ export function TFCMyButtonSystem(world: HubsWorld) {
     }
 
     const exited = TFCMyButtonExitQuery(world);
-    for (let i = 0; i < exited.length; i++) {
-        const entity = exited[i];
-        console.log('TFCMyButton exited', entity)
-
-        for (let j = 0; j < objectsInScene.length; j++) {
-            const object = objectsInScene[j];
-            console.log("Removing object from scene: " + object.name);
-            world.scene.remove(object);
-        }
+    exited.forEach(entity => {
+        objectsInScene.forEach(object => world.scene.remove(object));
         objectsInScene.length = 0;
 
-        for (let j = 0; j < listCNCButton.length; j++) {
-            const object = listCNCButton[j];
-            console.log("Removing object from scene: " + object.name);
-            world.scene.remove(object);
-        }
+        listCNCButton.forEach(object => world.scene.remove(object));
         listCNCButton.length = 0;
-    }
+    });
 
     const entities = TFCMyButtonQuery(world);
     for (let i = 0; i < entities.length; i++) {
@@ -323,19 +299,14 @@ export function TFCMyButtonSystem(world: HubsWorld) {
                         world.scene.remove(cncButton);
                     }
                     nextStepNumber = currentStepNumber;
-                    if (nextStepNumber === 11) {
-                        console.log("All steps are completed");
+                    if (nextStepNumber === 11 || nextStepNumber === 20) {
                         startStopAllAnimation(world, entity, true);
-                    } else
-                        if (nextStepNumber === 20) {
-                            console.log("All steps are completed");
-                            startStopAllAnimation(world, entity, true);
-                        } else {
-                            const nextButtonEid = addEntity(world);
-                            const nextButton = listCNCButton[nextStepNumber];
-                            addObject3DComponent(world, nextButtonEid, nextButton);
-                            world.scene.add(nextButton);
-                        }
+                    } else {
+                        const nextButtonEid = addEntity(world);
+                        const nextButton = listCNCButton[nextStepNumber];
+                        addObject3DComponent(world, nextButtonEid, nextButton);
+                        world.scene.add(nextButton);
+                    }
                 } else {
                 }
             }

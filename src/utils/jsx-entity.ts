@@ -48,7 +48,8 @@ import {
   HoverableVisuals,
   MirrorMenu,
   TFCMyTeleport,
-  TFCMyButton
+  TFCMyButton,
+  TFCKeyboardButton
 } from "../bit-components";
 import { inflateMediaLoader } from "../inflators/media-loader";
 import { inflateMediaFrame } from "../inflators/media-frame";
@@ -117,6 +118,7 @@ import { TFCTicTacToeParams, inflateTFCTicTacToe } from "../inflators/tfc-tic-ta
 import { TFCMyThreeJSParams, inflateTFCMyThreeJS } from "../inflators/tfc-my-threejs";
 import { TFCMyTeleportParams, inflateTFCMyTeleport } from "../inflators/tfc-my-teleport";
 import { TFCMyButtonParams, inflateTFCMyButton } from "../inflators/tfc-my-button";
+import { TFCKeyboardButtonParams, inflateTFCKeyboardButton } from "../inflators/tfc-keyboard-button";
 import { TFCNetworkedContentDataParams, inflateTFCNetworkedContentData } from "../inflators/tfc-networked-content-data";
 import { create } from "mathjs";
 
@@ -398,6 +400,7 @@ export interface JSXComponentData extends ComponentData {
   tfcNetworkedContentData?: TFCNetworkedContentDataParams;
   tfcMyTeleport?: TFCMyTeleportParams;
   tfcMyButton?: TFCMyButtonParams;
+  tfcKeyboardButton?: TFCKeyboardButtonParams;
 }
 
 export interface GLTFComponentData extends ComponentData {
@@ -437,6 +440,7 @@ export interface GLTFComponentData extends ComponentData {
   tfcNetworkedContentData?: TFCNetworkedContentDataParams;
   tfcMyTeleport?: TFCMyTeleportParams;
   tfcMyButton?: TFCMyButtonParams;
+  tfcKeyboardButton?: TFCKeyboardButtonParams;
 }
 
 declare global {
@@ -529,7 +533,8 @@ const jsxInflators: Required<{ [K in keyof JSXComponentData]: InflatorFn }> = {
   tfcMyThreeJS: inflateTFCMyThreeJS,
   tfcNetworkedContentData: inflateTFCNetworkedContentData,
   tfcMyTeleport: inflateTFCMyTeleport,
-  tfcMyButton: inflateTFCMyButton
+  tfcMyButton: inflateTFCMyButton,
+  tfcKeyboardButton: inflateTFCKeyboardButton
 };
 
 export const gltfInflators: Required<{ [K in keyof GLTFComponentData]: InflatorFn }> = {
@@ -571,7 +576,8 @@ export const gltfInflators: Required<{ [K in keyof GLTFComponentData]: InflatorF
   tfcMyThreeJS: inflateTFCMyThreeJS,
   tfcNetworkedContentData: inflateTFCNetworkedContentData,
   tfcMyTeleport: inflateTFCMyTeleport,
-  tfcMyButton: inflateTFCMyButton
+  tfcMyButton: inflateTFCMyButton,
+  tfcKeyboardButton: inflateTFCKeyboardButton
 };
 
 function jsxInflatorExists(name: string): name is keyof JSXComponentData {
