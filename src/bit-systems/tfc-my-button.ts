@@ -1,12 +1,13 @@
 import { HubsWorld } from "../app";
-import { defineQuery, enterQuery, exitQuery, hasComponent, Not, entityExists, addComponent, addEntity } from "bitecs";
+import {
+    defineQuery, enterQuery, exitQuery, hasComponent, addComponent, addEntity
+} from "bitecs";
 import { Interacted, TFCMyButton, TFCNetworkedContentData } from "../bit-components";
 import { createUIButton } from "../tfl-libs/myButton";
 import { addObject3DComponent } from "../utils/jsx-entity";
 import { anyEntityWith } from "../utils/bit-utils";
-import { AnimationClip, Object3D } from "three";
+import { AnimationClip, Object3D, LoopOnce, MeshBasicMaterial, Quaternion, Vector3 } from "three";
 import { findAncestorWithComponent } from "../utils/scene-graph";
-import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
 import { createNetworkedEntity } from "../utils/create-networked-entity";
 import { takeOwnership } from "../utils/take-ownership";
 
@@ -18,90 +19,50 @@ const TFCMyButtonExitQuery = exitQuery(TFCMyButtonQuery);
 let currentSteps = 0;
 const objectsInScene: THREE.Object3D[] = [];
 const listCNCButton: THREE.Object3D[] = [];
-const listCNCEid: number[] = [];
-
-const getActiveClips = (
-    animations: Array<AnimationClip>,
-    activeClipIndices: number[],
-    clip: string
-): AnimationClip[] => {
-    if (clip !== "") {
-        const activeClips = [];
-        const clipNames = clip.split(",");
-        for (let i = 0; i < clipNames.length; i++) {
-            const clipName = clipNames[i];
-            const foundClip = animations.find((clip: AnimationClip) => {
-                return clip.name === clipName;
-            });
-            if (foundClip) {
-                activeClips.push(foundClip);
-            } else {
-                console.warn(`Could not find animation names '${clipName}' in `, animations);
-            }
-        }
-        return activeClips;
-    } else {
-        return activeClipIndices.map((index: number) => animations[index]);
-    }
-};
-function clicked(world: HubsWorld, entity: number) {
-    return hasComponent(world, Interacted, entity);
-}
-const startTime = 0;
-const endTime = 240 / 30;
+let nextStepNumber = -1;
+let screenObject = new Object3D();
 let isPlaying = false;
 let currentTime = 0;
-let nextStepNumber = -1;
-let screenObject = new THREE.Object3D();
-function startStopAllAnimation(world: HubsWorld, entity: number, startOrStop: boolean) {
+const startTime = 0;
+const endTime = 240 / 30;
+
+function clicked(world: HubsWorld, entity: number): boolean {
+    return hasComponent(world, Interacted, entity);
+}
+
+function startStopAllAnimation(world: HubsWorld, entity: number, startOrStop: boolean): void {
     const object = world.eid2obj.get(entity);
     const mixerEl = findAncestorWithComponent(object?.parent?.parent?.el, "animation-mixer");
     const { mixer, animations } = mixerEl.components["animation-mixer"];
-    if (animations.length > 0) {
-        for (let i = 0; i < animations.length; i++) {
-            const clips = [animations[i]];
-            console.log('clips', clips);
-            for (let j = 0; j < clips.length; j++) {
-                const clip = clips[j];
-                if (!clip) {
+
+    animations.forEach((animation: AnimationClip) => { // Add type annotation to 'animation' parameter
+        const clips = [animation];
+        clips.forEach(clip => {
+            const action = mixer.clipAction(clip);
+            if (action) {
+                if (startOrStop) {
+                    if (nextStepNumber > 11) {
+                        action.time = 6.6666666;
+                        action.paused = false;
+                    } else {
+                        action.enabled = true;
+                        action.setLoop(LoopOnce, 1);
+                        action.clampWhenFinished = true;
+                        action.play();
+                        isPlaying = true;
+                    }
                 } else {
-                    const action = mixer.clipAction(clip);
-                    if (action) {
-                        if (startOrStop) {
-                            if (nextStepNumber > 11) {
-                                action.time = 6.6666666;
-                                action.paused = false;
-                                console.log("Paused action", action);
-                            } else {
-                                action.enabled = true;
-                                // action.time = 6.6666666;
-                                action.setLoop(THREE.LoopOnce, 1);
-                                action.clampWhenFinished = true;
-                                action.play();
-                                isPlaying = true;
-                                console.log("Starting action", action);
-                            }
-
-                        } else {
-                            if (nextStepNumber === 11) {
-                                action.paused = true;
-                                console.log("Paused action", action);
-
-                            } else {
-                                action.enabled = false;
-                                action.stop();
-                                console.log("Stopping action", action);
-                                if (mixer !== null) {
-                                    mixer.uncacheAction(action);
-                                }
-                            }
-
-                        }
+                    if (nextStepNumber === 11) {
+                        action.paused = true;
+                    } else {
+                        action.enabled = false;
+                        action.stop();
+                        mixer.uncacheAction(action);
                     }
                 }
             }
-        }
-    }
+        });
+    });
 }
 
 export function TFCMyButtonSystem(world: HubsWorld) {
