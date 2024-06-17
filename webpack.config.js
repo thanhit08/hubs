@@ -43,7 +43,7 @@ function createHTTPSConfig() {
               },
               {
                 type: 2,
-                value: "localhost"
+                value: "143.198.201.239"
               }
             ]
           }
@@ -188,9 +188,9 @@ async function fetchAppConfigAndEnvironmentVars() {
 
   process.env.RETICULUM_SERVER = host;
   process.env.SHORTLINK_DOMAIN = shortlink_domain;
-  process.env.CORS_PROXY_SERVER = `localhost:8080/cors-proxy`;
+  process.env.CORS_PROXY_SERVER = `143.198.201.239:8080/cors-proxy`;
   process.env.THUMBNAIL_SERVER = thumbnail_server;
-  process.env.NON_CORS_PROXY_DOMAINS = `${localIp},localhost,localhost`;
+  process.env.NON_CORS_PROXY_DOMAINS = `${localIp},143.198.201.239,localhost`;
 
   return appConfig;
 }
@@ -250,12 +250,12 @@ module.exports = async (env, argv) => {
     }
 
     if (env.localDev) {
-      const localDevHost = "localhost";
+      const localDevHost = "143.198.201.239";
       // Local Dev Environment (npm run local)
       Object.assign(process.env, {
         HOST: localDevHost,
         RETICULUM_SOCKET_SERVER: localDevHost,
-        CORS_PROXY_SERVER: "localhost:4000",
+        CORS_PROXY_SERVER: "143.198.201.239:4000",
         NON_CORS_PROXY_DOMAINS: `${localDevHost},dev.reticulum.io`,
         BASE_ASSETS_PATH: `https://${localDevHost}:8080/`,
         RETICULUM_SERVER: `${localDevHost}:4000`,
@@ -269,7 +269,7 @@ module.exports = async (env, argv) => {
   // In production, the environment variables are defined in CI or loaded from ita and
   // the app config is injected into the head of the page by Reticulum.
 
-  const host = process.env.HOST_IP || env.localDev || env.remoteDev ? "localhost" : "localhost";
+  const host = process.env.HOST_IP || env.localDev || env.remoteDev ? "143.198.201.239" : "localhost";
 
   const liveReload = !!process.env.LIVE_RELOAD || false;
 
@@ -285,7 +285,7 @@ module.exports = async (env, argv) => {
     // .replaceAll("connect-src", "connect-src https://example.com");
   }
 
-  const internalHostname = process.env.INTERNAL_HOSTNAME || "localhost";
+  const internalHostname = process.env.INTERNAL_HOSTNAME || "143.198.201.239";
   return {
     cache: {
       type: "filesystem"
@@ -384,7 +384,7 @@ module.exports = async (env, argv) => {
           const redirectLocation = req.header("location");
 
           if (redirectLocation) {
-            res.header("localhost", "https://localhost:8080/cors-proxy/" + redirectLocation);
+            res.header("Location", "https://localhost:8080/cors-proxy/" + redirectLocation);
           }
 
           if (req.method === "OPTIONS") {
@@ -401,7 +401,7 @@ module.exports = async (env, argv) => {
         });
 
         // be flexible with people accessing via a local reticulum on another port
-        app.use(cors({ origin: /localhost(:\d*)?$/ }));
+        app.use(cors({ origin: /143.198.201.239(:\d*)?$/ }));
         // networked-aframe makes HEAD requests to the server for time syncing. Respond with an empty body.
         app.head("*", function (req, res, next) {
           if (req.method === "HEAD") {
