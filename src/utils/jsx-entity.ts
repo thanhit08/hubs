@@ -49,7 +49,8 @@ import {
   MirrorMenu,
   TFCMyTeleport,
   TFCMyButton,
-  TFCKeyboardButton
+  TFCKeyboardButton,
+  TFCIframe
 } from "../bit-components";
 import { inflateMediaLoader } from "../inflators/media-loader";
 import { inflateMediaFrame } from "../inflators/media-frame";
@@ -118,6 +119,7 @@ import { TFCTicTacToeParams, inflateTFCTicTacToe } from "../inflators/tfc-tic-ta
 import { TFCMyThreeJSParams, inflateTFCMyThreeJS } from "../inflators/tfc-my-threejs";
 import { TFCMyTeleportParams, inflateTFCMyTeleport } from "../inflators/tfc-my-teleport";
 import { TFCMyButtonParams, inflateTFCMyButton } from "../inflators/tfc-my-button";
+import { TFCIframeParams, inflateTFCIframe } from "../inflators/iframe";
 import { TFCKeyboardButtonParams, inflateTFCKeyboardButton } from "../inflators/tfc-keyboard-button";
 import { TFCNetworkedContentDataParams, inflateTFCNetworkedContentData } from "../inflators/tfc-networked-content-data";
 import { create } from "mathjs";
@@ -400,6 +402,7 @@ export interface JSXComponentData extends ComponentData {
   tfcNetworkedContentData?: TFCNetworkedContentDataParams;
   tfcMyTeleport?: TFCMyTeleportParams;
   tfcMyButton?: TFCMyButtonParams;
+  tfcIframe?: TFCIframeParams;
   tfcKeyboardButton?: TFCKeyboardButtonParams;
 }
 
@@ -440,6 +443,7 @@ export interface GLTFComponentData extends ComponentData {
   tfcNetworkedContentData?: TFCNetworkedContentDataParams;
   tfcMyTeleport?: TFCMyTeleportParams;
   tfcMyButton?: TFCMyButtonParams;
+  tfcIframe?: TFCIframeParams;
   tfcKeyboardButton?: TFCKeyboardButtonParams;
 }
 
@@ -534,6 +538,7 @@ const jsxInflators: Required<{ [K in keyof JSXComponentData]: InflatorFn }> = {
   tfcNetworkedContentData: inflateTFCNetworkedContentData,
   tfcMyTeleport: inflateTFCMyTeleport,
   tfcMyButton: inflateTFCMyButton,
+  tfcIframe: inflateTFCIframe,
   tfcKeyboardButton: inflateTFCKeyboardButton
 };
 
@@ -577,6 +582,7 @@ export const gltfInflators: Required<{ [K in keyof GLTFComponentData]: InflatorF
   tfcNetworkedContentData: inflateTFCNetworkedContentData,
   tfcMyTeleport: inflateTFCMyTeleport,
   tfcMyButton: inflateTFCMyButton,
+  tfcIframe: inflateTFCIframe,
   tfcKeyboardButton: inflateTFCKeyboardButton
 };
 

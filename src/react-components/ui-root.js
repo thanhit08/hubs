@@ -354,6 +354,10 @@ class UIRoot extends Component {
     this.props.scene.addEventListener("action_toggle_science_01", (action, content) =>
       this.showNonHistoriedDialog(WebGLContentModalContainer,  { scene, url: "https://visualinfinity.asia/sciences/s01/" })
     );
+
+    this.props.scene.addEventListener("action_toggle_iframe", (action, content) =>
+      this.showNonHistoriedDialog(WebGLContentModalContainer,  { scene, url: action.detail["href"] })
+    );
     this.props.scene.addEventListener("action_toggle_record", () => {
       const cursor = document.querySelector("#right-cursor");
       if (this.state.isRecordingMode) {

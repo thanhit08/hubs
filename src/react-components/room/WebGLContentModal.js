@@ -23,19 +23,19 @@ export function WebGLContentModal({ onClose, url }) {
     });
 
     return (
-        <div className={classNames(styles.preferencesPanel)} style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', width: '80%', height: '80%' }}>
             <ToolbarButton
                 icon={<LeaveIcon />}
                 preset={"accent2"}
                 onClick={onClose}
-                style={{ position: 'absolute', top: 12, left: 24 }}
+                style={{ position: 'absolute', top: 15, left: 15 }}
             />
             <iframe
                 id="inlineFrameExample"
                 title="반응과 반사의 구조"
                 width="100%"
                 height="100%"
-                src={url} scrolling="no" style={{ frameBorder: 0 }} frameBorder="0" allow="xr-spatial-tracking">
+                src={url} scrolling="no" style={{ borderWidth: 5 }} frameborder="10px" allow="xr-spatial-tracking">
             </iframe>
 
         </div>

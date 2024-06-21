@@ -100,6 +100,7 @@ import { TFCMyTeleportSystem } from "../bit-systems/tfc-my-teleport";
 import { IframeSystem } from "./iframe-system";
 import { PortalSystem } from "./portal-system";
 import { TFCMyButtonSystem } from "../bit-systems/tfc-my-button";
+import { TFCIframeSystem } from "../bit-systems/iframe";
 import { TFCKeyboardButton } from "../bit-components";
 import { TFCKeyboardButtonSystem } from "../bit-systems/tfc-keyboar-button";
 
@@ -344,6 +345,7 @@ export function mainTick(xrFrame: XRFrame, renderer: WebGLRenderer, scene: Scene
   TFCMyThreeJSSystem(world, aframeSystems.userinput);
   TFCMyTeleportSystem(world, hubsSystems.physicsSystem);
   TFCMyButtonSystem(world);
+  TFCIframeSystem(world);
   TFCKeyboardButtonSystem(world);
 
   // tock()s on components and system will fire here. (As well as any other time render() is called without unbinding onAfterRender)

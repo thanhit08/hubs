@@ -549,3 +549,7 @@ TFCKeyboardButton.buttonImage[$isStringType] = true;
 TFCKeyboardButton.buttonLink[$isStringType] = true;
 TFCKeyboardButton.buttonText[$isStringType] = true;
 
+export const TFCIframe = defineComponent({
+  href: Types.ui32,
+});
+TFCIframe.href[$isStringType] = true;
