@@ -1,0 +1,45 @@
+@use "../styles/theme.scss";
+
+$primary-color: #4CAF50;
+$secondary-color: #fff;
+$text-color: #333;
+$background-color: #f4f4f4;
+
+.object-info-header {
+    background: $primary-color;
+    color: $secondary-color;
+    padding: 1em 0;
+    text-align: center;
+}
+
+.object-info-header h1 {
+    width: 90%;
+    margin: auto;
+}
+
+.object-info-container {
+    width: 90%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.object-info-content {
+    background: $secondary-color;
+    padding: 1em;
+    margin: 1em 0;
+}
+
+h2, h3 {
+    color: $primary-color;
+}
+
+.object-info-content img {
+    max-width: 100%;
+}
+
+.object-info-footer {
+    background: $text-color;
+    color: $secondary-color;
+    text-align: center;
+    padding: 1em 0;
+}

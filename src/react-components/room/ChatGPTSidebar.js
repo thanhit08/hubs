@@ -11,7 +11,7 @@ import { IconButton } from "../input/IconButton";
 import { TextAreaInput } from "../input/TextAreaInput";
 import { Popover } from "../popover/Popover";
 import { EmojiPicker } from "./EmojiPicker";
-import styles from "./ChatSidebar.scss";
+import styles from "./ChatGPTSidebar.scss";
 import { formatMessageBody } from "../../utils/chat-message";
 import { FormattedMessage, useIntl, defineMessages, FormattedRelativeTime } from "react-intl";
 import { permissionMessage } from "./PermissionNotifications";

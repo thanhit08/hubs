@@ -106,7 +106,8 @@ import ChatToolbarButton from "./room/components/ChatToolbarButton/ChatToolbarBu
 import SeePlansCTA from "./room/components/SeePlansCTA/SeePlansCTA";
 import ChatGPTToolbarButton from "./room/components/ChatToolbarButton/ChatGPTToolbarButton";
 import { ExportRoomModalContainer } from "./room/ExportRoomModalContainer";
-import {WebGLContentModalContainer} from "./room/WebGLContentModalContainer";
+import { WebGLContentModalContainer } from "./room/WebGLContentModalContainer";
+import { InfoSidebar } from "./room/InfoSidebar";
 
 
 const avatarEditorDebug = qsTruthy("avatarEditorDebug");
@@ -343,20 +344,20 @@ class UIRoot extends Component {
       this.setState({ hide: !this.state.hide, hideUITip: false })
     );
     this.props.scene.addEventListener("action_toggle_wegbl", (action, content) =>
-      this.showNonHistoriedDialog(WebGLContentModalContainer,  { scene })
+      this.showNonHistoriedDialog(WebGLContentModalContainer, { scene })
     );
     this.props.scene.addEventListener("action_toggle_cnc_01", (action, content) =>
-      this.showNonHistoriedDialog(WebGLContentModalContainer,  { scene, url: "https://visualinfinity.asia/webcnc/m1/" })
+      this.showNonHistoriedDialog(WebGLContentModalContainer, { scene, url: "https://visualinfinity.asia/webcnc/m1/" })
     );
     this.props.scene.addEventListener("action_toggle_math_01", (action, content) =>
-      this.showNonHistoriedDialog(WebGLContentModalContainer,  { scene, url: "https://visualinfinity.asia/Geo/7.html" })
+      this.showNonHistoriedDialog(WebGLContentModalContainer, { scene, url: "https://visualinfinity.asia/Geo/7.html" })
     );
     this.props.scene.addEventListener("action_toggle_science_01", (action, content) =>
-      this.showNonHistoriedDialog(WebGLContentModalContainer,  { scene, url: "https://visualinfinity.asia/sciences/s01/" })
+      this.showNonHistoriedDialog(WebGLContentModalContainer, { scene, url: "https://visualinfinity.asia/sciences/s01/" })
     );
 
     this.props.scene.addEventListener("action_toggle_iframe", (action, content) =>
-      this.showNonHistoriedDialog(WebGLContentModalContainer,  { scene, url: action.detail["href"] })
+      this.showNonHistoriedDialog(WebGLContentModalContainer, { scene, url: action.detail["href"] })
     );
     this.props.scene.addEventListener("action_toggle_record", () => {
       const cursor = document.querySelector("#right-cursor");
@@ -1209,7 +1210,7 @@ class UIRoot extends Component {
               id: "export-room",
               label: <FormattedMessage id="more-menu.export-room" defaultMessage="Export Room" />,
               icon: AddIcon,
-              onClick: () => this.showNonHistoriedDialog(ExportRoomModalContainer, {scene: this.props.scene})   
+              onClick: () => this.showNonHistoriedDialog(ExportRoomModalContainer, { scene: this.props.scene })
             }
             : {
 
@@ -1651,6 +1652,9 @@ class UIRoot extends Component {
                       {this.state.sidebarId === "ecs-debug" && (
                         <ECSDebugSidebarContainer onClose={() => this.setSidebar(null)} />
                       )}
+                      {this.state.sidebarId === "object-info" && (
+                        <InfoSidebar />
+                      )}
                     </>
                   ) : undefined
                 }
@@ -1700,9 +1704,13 @@ class UIRoot extends Component {
                               mediaSearchStore={this.props.mediaSearchStore}
                               showNonHistoriedDialog={this.showNonHistoriedDialog}
                             />
-                            <ChatGPTToolbarButton
+                            {/* <ChatGPTToolbarButton
                               onClick={() => this.toggleSidebar("chatgpt", { chatPrefix: "", chatAutofocus: false })}
                               selected={this.state.sidebarId === "chatgpt"}
+                            /> */}
+                            <ChatGPTToolbarButton
+                              onClick={() => this.toggleSidebar("object-info")}
+                              selected={this.state.sidebarId === "object-info"}
                             />
                           </>
                         )}
