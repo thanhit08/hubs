@@ -108,6 +108,7 @@ import ChatGPTToolbarButton from "./room/components/ChatToolbarButton/ChatGPTToo
 import { ExportRoomModalContainer } from "./room/ExportRoomModalContainer";
 import { WebGLContentModalContainer } from "./room/WebGLContentModalContainer";
 import { InfoSidebar } from "./room/InfoSidebar";
+import { AITeacherSidebar } from "./room/AITeacherSidebar";
 
 
 const avatarEditorDebug = qsTruthy("avatarEditorDebug");
@@ -1564,10 +1565,6 @@ class UIRoot extends Component {
                       )}
                       {this.state.sidebarId === "chatgpt" && (
                         <ChatGPTSidebarContainer
-                          presences={this.props.presences}
-                          occupantCount={this.occupantCount()}
-                          canSpawnMessages={entered && this.props.hubChannel.can("spawn_and_move_media")}
-                          scene={this.props.scene}
                           onClose={() => this.setSidebar(null)}
                           autoFocus={this.state.chatGPTAutofocus}
                           initialValue={this.state.chatGPTPrefix}
@@ -1653,7 +1650,7 @@ class UIRoot extends Component {
                         <ECSDebugSidebarContainer onClose={() => this.setSidebar(null)} />
                       )}
                       {this.state.sidebarId === "object-info" && (
-                        <InfoSidebar />
+                        <AITeacherSidebar />
                       )}
                     </>
                   ) : undefined
@@ -1708,10 +1705,10 @@ class UIRoot extends Component {
                               onClick={() => this.toggleSidebar("chatgpt", { chatPrefix: "", chatAutofocus: false })}
                               selected={this.state.sidebarId === "chatgpt"}
                             /> */}
-                            <ChatGPTToolbarButton
+                            {/* <ChatGPTToolbarButton
                               onClick={() => this.toggleSidebar("object-info")}
                               selected={this.state.sidebarId === "object-info"}
-                            />
+                            /> */}
                           </>
                         )}
                         {this.props.hubChannel.can("spawn_emoji") && (
@@ -1727,6 +1724,19 @@ class UIRoot extends Component {
                         onClick={() => this.toggleSidebar("chat", { chatPrefix: "", chatAutofocus: false })}
                         selected={this.state.sidebarId === "chat"}
                       />
+                    )}
+                    {entered && (
+                      <>
+                        {!isLockedDownDemo && (
+                          <>
+                            <ChatGPTToolbarButton
+                              onClick={() => this.toggleSidebar("chatgpt", { chatPrefix: "", chatAutofocus: false })}
+                              selected={this.state.sidebarId === "chatgpt"}
+                            />
+                          </>
+                        )}
+                      </>
+
                     )}
                     {entered && isMobileVR && (
                       <ToolbarButton

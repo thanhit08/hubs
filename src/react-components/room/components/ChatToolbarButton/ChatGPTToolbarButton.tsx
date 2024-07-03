@@ -8,7 +8,7 @@ import { ToolTip } from "@mozilla/lilypad-ui";
 
 const chatGPTTooltipDescription = defineMessage({
   id: "chat-tooltip.description",
-  defaultMessage: "Open the chat GPT sidebar (T)"
+  defaultMessage: "Open the chat with the AI Teacher.",
 });
 
 type ChatGPTToolbarButtonProps = {
@@ -30,7 +30,7 @@ const ChatGPTToolbarButton = ({ onClick, selected }: ChatGPTToolbarButtonProps) 
             statusColor={unreadMessages ? "unread" : undefined}
             icon={<ChatGPTIcon />}
             preset="accent4"
-            label={<FormattedMessage id="chat-gpt-toolbar-button" defaultMessage="ChatGPT" />}
+            label={<FormattedMessage id="chat-gpt-toolbar-button" defaultMessage="AI Teacher" />}
             selected={selected}
         />
         </ToolTip>

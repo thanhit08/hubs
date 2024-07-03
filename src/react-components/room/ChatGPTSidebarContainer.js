@@ -6,16 +6,11 @@ import {
   SystemMessageGPT,
   ChatGPTMessageList,
   ChatGPTInput,
-  MessageGPTAttachmentButton,
-  SpawnMessageGPTButton,
   SendMessageGPTButton,
-  EmojiPickerGPTPopoverButton,
   ChatGPTLengthWarning,
   PermissionMessageGPTGroup
 } from "./ChatGPTSidebar";
 import { useMaintainScrollPosition } from "../misc/useMaintainScrollPosition";
-import { spawnChatMessage } from "../chat-message";
-import { discordBridgesForPresences } from "../../utils/phoenix-utils";
 import { defineMessages, useIntl } from "react-intl";
 import { MAX_MESSAGE_LENGTH } from "../../utils/chat-message";
 import { PermissionNotification } from "./PermissionNotifications";
@@ -51,10 +46,6 @@ const chatSidebarMessages = defineMessages({
 
 // NOTE: context and related functions moved to ChatContext
 export function ChatGPTSidebarContainer({
-  scene,
-  canSpawnMessages,
-  presences,
-  occupantCount,
   initialValue,
   autoFocus,
   onClose
@@ -72,17 +63,13 @@ export function ChatGPTSidebarContainer({
 
   const onKeyDown = useCallback(
     e => {
-      setIsCommand(e.target.value.startsWith("/"));
       if (!canTextChat && !isCommand) return;
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         if (e.target.value.length <= MAX_MESSAGE_LENGTH) {
           sendMessage(e.target.value);
           setMessage("");
-          // intentionally only doing this on "enter" press and not clicking of send button
-          if (e.target.value.startsWith("/")) {
-            onClose();
-          }
+          console.log("Send message");
         }
       } else if (e.key === "Escape") {
         onClose();
@@ -99,42 +86,12 @@ export function ChatGPTSidebarContainer({
     setMessage("");
   }, [message, sendMessage, setMessage]);
 
-  const onSpawnMessage = () => {
-    spawnChatMessage(message);
-    setMessage("");
-  };
-
-  const onUploadAttachments = useCallback(
-    e => {
-      // TODO: Right now there's no way to upload files to the chat only.
-      // When we add the place menu whcih will have an explicit button for uploading files,
-      // should we make this attach button only upload to chat?
-      for (const file of e.target.files) {
-        scene.emit("add_media", file);
-      }
-    },
-    [scene]
-  );
-
-  const onSelectEmoji = useCallback(
-    ({ emoji, pickerRemainedOpen }) => {
-      setMessage(message => message + emoji);
-      // If the picker remained open, avoid selecting the input so that the
-      // user can keep picking emojis.
-      if (!pickerRemainedOpen) inputRef.current.select();
-    },
-    [setMessage, inputRef]
-  );
-
   useEffect(() => {
     if (autoFocus) {
       inputRef.current.focus();
       const len = inputRef.current.value.length;
       inputRef.current.setSelectionRange(len, len);
     }
-    // We only want this effect to run on initial mount even if autoFocus were to change.
-    // This does not happen in practice, but this is more correct.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -143,29 +100,8 @@ export function ChatGPTSidebarContainer({
     }
   }, [messageGroups, scrolledToBottom, setMessagesRead]);
 
-  const discordBridges = discordBridgesForPresences(presences);
-  const discordSnippet = discordBridges.map(ch => "#" + ch).join(", ");
   let placeholder;
-
-  if (occupantCount <= 1) {
-    if (discordBridges.length === 0) {
-      placeholder = intl.formatMessage(chatSidebarMessages["emmptyRoom"]);
-    } else {
-      placeholder = intl.formatMessage(chatSidebarMessages["emmptyRoomBot"], { discordChannels: discordSnippet });
-    }
-  } else {
-    if (discordBridges.length === 0) {
-      placeholder = intl.formatMessage(chatSidebarMessages["occupants"], {
-        discordChannels: discordSnippet,
-        occupantCount: occupantCount - 1
-      });
-    } else {
-      placeholder = intl.formatMessage(chatSidebarMessages["occupantsAndBot"], {
-        discordChannels: discordSnippet,
-        occupantCount: occupantCount - 1
-      });
-    }
-  }
+  placeholder = intl.formatMessage(chatSidebarMessages["emmptyRoom"]);
 
   const isMobile = AFRAME.utils.device.isMobile();
   const isOverMaxLength = message.length > MAX_MESSAGE_LENGTH;
@@ -205,24 +141,12 @@ export function ChatGPTSidebarContainer({
         }
         afterInput={
           <>
-            {!isMobile && <EmojiPickerGPTPopoverButton onSelectEmoji={onSelectEmoji} />}
-            {message.length === 0 && canSpawnMessages ? (
-              <MessageGPTAttachmentButton onChange={onUploadAttachments} />
-            ) : (
-              <SendMessageGPTButton
-                onClick={onSendMessage}
-                as={"button"}
-                disabled={isDisabled && !isCommand}
-                title={isDisabled && !isCommand ? intl.formatMessage(chatSidebarMessages["textChatOff"]) : undefined}
-              />
-            )}
-            {canSpawnMessages && (
-              <SpawnMessageGPTButton
-                disabled={isDisabled}
-                onClick={onSpawnMessage}
-                title={isDisabled ? intl.formatMessage(chatSidebarMessages["textChatOff"]) : undefined}
-              />
-            )}
+            <SendMessageGPTButton
+              onClick={onSendMessage}
+              as={"button"}
+              disabled={isDisabled && !isCommand}
+              title={isDisabled && !isCommand ? intl.formatMessage(chatSidebarMessages["textChatOff"]) : undefined}
+            />
           </>
         }
       />
@@ -231,10 +155,6 @@ export function ChatGPTSidebarContainer({
 }
 
 ChatGPTSidebarContainer.propTypes = {
-  canSpawnMessages: PropTypes.bool,
-  presences: PropTypes.object.isRequired,
-  occupantCount: PropTypes.number.isRequired,
-  scene: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   autoFocus: PropTypes.bool,
   initialValue: PropTypes.string

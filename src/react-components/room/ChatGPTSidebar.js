@@ -475,7 +475,7 @@ ChatGPTMessageList.displayName = "ChatMessageList";
 export function ChatGPTSidebar({ onClose, children, ...rest }) {
   return (
     <Sidebar
-      title={<FormattedMessage id="chat-gpt-sidebar.title" defaultMessage="ChatGPT" />}
+      title={<FormattedMessage id="chat-gpt-sidebar.title" defaultMessage="AI Teacher" />}
       beforeTitle={<CloseButton onClick={onClose} />}
       contentClassName={styles.content}
       disableOverflowScroll
