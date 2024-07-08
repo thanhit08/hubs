@@ -23,7 +23,7 @@ export function WebGLContentModal({ onClose, url }) {
     });
 
     return (
-        <div style={{ position: 'relative', width: '80%', height: '80%' }}>
+        <div style={{ position: 'relative', width: '30%', height: '80%', marginLeft: 'auto', marginRight: '0' }}>
             <ToolbarButton
                 icon={<LeaveIcon />}
                 preset={"accent2"}

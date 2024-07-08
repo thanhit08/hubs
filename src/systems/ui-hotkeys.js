@@ -62,6 +62,10 @@ AFRAME.registerSystem("ui-hotkeys", {
       this.el.emit("action_toggle_camera");
     }
 
+    // if (this.userinput.get(paths.actions.thirdCameraMode)) {
+    //   this.el.emit("action_toggle_third_camera_mode");
+    // }
+
     if (this.userinput.get(paths.actions.toggleUI)) {
       this.el.emit("action_toggle_ui");
     }

@@ -125,6 +125,21 @@ async function grantedMicLabels() {
   return mediaDevices.filter(d => d.label && d.kind === "audioinput").map(d => d.label);
 }
 
+function enableThirdPersonMode() {
+  console.log("Enabling third person mode");
+  const scene = document.querySelector("a-scene");
+  const cameraSystem = scene.systems["hubs-systems"].cameraSystem;
+  if (!cameraSystem) {
+    console.error("Camera system not found");
+    return;
+  }
+  if (cameraSystem.mode === 5) {
+    cameraSystem.setMode(0);
+  } else {
+    cameraSystem.setMode(5);
+  }
+}
+
 const isMobile = AFRAME.utils.device.isMobile();
 const isMobileVR = AFRAME.utils.device.isMobileVR();
 const AUTO_EXIT_TIMER_SECONDS = 10;
@@ -359,6 +374,15 @@ class UIRoot extends Component {
 
     this.props.scene.addEventListener("action_toggle_iframe", (action, content) =>
       this.showNonHistoriedDialog(WebGLContentModalContainer, { scene, url: action.detail["href"] })
+    );
+    this.props.scene.addEventListener("action_toggle_third_camera_mode", () => {
+      const cameraSystem = scene.systems["hubs-systems"].cameraSystem;
+      if (cameraSystem.mode === 5) {
+        cameraSystem.setMode(0);
+      } else {
+        cameraSystem.setMode(5);
+      }
+    }
     );
     this.props.scene.addEventListener("action_toggle_record", () => {
       const cursor = document.querySelector("#right-cursor");
@@ -1747,6 +1771,13 @@ class UIRoot extends Component {
                         onClick={() => exit2DInterstitialAndEnterVR(true)}
                       />
                     )}
+                    {entered && (
+                      <ToolbarButton
+                        icon={<VRIcon />}
+                        preset="transparent"
+                        label={<FormattedMessage id="toolbar.enter-third-view" defaultMessage="Change View" />}
+                        onClick={() => enableThirdPersonMode()}
+                      />)}
                   </>
                 }
                 toolbarRight={

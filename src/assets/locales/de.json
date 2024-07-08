@@ -599,5 +599,6 @@
   "webvr-unsupported-modal.message": "WebVR wird in diesem Browser nicht unterstützt. Um mit Oculus oder SteamVR einzusteigen, verwende Firefox.",
   "webvr-unsupported-modal.title": "In VR betreten",
   "webvr-unsupported-modal.webvr-rocks-link": "Eine Liste von Browsern mit experimenteller VR-Unterstützung findest du unter <a>WebVR Rocks</a>.",
-  "whats-new-page.title": "Was gibt's Neues"
+  "whats-new-page.title": "Was gibt's Neues",
+  "preferences-screen.preference.enable-third-person-view": "Third-Person Ansicht aktivieren"
 }

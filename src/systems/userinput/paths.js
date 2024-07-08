@@ -127,6 +127,7 @@ paths.actions.inspectZoom = "/actions/inspectZoom";
 paths.actions.inspectPanY = "/actions/inspectPanY";
 paths.actions.resetInspectView = "/actions/resetInspectView";
 paths.actions.nextCameraMode = "/actions/nextCameraMode";
+paths.actions.thirdCameraMode = "/actions/thirdCameraMode";
 paths.actions.spawnEmoji0 = "/actions/spawnEmoji0";
 paths.actions.spawnEmoji1 = "/actions/spawnEmoji1";
 paths.actions.spawnEmoji2 = "/actions/spawnEmoji2";
