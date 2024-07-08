@@ -14,6 +14,7 @@ import { getCurrentPlayerHeight } from "../utils/get-current-player-height";
 import qsTruthy from "../utils/qs_truthy";
 import { releaseOccupiedWaypoint } from "../bit-systems/waypoint";
 import { shouldUseNewLoader } from "../utils/bit-utils";
+import { abs } from "mathjs";
 //import { m4String } from "../utils/pretty-print";
 const NAV_ZONE = "character";
 const qsAllowWaypointLerp = qsTruthy("waypointLerp");
@@ -45,6 +46,7 @@ const calculateDisplacementToDesiredPOV = (function () {
  * @namespace avatar
  */
 const BASE_SPEED = 3.2; //TODO: in what units?
+let previousMouseCoords = null;
 export class CharacterControllerSystem {
   constructor(scene) {
     this.scene = scene;
@@ -188,10 +190,10 @@ export class CharacterControllerSystem {
           (vrMode && !qsAllowWaypointLerp) || this.activeWaypoint.isInstant
             ? 0
             : 1000 *
-              (new THREE.Vector3()
-                .setFromMatrixPosition(this.avatarPOV.object3D.matrixWorld)
-                .distanceTo(waypointPosition.setFromMatrixPosition(this.activeWaypoint.transform)) /
-                AVERAGE_WAYPOINT_TRAVEL_SPEED_METERS_PER_SECOND);
+            (new THREE.Vector3()
+              .setFromMatrixPosition(this.avatarPOV.object3D.matrixWorld)
+              .distanceTo(waypointPosition.setFromMatrixPosition(this.activeWaypoint.transform)) /
+              AVERAGE_WAYPOINT_TRAVEL_SPEED_METERS_PER_SECOND);
         rotateInPlaceAroundWorldUp(this.avatarPOV.object3D.matrixWorld, Math.PI, startTransform);
         startTransform.multiply(startTranslation.makeTranslation(0, -1 * getCurrentPlayerHeight(), -0.15));
         this.waypointTravelStartTime = t;
@@ -245,7 +247,35 @@ export class CharacterControllerSystem {
       const preferences = window.APP.store.state.preferences;
       const snapRotateLeft = userinput.get(paths.actions.snapRotateLeft);
       const snapRotateRight = userinput.get(paths.actions.snapRotateRight);
+      const mouseLeft = userinput.get(paths.device.mouse.buttonLeft);
+      const mouse = userinput.get(paths.device.mouse.coords);
+      // Check if the mouse has moved since the last frame
+      if (previousMouseCoords && mouse && mouse[0] === previousMouseCoords[0] && mouse[1] === previousMouseCoords[1]) {
+      } else {
+        if (previousMouseCoords && !mouseLeft){
+          const camera = this.scene.systems["hubs-systems"].cameraSystem.viewingCamera;
+          const origin = new THREE.Vector3().setFromMatrixPosition(camera.matrixWorld);
+          const direction = new THREE.Vector3(mouse[0] - previousMouseCoords[0], mouse[1] - previousMouseCoords[1], 0.5).unproject(camera).sub(origin).normalize();
+          const target = new THREE.Vector3().copy(origin).add(direction);
+          const targetPOV = new THREE.Matrix4().lookAt(origin, target, new THREE.Vector3(0, 0, 1));
+          const currentPOV = this.avatarPOV.object3D.matrixWorld.clone();
+          const rotation = currentPOV.clone().invert().multiply(targetPOV);
+          const euler = new THREE.Euler().setFromRotationMatrix(rotation);
+          this.dXZ = euler.y;
+        }
+        previousMouseCoords = new Array(mouse[0], mouse[1]);
+      }
+      // const camera = this.scene.systems["hubs-systems"].cameraSystem.viewingCamera;
+      // const origin = new THREE.Vector3().setFromMatrixPosition(camera.matrixWorld);
+      // const direction = new THREE.Vector3(mouse[0], mouse[1], 0.5).unproject(camera).sub(origin).normalize();
+      // const target = new THREE.Vector3().copy(origin).add(direction);
+      // const targetPOV = new THREE.Matrix4().lookAt(origin, target, new THREE.Vector3(0, 0, 1));
+      // const currentPOV = this.avatarPOV.object3D.matrixWorld.clone();
+      // const rotation = currentPOV.clone().invert().multiply(targetPOV);
+      // const euler = new THREE.Euler().setFromRotationMatrix(rotation);
+      // this.dXZ = euler.y;
       if (snapRotateLeft) {
+        // calculate the rotation between the current POV and the mouse position
         this.dXZ += (preferences.snapRotationDegrees * Math.PI) / 180;
       }
       if (snapRotateRight) {
@@ -260,12 +290,12 @@ export class CharacterControllerSystem {
         const zCharacterAcceleration = -1 * characterAcceleration[1];
         this.relativeMotion.set(
           this.relativeMotion.x +
-            (preferences.disableMovement || preferences.disableStrafing ? 0 : characterAcceleration[0]),
+          (preferences.disableMovement || preferences.disableStrafing ? 0 : characterAcceleration[0]),
           this.relativeMotion.y,
           this.relativeMotion.z +
-            (preferences.disableMovement
-              ? 0
-              : preferences.disableBackwardsMovement
+          (preferences.disableMovement
+            ? 0
+            : preferences.disableBackwardsMovement
               ? Math.min(0, zCharacterAcceleration)
               : zCharacterAcceleration)
         );
@@ -295,7 +325,7 @@ export class CharacterControllerSystem {
                 BASE_SPEED *
                 Math.sqrt(playerScale) *
                 dt) /
-                1000
+              1000
             ),
             displacementToDesiredPOV
           );
