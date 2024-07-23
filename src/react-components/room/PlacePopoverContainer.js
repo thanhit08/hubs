@@ -117,6 +117,13 @@ export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistorie
             color: 'accent2',
             label: <FormattedMessage id="place-popover.item-type.webgl" defaultMessage="WebGL" />,
             onSelect: () => showNonHistoriedDialog(WebGLContentModalContainer, { scene })
+          },
+          {
+            id: "interactable_object",
+            icon: ObjectIcon,
+            color: 'accent2',
+            label: <FormattedMessage id="place-popover.item-type.interactable_object" defaultMessage="Object" />,
+            onSelect: () => scene.emit("spawn-interactable-object")
           }
         ];
       }

@@ -289,6 +289,24 @@ function registerNetworkSchemas() {
   });
 
   NAF.schemas.add({
+    template: "#interactable-object",
+    components: [
+      {
+        component: "position",
+        requiresNetworkUpdate: vectorRequiresUpdate(0.001) // Only send updates when the object has moved over 0.001 meters
+      },
+      {
+        component: "rotation",
+        requiresNetworkUpdate: vectorRequiresUpdate(0.5) // Only send updates when the object has rotated over 0.5 degrees
+      },
+      {
+        component: "scale",
+        requiresNetworkUpdate: vectorRequiresUpdate(0.001)  // Only send updates when the object scale has changed over 0.001 units
+      }
+    ]
+  });
+
+  NAF.schemas.add({
     template: "#interactable-portal",
     components: [
       {

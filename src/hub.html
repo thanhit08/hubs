@@ -628,8 +628,8 @@
                     tags="isHandCollisionTarget: true; isHoldable: true; offersRemoteConstraint: true; offersHandConstraint: true;"
                     body-helper="type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 31;"
                     shape-helper="type: box; fit: manual;" set-unowned-body-kinematic
-                    floaty-object="modifyGravityOnRelease: true; autoLockOnLoad: true; gravitySpeedLimit: 0; reduceAngularFloat: true;"
-                    set-yxz-order destroy-at-extreme-distances matrix-auto-update
+                    floaty-object="modifyGravityOnRelease: true; reduceAngularFloat: true;" set-yxz-order
+                    destroy-at-extreme-distances matrix-auto-update
                     loader="loadedEvent: page-thumbnail-loaded"></a-entity>
             </template>
 
@@ -638,9 +638,18 @@
                     tags="isHandCollisionTarget: true; isHoldable: true; offersRemoteConstraint: true; offersHandConstraint: true;"
                     body-helper="type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 31;"
                     shape-helper="type: box; fit: manual;" set-unowned-body-kinematic
-                    floaty-object="modifyGravityOnRelease: true; autoLockOnLoad: true; gravitySpeedLimit: 0; reduceAngularFloat: true;"
-                    set-yxz-order destroy-at-extreme-distances matrix-auto-update
+                    floaty-object="modifyGravityOnRelease: true; reduceAngularFloat: true;" set-yxz-order
+                    destroy-at-extreme-distances matrix-auto-update
                     portal="cameraColor:red; portalFaceColor:orange; portalFrameColor:red; destinationPortalId:portal2"></a-entity>
+            </template>
+
+            <template id="interactable-object">
+                <a-entity class="interactable" is-remote-hover-target hoverable-visuals
+                    tags="isHandCollisionTarget: true; isHoldable: true; offersRemoteConstraint: true; offersHandConstraint: true;"
+                    body-helper="type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 16;"
+                    shape-helper="type: box; fit: manual;" set-unowned-body-kinematic
+                    floaty-object="modifyGravityOnRelease: true; reduceAngularFloat: true;" set-yxz-order
+                    destroy-at-extreme-distances matrix-auto-update interactable-object></a-entity>
             </template>
 
             <a-mixin id="rounded-text-button" slice9="

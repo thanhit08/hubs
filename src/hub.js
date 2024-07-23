@@ -141,6 +141,7 @@ import "./components/video-texture-target";
 import "./components/mirror";
 import "./components/page-thumbnail";
 import "./components/portal";
+import "./components/interactable-object"
 
 import React from "react";
 import { createRoot } from "react-dom/client";
