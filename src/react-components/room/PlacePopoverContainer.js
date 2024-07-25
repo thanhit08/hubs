@@ -102,7 +102,7 @@ export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistorie
             icon: ImageIcon,
             color: 'accent2',
             label: <FormattedMessage id="place-popover.item-type.portal" defaultMessage="Model" />,
-            onSelect: () => showNonHistoriedDialog(PortalIDModalContainer, { scene})            
+            onSelect: () => showNonHistoriedDialog(PortalIDModalContainer, { scene })
           },
           {
             id: "ai",
@@ -124,6 +124,13 @@ export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistorie
             color: 'accent2',
             label: <FormattedMessage id="place-popover.item-type.interactable_object" defaultMessage="Object" />,
             onSelect: () => scene.emit("spawn-interactable-object")
+          },
+          {
+            id: "table",
+            icon: ObjectIcon,
+            color: 'accent2',
+            label: <FormattedMessage id="place-popover.item-type.table" defaultMessage="Table" />,
+            onSelect: () => scene.emit("spawn-table-object")
           }
         ];
       }

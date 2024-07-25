@@ -100,6 +100,7 @@ import { TFCMyTeleportSystem } from "../bit-systems/tfc-my-teleport";
 import { IframeSystem } from "./iframe-system";
 import { PortalSystem } from "./portal-system";
 import { InteractableObjectSystem } from "./interactable-object";
+import { TableSystem } from "./table-system";
 import { TFCMyButtonSystem } from "../bit-systems/tfc-my-button";
 import { TFCIframeSystem } from "../bit-systems/iframe";
 import { TFCKeyboardButton } from "../bit-components";
@@ -164,6 +165,7 @@ AFRAME.registerSystem("hubs-systems", {
     this.iframeSystem = new IframeSystem(this.el);
     this.portalSystem = new PortalSystem(this.el);
     this.interactableObjectSystem = new InteractableObjectSystem(this.el);
+    this.tableSystem = new TableSystem(this.el);
 
 
     window.$S = this;
