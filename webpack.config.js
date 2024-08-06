@@ -39,7 +39,7 @@ function createHTTPSConfig() {
             altNames: [
               {
                 type: 2,
-                value: "143.198.201.239"
+                value: "localhost"
               },
               {
                 type: 2,
